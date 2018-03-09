@@ -11,13 +11,14 @@ let cursors
 let weapon
 let fireButton
 let enemy
+let tween
 
 function preload() {
   game.load.image('mario', 'assets/mario.png')
   game.load.image('bg2', 'assets/bg2.png')
   game.load.image('bg', 'assets/bg.png')
   game.load.image('rec', 'assets/rec.png')
-  game.load.image('trump', 'assets/trump.png')
+  game.load.image('head', 'assets/head.png')
   game.load.image('hilary2', 'assets/hilary2.png')
 }
 
@@ -30,7 +31,7 @@ function create() {
   bg = game.add.sprite(0, 0, 'bg2')
 
   // Add Weapon
-  weapon = game.add.weapon(30, 'trump')
+  weapon = game.add.weapon(30, 'head')
 
   // Weapon Methods
   weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS
@@ -42,7 +43,11 @@ function create() {
 
   // Add Enemy
   enemy = game.add.sprite(400, 200, 'hilary2')
+  tween = game.add.tween(enemy)
 
+  // Moving enemy
+  tween.to({ x: 700 }, 1000, 'Linear', true, 0, 20, true).loop(true)
+       
   // Add Boundary
   rec = game.add.tileSprite(300, 450, 400, 100, 'bg')
 
@@ -71,6 +76,7 @@ function create() {
 
 function update() {
   game.physics.arcade.collide(player, rec)
+  game.physics.arcade.collide(player, enemy, killPlayer, null, this)  
   game.physics.arcade.overlap(weapon.bullets, enemy, killEnemy, null, this)
     
   player.body.velocity.x = 0;
@@ -101,5 +107,10 @@ function update() {
 function killEnemy(weapon, enemy) {
   enemy.kill()
   weapon.kill()
+  console.log('hey')
+}
+
+function killPlayer(player, enemy) {
+  player.kill()
   console.log('hey')
 }
