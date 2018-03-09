@@ -10,6 +10,7 @@ let rec
 let cursors
 let weapon
 let fireButton
+let enemy
 
 function preload() {
   game.load.image('mario', 'assets/mario.png')
@@ -17,9 +18,11 @@ function preload() {
   game.load.image('bg', 'assets/bg.png')
   game.load.image('rec', 'assets/rec.png')
   game.load.image('trump', 'assets/trump.png')
+  game.load.image('hilary2', 'assets/hilary2.png')
 }
 
 function create() {
+
   // Set World Bounds
   game.world.setBounds(0, 0, 1920, 1080)
 
@@ -29,20 +32,22 @@ function create() {
   // Add Weapon
   weapon = game.add.weapon(30, 'trump')
 
+  // Weapon Methods
   weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS
-
   weapon.bulletSpeed = 600
-
   weapon.fireRate = 100
 
   // Add Player
   player = game.add.sprite(50, 50, 'mario')
 
-  rec = game.add.tileSprite(300, 450, 400, 100, 'bg')
-  // rec.body.immovable = true
+  // Add Enemy
+  enemy = game.add.sprite(400, 200, 'hilary2')
 
-  // Enable physics
-  game.physics.enable([player, rec], Phaser.Physics.ARCADE)
+  // Add Boundary
+  rec = game.add.tileSprite(300, 450, 400, 100, 'bg')
+
+  // Enable physics   
+  game.physics.enable([player, rec, weapon, enemy], Phaser.Physics.ARCADE)
 
   // Make sure player can't leave canvas view
   player.body.collideWorldBounds = true
@@ -59,27 +64,42 @@ function create() {
 
   weapon.trackSprite(player, 0, 0, true)
 
+  // Keys for player movement/actions
   cursors = game.input.keyboard.createCursorKeys()
   fireButton = game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR)
 }
 
 function update() {
   game.physics.arcade.collide(player, rec)
-
+  game.physics.arcade.overlap(weapon.bullets, enemy, killEnemy, null, this)
+    
   player.body.velocity.x = 0;
   player.body.velocity.y = 0;
 
   if (cursors.left.isDown) {
     player.body.velocity.x = -500;
-  } else if (cursors.right.isDown) {
+  } 
+  
+  else if (cursors.right.isDown) {
     player.body.velocity.x = 500;
-  } else if (cursors.up.isDown) {
+  } 
+  
+  else if (cursors.up.isDown) {
     player.body.velocity.y = -500;
-  } else if (cursors.down.isDown) {
+  } 
+  
+  else if (cursors.down.isDown) {
     player.body.velocity.y = 500;
   }
 
   if (fireButton.isDown) {
     weapon.fire()
   }
+}
+
+// Kill enemy
+function killEnemy(weapon, enemy) {
+  enemy.kill()
+  weapon.kill()
+  console.log('hey')
 }
