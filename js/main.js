@@ -112,5 +112,6 @@ function killEnemy(weapon, enemy) {
 
 function killPlayer(player, enemy) {
   player.kill()
+  player.reset(player.body.velocity.x = 0, player.body.velocity.y = 0)
   console.log('hey')
 }
