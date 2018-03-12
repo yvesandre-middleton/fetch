@@ -20,8 +20,7 @@ WebFontConfig = {
 
 }
 
-
-let healthBar
+let ninjaHealth = 100
 let timer
 let totalTime = 0
 let player
