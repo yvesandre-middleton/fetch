@@ -11,6 +11,7 @@ let walk
 let boundaries
 let teleport
 let teleport2
+let waterBoundary
 
 let Game = {
   preload: function() {
@@ -57,8 +58,9 @@ let Game = {
     
     boundaries = game.add.group()
     boundaries.add(makeTileSprite(0, 335, 440, 90, 'bg'))
+    boundaries.add(makeTileSprite(580, 335, 100, 90, 'bg'))
     boundaries.add(makeTileSprite(0, 100, 75, 165, 'bg'))
-    boundaries.add(makeTileSprite(675, 100, 400, 320, 'bg'))
+    boundaries.add(makeTileSprite(700, 100, 320, 320, 'bg'))
     boundaries.add(makeTileSprite(0, 0, 996, 110, 'bg'))
     boundaries.add(makeTileSprite(0, 530, 134, 780, 'bg'))
 
@@ -74,12 +76,17 @@ let Game = {
     teleport2 = game.add.tileSprite(60, 270, 50, 60, 'bg')
     teleport.alpha = 0
     teleport2.alpha = 0
+    
+    // Water Boundary
+    
+    waterBoundary = game.add.tileSprite(385, 450, 300, 850, 'bg')
+    waterBoundary.alpha = 0
 
     // Moving enemy
     tween.to({ x: 700 }, 1000, 'Linear', true, 0, 20, true).loop(true)
     
     // Enable physics   
-    game.physics.enable([player, weapon, enemy, teleport, teleport2, boundaries], Phaser.Physics.ARCADE)
+    game.physics.enable([player, weapon, enemy, teleport, teleport2, boundaries, waterBoundary], Phaser.Physics.ARCADE)
 
     // Make sure player can't leave canvas view
     player.body.collideWorldBounds = true
@@ -91,6 +98,10 @@ let Game = {
     // Teleport Down
     teleport2.body.collideWorldBounds = true
     teleport2.body.immovable = true
+    
+    // Water Death
+    waterBoundary.body.collideWorldBounds = true
+    waterBoundary.body.immovable = true
 
     boundaries.children.forEach(c => {
       c.body.collideWorldBounds = true
@@ -111,6 +122,7 @@ let Game = {
   update: function() {
     // game.physics.arcade.collide(player, rec, this.startLevelTwo, null, this)
     game.physics.arcade.collide(player, enemy, this.killPlayer, null, this)
+    game.physics.arcade.collide(player, waterBoundary, this.killPlayer, null, this)
     game.physics.arcade.overlap(weapon.bullets, enemy, this.killEnemy, null, this)
     game.physics.arcade.collide(player, teleport, this.teleportPlayer, null, this)
     game.physics.arcade.collide(player, teleport2, this.teleportPlayer2, null, this)
@@ -148,7 +160,7 @@ let Game = {
 
   killPlayer: function(player, enemy) {
     player.kill()
-    player.reset(player.body.velocity.x = 0, player.body.velocity.y = 0)
+    player.reset(player.body.velocity.x = 240, player.body.velocity.y = 1304)
     console.log('hey')
   },
 
