@@ -4,6 +4,26 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser', {
   update: update
 });
 
+WebFontConfig = {
+ 
+  //  'active' means all requested fonts have finished loading
+  //  We set a 1 second delay before calling 'createText'.
+  //  For some reason if we don't the browser cannot render the text the first time it's created.
+  active: function() { 
+      game.time.events.add(Phaser.Timer.SECOND, createText, this);
+  },
+
+  //  The Google Fonts we want to load (specify as many as you like in the array)
+  google: {
+      families: ["Knewave"]
+  }
+
+}
+
+
+let healthBar
+let timer
+let totalTime = 0
 let player
 let bg
 let rec
@@ -12,6 +32,8 @@ let weapon
 let fireButton
 
 function preload() {
+  game.load.script("webfont", "//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js")
+  game.load.image('healthBar', 'assets/healthBar.png')
   game.load.image('mario', 'assets/mario.png')
   game.load.image('bg2', 'assets/bg2.png')
   game.load.image('bg', 'assets/bg.png')
@@ -26,6 +48,16 @@ function create() {
   // Add Background
   bg = game.add.sprite(0, 0, 'bg2')
 
+  // Add Health Bar
+  
+
+  // Adding a timer
+  timer = game.time.create(false);
+
+  timer.loop(1250, updateCounter, this)
+
+  timer.start()
+
   // Add Weapon
   weapon = game.add.weapon(30, 'trump')
 
@@ -36,7 +68,7 @@ function create() {
   weapon.fireRate = 100
 
   // Add Player
-  player = game.add.sprite(50, 50, 'mario')
+  player = game.add.sprite(300, 300, 'mario')
 
   rec = game.add.tileSprite(300, 450, 400, 100, 'bg')
   // rec.body.immovable = true
@@ -63,7 +95,28 @@ function create() {
   fireButton = game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR)
 }
 
+function createText() {
+  time = game.add.text(10, 50)
+  time.fixedToCamera = true
+  time.font = 'Knewave'
+  time.fontSize = 40
+  score = game.add.text(10, 5, "Score: ")
+  score.fixedToCamera = true
+  score.font = 'Knewave'
+  score.fontSize = 40
+  healthBar = game.add.sprite(-20, -115, 'healthBar')
+  healthBar.width = 200
+  healthBar.fixedToCamera = true
+  
+}
+
+function updateCounter() {
+  totalTime++
+  time.setText('Time: ' + totalTime)
+}
+
 function update() {
+
   game.physics.arcade.collide(player, rec)
 
   player.body.velocity.x = 0;
@@ -82,4 +135,8 @@ function update() {
   if (fireButton.isDown) {
     weapon.fire()
   }
+  
 }
+
+
+
