@@ -6,17 +6,19 @@ let weapon
 let fireButton
 let enemy
 let tween
-let teleport
+let boundary
 let walk
+let boundaries
+let teleport
+let teleport2
 
 let Game = {
   preload: function() {
     game.load.image('lvl1bg', 'assets/images/lvl1bg.png')
     game.load.image('bg', 'assets/images/bg.png')
-    game.load.image('rec', 'assets/images/rec.png')
+    game.load.image('bg2', 'assets/images/bg2.png')
     game.load.image('head', 'assets/images/head.png')
     game.load.image('hilary2', 'assets/images/hilary2.png')
-    game.load.image('nugget', 'assets/images/nuggets.png')
     game.load.spritesheet('hamster', 'assets/images/hamster-animation-sheet.png', 37, 45, 5) 
   },
   
@@ -37,6 +39,9 @@ let Game = {
 
     // Add Player
     player = game.add.sprite(240, 1304, 'hamster')
+    // player = game.add.sprite(700, 900, 'hamster')
+    // player = game.add.sprite(115, 460, 'hamster')
+    // player = game.add.sprite(700, 0, 'hamster')
     walk = player.animations.add('walk')
     player.animations.play('walk', 15, true)
 
@@ -44,26 +49,54 @@ let Game = {
     enemy = game.add.sprite(400, 200, 'hilary2')
     tween = game.add.tween(enemy)
 
-    // Teleportation Test
-    teleport = game.add.tileSprite(400, 100, 400, 100, 'bg')
+    // Multiple Boundaries
+    function makeTileSprite(x,y,w,h,image) {
+      boundary = game.add.tileSprite(x,y,w,h,image)
+      return boundary
+    }
+    
+    boundaries = game.add.group()
+    boundaries.add(makeTileSprite(0, 335, 440, 90, 'bg'))
+    boundaries.add(makeTileSprite(0, 100, 75, 165, 'bg'))
+    boundaries.add(makeTileSprite(675, 100, 400, 320, 'bg'))
+    boundaries.add(makeTileSprite(0, 0, 996, 110, 'bg'))
+    boundaries.add(makeTileSprite(0, 530, 134, 780, 'bg'))
+
+    //Exit Boundary
+    boundaries.add(makeTileSprite(685, 1090, 200, 220, 'bg'))
+    boundaries.add(makeTileSprite(996, 425, 100, 880, 'bg'))
+
+    // Makes images transparent
+    boundaries.alpha = 0
+
+    // Teleportation
+    teleport = game.add.tileSprite(60, 450, 50, 60, 'bg')
+    teleport2 = game.add.tileSprite(60, 270, 50, 60, 'bg')
+    teleport.alpha = 0
+    teleport2.alpha = 0
 
     // Moving enemy
     tween.to({ x: 700 }, 1000, 'Linear', true, 0, 20, true).loop(true)
     
-    // Add Boundary
-    rec = game.add.tileSprite(300, 450, 400, 100, 'bg')
-
     // Enable physics   
-    game.physics.enable([player, rec, weapon, enemy, teleport], Phaser.Physics.ARCADE)
+    game.physics.enable([player, weapon, enemy, teleport, teleport2, boundaries], Phaser.Physics.ARCADE)
 
     // Make sure player can't leave canvas view
     player.body.collideWorldBounds = true
 
-    // Sprite Collisions
-    rec.body.collideWorldBounds = true
-    rec.body.immovable = true
+    // Teleport Up
+    teleport.body.collideWorldBounds = true
     teleport.body.immovable = true
+    
+    // Teleport Down
+    teleport2.body.collideWorldBounds = true
+    teleport2.body.immovable = true
 
+    boundaries.children.forEach(c => {
+      c.body.collideWorldBounds = true
+      c.body.immovable = true;
+    })
+    
     // Have Camera follow
     game.camera.follow(player)
 
@@ -76,10 +109,12 @@ let Game = {
   },
   
   update: function() {
-    game.physics.arcade.collide(player, rec, this.startLevelTwo, null, this)
+    // game.physics.arcade.collide(player, rec, this.startLevelTwo, null, this)
     game.physics.arcade.collide(player, enemy, this.killPlayer, null, this)
     game.physics.arcade.overlap(weapon.bullets, enemy, this.killEnemy, null, this)
     game.physics.arcade.collide(player, teleport, this.teleportPlayer, null, this)
+    game.physics.arcade.collide(player, teleport2, this.teleportPlayer2, null, this)
+    game.physics.arcade.collide(player, boundaries)
 
     player.body.velocity.x = 0;
     player.body.velocity.y = 0;
@@ -118,10 +153,14 @@ let Game = {
   },
 
   teleportPlayer: function(player, teleport) {
-    player.reset(player.body.velocity.x = 200, player.body.velocity.y = 400)
+    player.reset(player.body.velocity.x = 140, player.body.velocity.y = 280)
   },
 
-  startLevelTwo: function(player, rec) {
-    this.state.start('Two')
-  }
+  teleportPlayer2: function(player, teleport) {
+    player.reset(player.body.velocity.x = 140, player.body.velocity.y = 460)
+  },
+
+  // startLevelTwo: function(player, rec) {
+  //   this.state.start('Two')
+  // }
 }
