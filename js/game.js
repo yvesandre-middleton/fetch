@@ -13,13 +13,15 @@ let teleport
 let teleport2
 let waterBoundary
 let waterBoundary2
-let rock
+let log
 
 let Game = {
   preload: function() {
     game.load.image('lvl1bg', 'assets/images/lvl1bg.png')
     game.load.image('bg', 'assets/images/bg.png')
     game.load.image('bg2', 'assets/images/bg2.png')
+    game.load.image('log', 'assets/images/log1.png')
+    game.load.image('treasure', 'assets/images/treasure.png')
     game.load.image('shuriken', 'assets/images/shuriken.png')
     game.load.image('hilary2', 'assets/images/hilary2.png')
     game.load.spritesheet('hamster', 'assets/images/hamster-animation-sheet.png', 37, 45, 5) 
@@ -40,15 +42,15 @@ let Game = {
     weapon.bulletSpeed = 600
     weapon.fireRate = 100
     
-    // Add rock, has to be called before player so that
+    // Add log, has to be called before player so that
     // player appears on top
-    rock = game.add.tileSprite(350, 280, 340, 50,'bg')
+    log = game.add.tileSprite(350, 280, 340, 50,'log')
     
     // Add Player
-    player = game.add.sprite(240, 1304, 'hamster')
+    // player = game.add.sprite(240, 1304, 'hamster')
 
     // Player locations for testing
-    // player = game.add.sprite(700, 900, 'hamster')
+    player = game.add.sprite(700, 900, 'hamster')
     // player = game.add.sprite(115, 460, 'hamster')
     // player = game.add.sprite(700, 0, 'hamster')
     walk = player.animations.add('walk')
@@ -94,6 +96,9 @@ let Game = {
     rock2 = game.add.tileSprite(350, 500, 340, 50,'bg')
     rock2.alpha = 0
 
+    // Treasure
+    treasure = game.add.sprite(840, 670, 'treasure')
+
     // Moving enemy
     // tween.to({ x: 700 }, 1000, 'Linear', true, 0, 20, true).loop(true)
     
@@ -107,8 +112,9 @@ let Game = {
       boundaries, 
       waterBoundary, 
       waterBoundary2, 
-      rock,
-      rock2], 
+      log,
+      rock2,
+      treasure], 
       Phaser.Physics.ARCADE)
 
     // Make sure player can't leave canvas view
@@ -129,7 +135,7 @@ let Game = {
     waterBoundary2.body.immovable = true
 
     // Rock
-    rock.body.collideWorldBounds = true
+    log.body.collideWorldBounds = true
     rock2.body.collideWorldBounds = true
     rock2.body.immovable = true
 
@@ -137,6 +143,10 @@ let Game = {
       c.body.collideWorldBounds = true
       c.body.immovable = true;
     })
+
+    // Treasure Collision
+    treasure.body.collideWorldBounds = true
+    treasure.body.immovable = true
     
     // Have Camera follow
     game.camera.follow(player)
@@ -152,14 +162,15 @@ let Game = {
   update: function() {
     // game.physics.arcade.collide(player, rec, this.startLevelTwo, null, this)
     game.physics.arcade.collide(player, enemy, this.killPlayer, null, this)
-    game.physics.arcade.collide(player, rock, this.moveRock, null, this)
+    game.physics.arcade.collide(player, log, this.moveRock, null, this)
     game.physics.arcade.collide(player, waterBoundary, this.killPlayer, null, this)
     game.physics.arcade.collide(player, waterBoundary2, this.killPlayer, null, this)
     game.physics.arcade.overlap(weapon.bullets, enemy, this.killEnemy, null, this)
     game.physics.arcade.collide(player, teleport, this.teleportPlayer, null, this)
     game.physics.arcade.collide(player, teleport2, this.teleportPlayer2, null, this)
     game.physics.arcade.collide(player, boundaries)
-    game.physics.arcade.collide(rock, waterBoundary)
+    game.physics.arcade.collide(log, waterBoundary)
+    game.physics.arcade.collide(player, treasure, this.spawnWeapon, null, this)
     game.physics.arcade.collide(player, rock2, this.checkPlatfrom, null, this)
 
     player.body.velocity.x = 0;
@@ -182,7 +193,9 @@ let Game = {
     }
 
     else if (fireButton.isDown) {
-      weapon.fire()
+      if (this.enableWeapon) {
+        weapon.fire()
+      }
     }
   },
 
@@ -206,19 +219,24 @@ let Game = {
     player.reset(player.body.velocity.x = 140, player.body.velocity.y = 460)
   },
 
-  // Move the rock
-  moveRock: function (player, rock) {
+  // Move the log
+  moveRock: function (player, log) {
     this.rockMoved = true
-    rock.reset(rock.body.x = 350, rock.body.y = 500)      
+    log.reset(log.body.x = 350, log.body.y = 500)      
   },
 
-  // Check if rock has been moved
+  // Check if log has been moved
   checkPlatfrom: function(player, rock2) {
     if (this.rockMoved) {
       rock2.kill()
     } else {
       player.reset(player.body.velocity.x = 240, player.body.velocity.y = 1304)
     }
+  },
+
+  spawnWeapon: function(player, treasure) {
+    this.enableWeapon = true
+    treasure.kill()
   }
 
   // startLevelTwo: function(player, rec) {
