@@ -13,11 +13,7 @@ let totalTime = 0
 let time
 let text
 let ninjaLives = 1
-let score
-let highScore
-let scoreDisplay
-let highScoreText
-let randomScore = Math.floor(Math.random() * 20) + 100;
+let score = 0
 let player
 let bg
 let rec
@@ -29,9 +25,9 @@ let enemies
 let tween
 let teleport
 let walk
-// let enemyBullets
-// let enemyBulletTime = 0
-// let livingEnemies = []
+let bullets
+let bulletTime = 0
+
 
 WebFontConfig = {
   active: function() { 
@@ -50,6 +46,7 @@ let Game = {
     game.load.image('healthBar', 'assets/images/healthBar.png')
     game.load.image('rec', 'assets/images/rec.png')
     game.load.image('head', 'assets/images/head.png')
+    game.load.image('bullet', 'assets/images/head.png')
     game.load.image('enemy', 'assets/images/hilary2.png')
     game.load.image('nugget', 'assets/images/nuggets.png')
     game.load.spritesheet('hamster', 'assets/images/hamster-animation-sheet.png', 37, 45, 5) 
@@ -62,10 +59,10 @@ let Game = {
     // Add Background
     bg = game.add.sprite(0, 0, 'lvl1bg')
     //player score
-    score = game.add.text(100, 5, "Score: " + randomScore)
-    score.fixedToCamera = true
-    score.font = 'Knewave'
-    score.fontSize = 40
+    scoreDisplay = game.add.text(100, 5, "Score: " + `${score}`)
+    scoreDisplay.fixedToCamera = true
+    scoreDisplay.font = 'Knewave'
+    scoreDisplay.fontSize = 40
     //player lives
     ninjaLivesDisplay = game.add.text(100, 45, "Lives: " + `${ninjaLives}`)
     ninjaLivesDisplay.fixedToCamera = true
@@ -82,14 +79,14 @@ let Game = {
     timer.loop(1250, this.updateCounter, this)
     timer.start()
 
-    // enemyBullets = game.add.group()
-    // enemyBullets.enableBody = true
-    // enemyBullets.physicsBodyType = Phaser.Physics.ARCADE
-    // enemyBullets.createMultiple(30, 'head')
-    // enemyBullets.setAll('anchor.x', 0.5)
-    // enemyBullets.setAll('anchor.y', 1)
-    // enemyBullets.setAll('outOfBoundsKill', true)
-    // enemyBullets.setAll('checkWorldBounds', true)
+    bullets = game.add.group()
+    bullets.enableBody = true
+    bullets.physicsBodyType = Phaser.Physics.ARCADE
+    bullets.createMultiple(30, 'bullet')
+    bullets.setAll('anchor.x', 0.5)
+    bullets.setAll('anchor.y', 1)
+    bullets.setAll('outOfBoundsKill', true)
+    bullets.setAll('checkWorldBounds', true)
 
     enemies = game.add.group()
     enemies.enableBody = true
@@ -182,6 +179,8 @@ let Game = {
   killEnemy: function(weapon, enemy) {
     enemy.kill()
     weapon.kill()
+    score += 100
+    scoreDisplay.text = ('Score: ' + `${score}`)
     console.log('hey')
   },
 
@@ -192,17 +191,25 @@ let Game = {
         enemy.anchor.setTo(0.5, 0.5)
         enemy.body.velocity.x = 0;
         enemy.body.velocity.y = 0;
-        
       }
     }
-
-    // enemies.x = 100
-    // enemies.y = 50
 
     var tween = game.add.tween(enemies).to({x: 200}, 2000, Phaser.Easing.Linear.None,true,0,1000,)
     tween.yoyo(true)
   },
 
+  // shootBullet: function() {
+  //   if (this.time.now > bulletTime) {
+  //     bullet = bullets.getFirstExists(false)
+  //     if (bullet) {
+  //       bullet.reset(this.enemy.x, this.enemy.y)
+
+  //       bullet.body.velocity.y = -600
+
+  //       bulletTime = this.time.now + 900
+  //     }
+  //   }
+  // },
 
   killPlayer: function(player, enemy) {
     enemy.body.velocity.x = 0;
