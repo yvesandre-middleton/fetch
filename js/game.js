@@ -12,6 +12,8 @@ let boundaries
 let teleport
 let teleport2
 let waterBoundary
+let waterBoundary2
+let rock
 
 let Game = {
   preload: function() {
@@ -37,9 +39,15 @@ let Game = {
     weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS
     weapon.bulletSpeed = 600
     weapon.fireRate = 100
-
+    
+    // Add rock, has to be called before player so that
+    // player appears on top
+    rock = game.add.tileSprite(350, 280, 340, 50,'bg')
+    
     // Add Player
     player = game.add.sprite(240, 1304, 'hamster')
+
+    // Player locations for testing
     // player = game.add.sprite(700, 900, 'hamster')
     // player = game.add.sprite(115, 460, 'hamster')
     // player = game.add.sprite(700, 0, 'hamster')
@@ -47,8 +55,8 @@ let Game = {
     player.animations.play('walk', 15, true)
 
     // Add Enemy
-    enemy = game.add.sprite(400, 200, 'hilary2')
-    tween = game.add.tween(enemy)
+    // enemy = game.add.sprite(400, 200, 'hilary2')
+    // tween = game.add.tween(enemy)
 
     // Multiple Boundaries
     function makeTileSprite(x,y,w,h,image) {
@@ -57,8 +65,7 @@ let Game = {
     }
     
     boundaries = game.add.group()
-    boundaries.add(makeTileSprite(0, 335, 440, 90, 'bg'))
-    boundaries.add(makeTileSprite(580, 335, 100, 90, 'bg'))
+    boundaries.add(makeTileSprite(0, 335, 670, 90, 'bg'))
     boundaries.add(makeTileSprite(0, 100, 75, 165, 'bg'))
     boundaries.add(makeTileSprite(700, 100, 320, 320, 'bg'))
     boundaries.add(makeTileSprite(0, 0, 996, 110, 'bg'))
@@ -78,15 +85,31 @@ let Game = {
     teleport2.alpha = 0
     
     // Water Boundary
-    
-    waterBoundary = game.add.tileSprite(385, 450, 300, 850, 'bg')
+    waterBoundary = game.add.tileSprite(385, 600, 300, 750, 'bg')
+    waterBoundary2 = game.add.tileSprite(385, 420, 300, 70, 'bg')
     waterBoundary.alpha = 0
+    waterBoundary2.alpha = 0
+
+    // Rock
+    rock2 = game.add.tileSprite(350, 500, 340, 50,'bg')
+    rock2.alpha = 0
 
     // Moving enemy
-    tween.to({ x: 700 }, 1000, 'Linear', true, 0, 20, true).loop(true)
+    // tween.to({ x: 700 }, 1000, 'Linear', true, 0, 20, true).loop(true)
     
     // Enable physics   
-    game.physics.enable([player, weapon, enemy, teleport, teleport2, boundaries, waterBoundary], Phaser.Physics.ARCADE)
+    game.physics.enable([
+      player, 
+      weapon, 
+      // enemy, 
+      teleport, 
+      teleport2, 
+      boundaries, 
+      waterBoundary, 
+      waterBoundary2, 
+      rock,
+      rock2], 
+      Phaser.Physics.ARCADE)
 
     // Make sure player can't leave canvas view
     player.body.collideWorldBounds = true
@@ -100,8 +123,15 @@ let Game = {
     teleport2.body.immovable = true
     
     // Water Death
+    // REFACTOR LATER //
     waterBoundary.body.collideWorldBounds = true
     waterBoundary.body.immovable = true
+    waterBoundary2.body.immovable = true
+
+    // Rock
+    rock.body.collideWorldBounds = true
+    rock2.body.collideWorldBounds = true
+    rock2.body.immovable = true
 
     boundaries.children.forEach(c => {
       c.body.collideWorldBounds = true
@@ -122,11 +152,15 @@ let Game = {
   update: function() {
     // game.physics.arcade.collide(player, rec, this.startLevelTwo, null, this)
     game.physics.arcade.collide(player, enemy, this.killPlayer, null, this)
+    game.physics.arcade.collide(player, rock, this.moveRock, null, this)
     game.physics.arcade.collide(player, waterBoundary, this.killPlayer, null, this)
+    game.physics.arcade.collide(player, waterBoundary2, this.killPlayer, null, this)
     game.physics.arcade.overlap(weapon.bullets, enemy, this.killEnemy, null, this)
     game.physics.arcade.collide(player, teleport, this.teleportPlayer, null, this)
     game.physics.arcade.collide(player, teleport2, this.teleportPlayer2, null, this)
     game.physics.arcade.collide(player, boundaries)
+    game.physics.arcade.collide(rock, waterBoundary)
+    game.physics.arcade.collide(player, rock2, this.checkPlatfrom, null, this)
 
     player.body.velocity.x = 0;
     player.body.velocity.y = 0;
@@ -147,7 +181,7 @@ let Game = {
       player.body.velocity.y = 300;
     }
 
-    if (fireButton.isDown) {
+    else if (fireButton.isDown) {
       weapon.fire()
     }
   },
@@ -171,6 +205,21 @@ let Game = {
   teleportPlayer2: function(player, teleport) {
     player.reset(player.body.velocity.x = 140, player.body.velocity.y = 460)
   },
+
+  // Move the rock
+  moveRock: function (player, rock) {
+    this.rockMoved = true
+    rock.reset(rock.body.x = 350, rock.body.y = 500)      
+  },
+
+  // Check if rock has been moved
+  checkPlatfrom: function(player, rock2) {
+    if (this.rockMoved) {
+      rock2.kill()
+    } else {
+      player.reset(player.body.velocity.x = 240, player.body.velocity.y = 1304)
+    }
+  }
 
   // startLevelTwo: function(player, rec) {
   //   this.state.start('Two')
