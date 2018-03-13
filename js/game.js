@@ -20,7 +20,7 @@ let Game = {
     game.load.image('lvl1bg', 'assets/images/lvl1bg.png')
     game.load.image('bg', 'assets/images/bg.png')
     game.load.image('bg2', 'assets/images/bg2.png')
-    game.load.image('head', 'assets/images/head.png')
+    game.load.image('shuriken', 'assets/images/shuriken.png')
     game.load.image('hilary2', 'assets/images/hilary2.png')
     game.load.spritesheet('hamster', 'assets/images/hamster-animation-sheet.png', 37, 45, 5) 
   },
@@ -33,7 +33,7 @@ let Game = {
     bg = game.add.sprite(0, 0, 'lvl1bg')
 
     // Add Weapon
-    weapon = game.add.weapon(30, 'head')
+    weapon = game.add.weapon(30, 'shuriken')
 
     // Weapon Methods
     weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS
