@@ -25,7 +25,7 @@ let Game = {
     game.load.image('treasure', 'assets/images/treasure.png')
     game.load.image('shuriken', 'assets/images/shuriken.png')
     game.load.image('hilary2', 'assets/images/hilary2.png')
-    game.load.spritesheet('hamster', 'assets/images/hamster-animation-sheet.png', 37, 45, 5) 
+    game.load.spritesheet('hamster', 'assets/images/hamster-animation-sheet.png', 37, 45) 
   },
   
   create: function() {
@@ -52,9 +52,23 @@ let Game = {
 
     // Player locations for testing
     player = game.add.sprite(700, 700, 'hamster')
+
+    // Animations
+    player.animations.add('left', [5, 6, 7, 8, 8], 10, true);
+    player.animations.add('right', [0, 1, 2, 3, 4], 10, true);
+    player.animations.add('down', [10, 11, 12, 13, 14], 10, true);
+    player.animations.add('up', [15, 16, 17, 18, 19], 10, true);
+    walk = player.animations.add('walk', [0, 2, 4], 7, true);
+
+
+
+
+
+
+
     // player = game.add.sprite(115, 460, 'hamster')
     // player = game.add.sprite(700, 0, 'hamster')
-    walk = player.animations.add('walk')
+    // walk = player.animations.add('walk')
     player.animations.play('walk', 15, true)
 
     // Add Enemy
@@ -179,6 +193,7 @@ let Game = {
     game.physics.arcade.collide(player, teleport2, this.teleportPlayer2, null, this)
     game.physics.arcade.collide(player, boundaries)
     game.physics.arcade.collide(log, waterBoundary)
+    game.physics.arcade.collide(player, levelUnlock)
     game.physics.arcade.collide(player, treasure, this.spawnWeapon, null, this)
     game.physics.arcade.collide(player, logCheck, this.checkPlatfrom, null, this)
 
@@ -187,18 +202,22 @@ let Game = {
 
     if (cursors.left.isDown) {
       player.body.velocity.x = -300;
+      player.animations.play('left')
     }
 
     else if (cursors.right.isDown) {
       player.body.velocity.x = 300;
+      player.animations.play('right')
     }
 
     else if (cursors.up.isDown) {
       player.body.velocity.y = -300;
+      player.animations.play('up')
     }
 
     else if (cursors.down.isDown) {
       player.body.velocity.y = 300;
+      player.animations.play('down')
     }
 
     else if (fireButton.isDown) {
