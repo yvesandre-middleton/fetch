@@ -1,9 +1,14 @@
 let EndGame = {
     preload: function() {
-      game.load.image('gameOver', 'assets/images/bg2.png')
+      game.load.image('endGame', 'assets/images/bg2.png')
     },
 
-    finalScore: function() {
+    create: function() {
+        let endGameText = "You have won!"
+        egText = game.add.text(game.world.centerX, game.world.centerY, winnerText, { fill: "#ffffff" });
+        egText.fixedToCamera = true
+        egText.font = 'Knewave'
+        egText.fontSize = 40
         console.log("GAME OVER!")
         let timeBonus = 0
         let livesBonus = ninjaLives * 100
@@ -27,5 +32,6 @@ let EndGame = {
         leaderboard.push({name: `${playerName}`, score: `${finalScore}`})
         console.log("leaderboard", leaderboard)
     
-      }
+      },
+
   }

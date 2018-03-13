@@ -19,16 +19,19 @@ let scoreDisplay
 let highScoreText
 let randomScore = Math.floor(Math.random() * 20) + 100;
 let player
-let healthBar
 let bg
 let rec
 let cursors
-let weapon
+let weapon = {}
 let fireButton
 let enemy
+let enemies
 let tween
 let teleport
 let walk
+// let enemyBullets
+// let enemyBulletTime = 0
+// let livingEnemies = []
 
 WebFontConfig = {
   active: function() { 
@@ -47,7 +50,7 @@ let Game = {
     game.load.image('healthBar', 'assets/images/healthBar.png')
     game.load.image('rec', 'assets/images/rec.png')
     game.load.image('head', 'assets/images/head.png')
-    game.load.image('hilary2', 'assets/images/hilary2.png')
+    game.load.image('enemy', 'assets/images/hilary2.png')
     game.load.image('nugget', 'assets/images/nuggets.png')
     game.load.spritesheet('hamster', 'assets/images/hamster-animation-sheet.png', 37, 45, 5) 
   },
@@ -58,17 +61,17 @@ let Game = {
 
     // Add Background
     bg = game.add.sprite(0, 0, 'lvl1bg')
-
+    //player score
     score = game.add.text(100, 5, "Score: " + randomScore)
     score.fixedToCamera = true
     score.font = 'Knewave'
     score.fontSize = 40
-
+    //player lives
     ninjaLivesDisplay = game.add.text(100, 45, "Lives: " + `${ninjaLives}`)
     ninjaLivesDisplay.fixedToCamera = true
     ninjaLivesDisplay.font = 'Knewave'
     ninjaLivesDisplay.fontSize = 40
-
+    // timer display
     time = game.add.text(100, 95)
     time.fixedToCamera = true
     time.font = 'Knewave'
@@ -78,6 +81,21 @@ let Game = {
     timer = game.time.create(false);
     timer.loop(1250, this.updateCounter, this)
     timer.start()
+
+    // enemyBullets = game.add.group()
+    // enemyBullets.enableBody = true
+    // enemyBullets.physicsBodyType = Phaser.Physics.ARCADE
+    // enemyBullets.createMultiple(30, 'head')
+    // enemyBullets.setAll('anchor.x', 0.5)
+    // enemyBullets.setAll('anchor.y', 1)
+    // enemyBullets.setAll('outOfBoundsKill', true)
+    // enemyBullets.setAll('checkWorldBounds', true)
+
+    enemies = game.add.group()
+    enemies.enableBody = true
+    enemies.physicsBodyType = Phaser.Physics.ARCADE
+
+    this.createEnemies()
     
     // Add Weapon
     weapon = game.add.weapon(30, 'head')
@@ -86,6 +104,10 @@ let Game = {
     weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS
     weapon.bulletSpeed = 600
     weapon.fireRate = 100
+    //enemy weapon
+    enemyWeapon = weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS
+    enemyWeapon = weapon.bulletSpeed = 600
+    enemyWeapon = weapon.fireRate = 100
 
     // Add Player
     player = game.add.sprite(240, 1304, 'hamster')
@@ -100,7 +122,7 @@ let Game = {
     teleport = game.add.tileSprite(400, 100, 400, 100, 'bg')
 
     // Moving enemy
-    tween.to({ x: 700 }, 1000, 'Linear', true, 0, 20, true).loop(true)
+    // tween.to({ x: 700 }, 1000, 'Linear', true, 0, 20, true).loop(true)
     
     // Add Boundary
     rec = game.add.tileSprite(300, 450, 400, 100, 'bg')
@@ -129,8 +151,8 @@ let Game = {
 
   update: function() {
     game.physics.arcade.collide(player, rec, this.startLevelTwo, null, this)
-    game.physics.arcade.collide(player, enemy, this.killPlayer, null, this)
-    game.physics.arcade.overlap(weapon.bullets, enemy, this.killEnemy, null, this)
+    game.physics.arcade.collide(player, enemies, this.killPlayer, null, this)
+    game.physics.arcade.overlap(weapon.bullets, enemies, this.killEnemy, null, this)
     game.physics.arcade.collide(player, teleport, this.teleportPlayer, null, this)
 
     player.body.velocity.x = 0;
@@ -163,12 +185,33 @@ let Game = {
     console.log('hey')
   },
 
+  createEnemies: function() {
+    for(let y = 0; y < 3; y++){
+      for(let x = 0; x < 1; x++) {
+        let enemy = enemies.create(x*350, y*350, 'enemy')
+        enemy.anchor.setTo(0.5, 0.5)
+        enemy.body.velocity.x = 0;
+        enemy.body.velocity.y = 0;
+        
+      }
+    }
+
+    // enemies.x = 100
+    // enemies.y = 50
+
+    var tween = game.add.tween(enemies).to({x: 200}, 2000, Phaser.Easing.Linear.None,true,0,1000,)
+    tween.yoyo(true)
+  },
+
+
   killPlayer: function(player, enemy) {
+    enemy.body.velocity.x = 0;
+    enemy.body.velocity.y = 0;
     player.kill()
     ninjaLives--
     ninjaLivesDisplay.text = ('Lives: ' + `${ninjaLives}`)
     if (ninjaLives === 0) {
-      this.state.start("EndGame")
+      this.endGame()
     } else {
       player.reset(player.body.velocity.x = 0, player.body.velocity.y = 0)
     }  
@@ -189,27 +232,7 @@ let Game = {
   },
 
   endGame: function() {
-    let timeBonus = 0
-    let livesBonus = ninjaLives * 100
-    if (totalTime > 50) {
-      timeBonus = 10
-    } else if (totalTime > 31) {
-      timeBonus = 50
-    } else {
-      timeBonus = 100
-    }
-    console.log("score", `${randomScore}`)
-    console.log("Time", `${totalTime}`)
-    console.log("time bonus", `${timeBonus}`)
-    console.log("Lives bonus", `${livesBonus}`)
-    let finalScore = randomScore + timeBonus + livesBonus
-    console.log("total score", finalScore)
-    
-    game.add.text(30, 20 )
-    
-    let playerName = prompt("Please enter username")
-    leaderboard.push({name: `${playerName}`, score: `${finalScore}`})
-    console.log("leaderboard", leaderboard)
+    this.state.start("EndGame")
   },
 
   gameOver: function() {
