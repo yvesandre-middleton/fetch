@@ -14,6 +14,7 @@ let teleport2
 let waterBoundary
 let waterBoundary2
 let log
+let levelUnlock
 
 let Game = {
   preload: function() {
@@ -39,8 +40,8 @@ let Game = {
 
     // Weapon Methods
     weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS
-    weapon.bulletSpeed = 600
-    weapon.fireRate = 100
+    weapon.bulletSpeed = 200
+    weapon.fireRate = 1200
     
     // Add log, has to be called before player so that
     // player appears on top
@@ -50,7 +51,7 @@ let Game = {
     // player = game.add.sprite(240, 1304, 'hamster')
 
     // Player locations for testing
-    player = game.add.sprite(700, 900, 'hamster')
+    player = game.add.sprite(700, 700, 'hamster')
     // player = game.add.sprite(115, 460, 'hamster')
     // player = game.add.sprite(700, 0, 'hamster')
     walk = player.animations.add('walk')
@@ -93,11 +94,14 @@ let Game = {
     waterBoundary2.alpha = 0
 
     // Rock
-    rock2 = game.add.tileSprite(350, 500, 340, 50,'bg')
-    rock2.alpha = 0
+    logCheck = game.add.tileSprite(350, 500, 340, 50,'log')
+    logCheck.alpha = 0
 
     // Treasure
     treasure = game.add.sprite(840, 670, 'treasure')
+
+    // Level Unlock
+    levelUnlock = game.add.sprite(640, 800, 'log')
 
     // Moving enemy
     // tween.to({ x: 700 }, 1000, 'Linear', true, 0, 20, true).loop(true)
@@ -113,8 +117,9 @@ let Game = {
       waterBoundary, 
       waterBoundary2, 
       log,
-      rock2,
-      treasure], 
+      logCheck,
+      treasure,
+      levelUnlock], 
       Phaser.Physics.ARCADE)
 
     // Make sure player can't leave canvas view
@@ -134,10 +139,10 @@ let Game = {
     waterBoundary.body.immovable = true
     waterBoundary2.body.immovable = true
 
-    // Rock
+    // Log Check
     log.body.collideWorldBounds = true
-    rock2.body.collideWorldBounds = true
-    rock2.body.immovable = true
+    logCheck.body.collideWorldBounds = true
+    logCheck.body.immovable = true
 
     boundaries.children.forEach(c => {
       c.body.collideWorldBounds = true
@@ -147,12 +152,16 @@ let Game = {
     // Treasure Collision
     treasure.body.collideWorldBounds = true
     treasure.body.immovable = true
+
+    // Level 2 Unlock
+    levelUnlock.body.collideWorldBounds
+    levelUnlock.body.immovable = true
     
     // Have Camera follow
     game.camera.follow(player)
 
     // Makes sure weapon comes out of enemy
-    weapon.trackSprite(player, 0, 0, true)
+    weapon.trackSprite(player, 30, 30, true)
 
     // Keys for player movement/actions
     cursors = game.input.keyboard.createCursorKeys()
@@ -171,7 +180,7 @@ let Game = {
     game.physics.arcade.collide(player, boundaries)
     game.physics.arcade.collide(log, waterBoundary)
     game.physics.arcade.collide(player, treasure, this.spawnWeapon, null, this)
-    game.physics.arcade.collide(player, rock2, this.checkPlatfrom, null, this)
+    game.physics.arcade.collide(player, logCheck, this.checkPlatfrom, null, this)
 
     player.body.velocity.x = 0;
     player.body.velocity.y = 0;
@@ -222,21 +231,20 @@ let Game = {
   // Move the log
   moveRock: function (player, log) {
     this.rockMoved = true
+    logCheck.kill()
     log.reset(log.body.x = 350, log.body.y = 500)      
   },
 
   // Check if log has been moved
-  checkPlatfrom: function(player, rock2) {
-    if (this.rockMoved) {
-      rock2.kill()
-    } else {
-      player.reset(player.body.velocity.x = 240, player.body.velocity.y = 1304)
-    }
+  checkPlatfrom: function(player, logCheck) {
+    player.reset(player.body.velocity.x = 240, player.body.velocity.y = 1304)
   },
 
+  // Spawn Weapon
   spawnWeapon: function(player, treasure) {
     this.enableWeapon = true
     treasure.kill()
+    levelUnlock.kill()
   }
 
   // startLevelTwo: function(player, rec) {
