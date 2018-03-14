@@ -65,12 +65,12 @@ let Game = {
     // Add Background
     bg = game.add.sprite(0, 0, 'lvl1bg')
     //player score
-    scoreDisplay = game.add.text(100, 5, "Score: " + `${score}`)
+    scoreDisplay = game.add.text(100, 5, "Score: " + `${score}  `)
     scoreDisplay.fixedToCamera = true
     scoreDisplay.font = 'Knewave'
     scoreDisplay.fontSize = 40
     //player lives
-    ninjaLivesDisplay = game.add.text(100, 45, "Lives: " + `${ninjaLives}`)
+    ninjaLivesDisplay = game.add.text(100, 45, "Lives: " + `${ninjaLives} `)
     ninjaLivesDisplay.fixedToCamera = true
     ninjaLivesDisplay.font = 'Knewave'
     ninjaLivesDisplay.fontSize = 40
@@ -116,7 +116,7 @@ let Game = {
     // player = game.add.sprite(240, 1304, 'hamster')
 
     // Player locations for testing
-    player = game.add.sprite(700, 700, 'hamster')
+    player = game.add.sprite(300, 900, 'hamster')
     // player = game.add.sprite(115, 460, 'hamster')
     // player = game.add.sprite(700, 0, 'hamster')
     walk = player.animations.add('walk')
@@ -291,7 +291,7 @@ let Game = {
       }
     }
 
-    var tween = game.add.tween(enemies).to({x: 200}, 2000, Phaser.Easing.Linear.None,true,0,1000,)
+    var tween = game.add.tween(enemies).to({x: 500}, 2000, Phaser.Easing.Linear.None,true,0,1000,)
     tween.yoyo(true)
   },
 
@@ -315,7 +315,9 @@ let Game = {
     ninjaLives--
     ninjaLivesDisplay.text = ('Lives: ' + `${ninjaLives}`)
     if (ninjaLives === 0) {
-      this.endGame()
+      score = 0
+      ninjaLives = 3
+      game.state.start('GameOver')
     } else {
       player.reset(player.body.velocity.x = 0, player.body.velocity.y = 0)
     }  
@@ -347,15 +349,6 @@ let Game = {
     totalTime++
     time.setText('Time: ' + totalTime)
   },
-
-  endGame: function() {
-    this.state.start("EndGame")
-  },
-
-  gameOver: function() {
-    console.log("GAME OVER!")
-  },
-
   
   // Check if log has been moved
   checkPlatfrom: function(player, logCheck) {
