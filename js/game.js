@@ -15,6 +15,8 @@ let waterBoundary
 let waterBoundary2
 let log
 let levelUnlock
+let facing
+let enemyWeapon
 
 let Game = {
   preload: function() {
@@ -35,6 +37,29 @@ let Game = {
     // Add Background
     bg = game.add.sprite(0, 0, 'lvl1bg')
 
+    // Add log, has to be called before player so that
+    // player appears on top
+    
+    // Add Player
+    // player = game.add.sprite(240, 1304, 'hamster')
+    
+    // Player locations for testing
+    // player = game.add.sprite(700, 700, 'hamster')
+    log = game.add.sprite(370, 200, 'log')
+    player = game.add.sprite(115, 460, 'hamster')
+    enemy = game.add.sprite(150, 500, 'hilary2')
+    
+
+    // Animations
+    player.animations.add('left', [5, 6, 7, 8, 8], 10, true);
+    player.animations.add('right', [0, 1, 2, 3, 4], 10, true);
+    player.animations.add('down', [10, 11, 12, 13, 14], 10, true);
+    player.animations.add('up', [15, 16, 17, 18, 19], 10, true);
+    player.animations.play('walk', 15, true)
+    walk = player.animations.add('walk', [0, 2, 4], 7, true);
+    
+    // PLAYER WEAPON //
+
     // Add Weapon
     weapon = game.add.weapon(30, 'shuriken')
 
@@ -43,37 +68,27 @@ let Game = {
     weapon.bulletSpeed = 200
     weapon.fireRate = 1200
     
-    // Add log, has to be called before player so that
-    // player appears on top
-    log = game.add.tileSprite(350, 280, 340, 50,'log')
+    // Makes sure weapon comes out of enemy
+    weapon.trackSprite(player, 30, 30, false)
     
-    // Add Player
-    // player = game.add.sprite(240, 1304, 'hamster')
+    // ENEMY WEAPON //
+    
+    // Add  Enemy Weapon
+    enemyWeapon = game.add.weapon(30, 'shuriken')
 
-    // Player locations for testing
-    player = game.add.sprite(700, 700, 'hamster')
-
-    // Animations
-    player.animations.add('left', [5, 6, 7, 8, 8], 10, true);
-    player.animations.add('right', [0, 1, 2, 3, 4], 10, true);
-    player.animations.add('down', [10, 11, 12, 13, 14], 10, true);
-    player.animations.add('up', [15, 16, 17, 18, 19], 10, true);
-    walk = player.animations.add('walk', [0, 2, 4], 7, true);
-
-
-
-
-
-
-
-    // player = game.add.sprite(115, 460, 'hamster')
+    // Weapon Methods
+    enemyWeapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS
+    enemyWeapon.bulletSpeed = 200
+    enemyWeapon.fireRate = 1200
+    enemyWeapon.autofire = true  
+    enemyWeapon.trackSprite(enemy, 30, 30, true)
+    
     // player = game.add.sprite(700, 0, 'hamster')
-    // walk = player.animations.add('walk')
-    player.animations.play('walk', 15, true)
+    walk = player.animations.add('walk')
 
     // Add Enemy
     // enemy = game.add.sprite(400, 200, 'hilary2')
-    // tween = game.add.tween(enemy)
+    tween = game.add.tween(enemy)
 
     // Multiple Boundaries
     function makeTileSprite(x,y,w,h,image) {
@@ -108,8 +123,8 @@ let Game = {
     waterBoundary2.alpha = 0
 
     // Rock
-    logCheck = game.add.tileSprite(350, 500, 340, 50,'log')
-    logCheck.alpha = 0
+    logCheck = game.add.sprite(370, 450, 'log')
+    // logCheck.alpha = 0
 
     // Treasure
     treasure = game.add.sprite(840, 670, 'treasure')
@@ -118,7 +133,7 @@ let Game = {
     levelUnlock = game.add.sprite(640, 800, 'log')
 
     // Moving enemy
-    // tween.to({ x: 700 }, 1000, 'Linear', true, 0, 20, true).loop(true)
+    tween.to({ x: 700 }, 4000, 'Linear', true, 0, 20, true).loop(true)
     
     // Enable physics   
     game.physics.enable([
@@ -155,6 +170,7 @@ let Game = {
 
     // Log Check
     log.body.collideWorldBounds = true
+    // log.body.immovable = true
     logCheck.body.collideWorldBounds = true
     logCheck.body.immovable = true
 
@@ -174,9 +190,6 @@ let Game = {
     // Have Camera follow
     game.camera.follow(player)
 
-    // Makes sure weapon comes out of enemy
-    weapon.trackSprite(player, 30, 30, true)
-
     // Keys for player movement/actions
     cursors = game.input.keyboard.createCursorKeys()
     fireButton = game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR)
@@ -192,7 +205,7 @@ let Game = {
     game.physics.arcade.collide(player, teleport, this.teleportPlayer, null, this)
     game.physics.arcade.collide(player, teleport2, this.teleportPlayer2, null, this)
     game.physics.arcade.collide(player, boundaries)
-    game.physics.arcade.collide(log, waterBoundary)
+    game.physics.arcade.collide(log, waterBoundary, this.testFunc, null, this)
     game.physics.arcade.collide(player, levelUnlock)
     game.physics.arcade.collide(player, treasure, this.spawnWeapon, null, this)
     game.physics.arcade.collide(player, logCheck, this.checkPlatfrom, null, this)
@@ -203,23 +216,27 @@ let Game = {
     if (cursors.left.isDown) {
       player.body.velocity.x = -300;
       player.animations.play('left')
+      weapon.fireAngle = Phaser.ANGLE_LEFT
     }
 
     else if (cursors.right.isDown) {
       player.body.velocity.x = 300;
       player.animations.play('right')
+      weapon.fireAngle = Phaser.ANGLE_RIGHT
     }
 
     else if (cursors.up.isDown) {
       player.body.velocity.y = -300;
       player.animations.play('up')
+      weapon.fireAngle = Phaser.ANGLE_UP
     }
 
     else if (cursors.down.isDown) {
       player.body.velocity.y = 300;
       player.animations.play('down')
+      weapon.fireAngle = Phaser.ANGLE_DOWN
     }
-
+   
     else if (fireButton.isDown) {
       if (this.enableWeapon) {
         weapon.fire()
@@ -248,10 +265,10 @@ let Game = {
   },
 
   // Move the log
-  moveRock: function (player, log) {
+  moveRock: function (player, logs) {
     this.rockMoved = true
     logCheck.kill()
-    log.reset(log.body.x = 350, log.body.y = 500)      
+    logs.reset(logs.body.x = 370, logs.body.y = 450)
   },
 
   // Check if log has been moved
