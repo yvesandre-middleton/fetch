@@ -49,7 +49,6 @@ let Game = {
     player = game.add.sprite(115, 460, 'hamster')
     enemy = game.add.sprite(150, 500, 'hilary2')
     
-
     // Animations
     player.animations.add('left', [5, 6, 7, 8, 8], 10, true);
     player.animations.add('right', [0, 1, 2, 3, 4], 10, true);
