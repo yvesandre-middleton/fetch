@@ -14,6 +14,7 @@ let time
 let text
 let ninjaLives = 1
 let score = 0
+let bossHealth = 100
 let player
 let bg
 let rec
@@ -55,6 +56,7 @@ let Game = {
     game.load.image('treasure', 'assets/images/treasure.png')
     game.load.image('shuriken', 'assets/images/shuriken.png')
     game.load.image('enemy', 'assets/images/hilary2.png')
+    game.load.image('boss','assets/images/head.png')
     game.load.spritesheet('hamster', 'assets/images/hamster-animation-sheet.png', 37, 45, 5) 
   },
   
@@ -93,12 +95,21 @@ let Game = {
     bullets.setAll('anchor.y', 1)
     bullets.setAll('outOfBoundsKill', true)
     bullets.setAll('checkWorldBounds', true)
-
+    // Add Enemies
     enemies = game.add.group()
     enemies.enableBody = true
     enemies.physicsBodyType = Phaser.Physics.ARCADE
-
+    // Add Enemies function
     this.createEnemies()
+    // Add boss
+    this.bossHealthBar = new HealthBar(this.game, {x: 700, y: 50, width: 120});
+    this.bossHealthBar.setPercent(bossHealth);
+    healthText = game.add.text(this.bossHealthBar.x, this.bossHealthBar.y + 50, "Health ");
+    healthText.fixedToCamera = true
+    healthText.anchor.setTo(0.5)
+    healthText.font = 'Knewave'
+    healthText.fontSize = 40
+    boss = game.add.sprite(800, 900, 'boss')
     
     // Add Weapon
     weapon = game.add.weapon(30, 'shuriken')
@@ -116,7 +127,7 @@ let Game = {
     // player = game.add.sprite(240, 1304, 'hamster')
 
     // Player locations for testing
-    player = game.add.sprite(300, 900, 'hamster')
+    player = game.add.sprite(300, 1200, 'hamster')
     // player = game.add.sprite(115, 460, 'hamster')
     // player = game.add.sprite(700, 0, 'hamster')
     walk = player.animations.add('walk')
