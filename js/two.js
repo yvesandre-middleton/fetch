@@ -23,8 +23,9 @@ let Two = {
     game.add.sprite(202,1074,'river2')
     game.add.sprite(0,325,'cliff1')
     game.add.sprite(264,325,'cliff2')
-    player = game.add.sprite(115, 460, 'hamster')   
-    
+
+    player = game.add.sprite(100,100,'hamster')
+
     
     game.physics.enable([
       player],
