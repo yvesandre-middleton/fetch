@@ -20,24 +20,10 @@ gameOver.prototype = {
     },
 
       restartGame: function() {
+        score = 0
         game.state.start('Menu')
       }
 }
-
-
-  //  create: function() {
-  //   enterKey = game.input.keyboard.addKey(Phaser.KeyCode.ENTER)
-  //   let gameOverDisplay = game.add.text(500, 300, 'GAME OVER')
-  //   gameOverDisplay.fixedToCamera = true
-  //   gameOverDisplay.font = 'Arial'
-  //   gameOverDisplay.fontSize = 50
-  //  },
-
-  //  update: function() {
-  //    if (enterKey.isDown) {
-  //      game.state.start('Menu')
-  //    }
-  // }
 
   
   

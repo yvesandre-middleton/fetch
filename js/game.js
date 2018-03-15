@@ -51,6 +51,7 @@ let Game = {
   },
   
   create: function() {
+    this.resetScore()
     // Set World Bounds
     game.world.setBounds(0, 0, 996, 1304)
 
@@ -326,6 +327,10 @@ let Game = {
     }
   },
 
+  resetScore: function() {
+    score = 0
+  },
+
   updateCounter: function() {
     totalTime++
     time.setText('Time: ' + totalTime);
@@ -366,7 +371,7 @@ let Game = {
       console.log('bossHealth', bossHealth)
       boss.kill()
       weapon.kill()
-      score += 1000
+      score += 500
       bossHealth = 100
       game.state.start('EndGame')
     }
