@@ -12,8 +12,8 @@ let timer
 let totalTime = 0
 let time
 let text
-let ninjaLives = 1
-let score = 0
+let ninjaLives = 3
+let score
 let bossHealth = 100
 let player
 let bg
@@ -66,22 +66,9 @@ let Game = {
 
     // Add Background
     bg = game.add.sprite(0, 0, 'lvl1bg')
-    //player score
-    scoreDisplay = game.add.text(100, 5, "Score: " + `${score}  `)
-    scoreDisplay.fixedToCamera = true
-    scoreDisplay.font = 'Knewave'
-    scoreDisplay.fontSize = 40
-    //player lives
-    ninjaLivesDisplay = game.add.text(100, 45, "Lives: " + `${ninjaLives} `)
-    ninjaLivesDisplay.fixedToCamera = true
-    ninjaLivesDisplay.font = 'Knewave'
-    ninjaLivesDisplay.fontSize = 40
-    // timer display
-    time = game.add.text(100, 95)
-    time.fixedToCamera = true
-    time.font = 'Knewave'
-    time.fontSize = 40
-
+    //Reset Score
+    score = 0
+    
     // Add a Timer
     timer = game.time.create(false);
     timer.loop(1250, this.updateCounter, this)
@@ -109,7 +96,9 @@ let Game = {
     healthText.anchor.setTo(0.5)
     healthText.font = 'Knewave'
     healthText.fontSize = 40
+    // Add Boss
     boss = game.add.sprite(800, 900, 'boss')
+    timer.loop(4000, this.createBossActions, this)
     
     // Add Weapon
     weapon = game.add.weapon(30, 'shuriken')
@@ -127,7 +116,7 @@ let Game = {
     // player = game.add.sprite(240, 1304, 'hamster')
 
     // Player locations for testing
-    player = game.add.sprite(300, 1200, 'hamster')
+    player = game.add.sprite(700, 700, 'hamster')
     // player = game.add.sprite(115, 460, 'hamster')
     // player = game.add.sprite(700, 0, 'hamster')
     walk = player.animations.add('walk')
@@ -185,7 +174,8 @@ let Game = {
     // Enable physics   
     game.physics.enable([
       player, 
-      weapon, 
+      weapon,
+      boss, 
       // enemy, 
       teleport, 
       teleport2, 
@@ -228,6 +218,9 @@ let Game = {
     // Treasure Collision
     treasure.body.collideWorldBounds = true
     treasure.body.immovable = true
+     // Boss Collision
+     boss.body.collideWorldBounds = false
+     boss.body.immovable = true
 
     // Level 2 Unlock
     levelUnlock.body.collideWorldBounds
@@ -242,6 +235,22 @@ let Game = {
     // Keys for player movement/actions
     cursors = game.input.keyboard.createCursorKeys()
     fireButton = game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR)
+
+    //player score
+    scoreDisplay = game.add.text(100, 5, "Score: " + `${score}  `)
+    scoreDisplay.fixedToCamera = true
+    scoreDisplay.font = 'Knewave'
+    scoreDisplay.fontSize = 40
+    //player lives
+    ninjaLivesDisplay = game.add.text(scoreDisplay.x, scoreDisplay.y + 45, "Lives: " + `${ninjaLives} `)
+    ninjaLivesDisplay.fixedToCamera = true
+    ninjaLivesDisplay.font = 'Knewave'
+    ninjaLivesDisplay.fontSize = 40
+    // timer display
+    time = game.add.text(scoreDisplay.x, scoreDisplay.y + 90)
+    time.fixedToCamera = true
+    time.font = 'Knewave'
+    time.fontSize = 40
   },
 
   update: function() {
@@ -250,7 +259,9 @@ let Game = {
     game.physics.arcade.collide(player, log, this.moveRock, null, this)
     game.physics.arcade.collide(player, waterBoundary, this.killPlayer, null, this)
     game.physics.arcade.collide(player, waterBoundary2, this.killPlayer, null, this)
+    game.physics.arcade.collide(player, boss, this.killPlayer, null, this)
     game.physics.arcade.overlap(weapon.bullets, enemies, this.killEnemy, null, this)
+    game.physics.arcade.collide(weapon.bullets, boss, this.killBoss, null, this)
     game.physics.arcade.collide(player, teleport, this.teleportPlayer, null, this)
     game.physics.arcade.collide(player, teleport2, this.teleportPlayer2, null, this)
     game.physics.arcade.collide(player, boundaries)
@@ -292,13 +303,44 @@ let Game = {
     console.log('hey')
   },
 
+  createBossActions: function() {         
+    var tween = game.add.tween(boss).to({x: 500}, 2000, Phaser.Easing.Linear.None,true,0,1000,)
+    var tween1 = game.add.tween(boss).to({angle: 180}, 3000, Phaser.Easing.Quadratic.In, true);
+    var tween2 = game.add.tween(boss).to({angle: 360}, 2000, Phaser.Easing.Quadratic.Out, true);
+    var tween3 = game.add.tween(boss).to({angle: 180}, 3000, Phaser.Easing.Quadratic.InOut, true);
+    var tween4 = game.add.tween(boss).to({angle: 360}, 2000, Phaser.Easing.Quadratic.InOut, true);
+    tween.yoyo(true)
+    tween2.yoyo(true)
+    tween3.yoyo(true)
+    tween4.yoyo(true)
+  },
+
+  killBoss: function(weapon, boss) {
+    score += 200
+    scoreDisplay.text = ('Score: ' + `${score}`)
+    bossHealth -= 40  
+    boss.kill()
+    this.bossHealthBar.setPercent(bossHealth)
+    console.log('bossHealth', bossHealth)
+
+    if (bossHealth < 0) {
+      console.log('bossHealth', bossHealth)
+      boss.kill()
+      weapon.kill()
+      score += 500
+      bossHealth = 100
+      game.state.start('EndGame')
+    }
+    
+  },
+
   createEnemies: function() {
     for(let y = 0; y < 3; y++){
       for(let x = 0; x < 1; x++) {
         let enemy = enemies.create(x*350, y*350, 'enemy')
         enemy.anchor.setTo(0.5, 0.5)
         enemy.body.velocity.x = 0;
-        enemy.body.velocity.y = 0;
+        enemy.body.velocity.y = 0;    
       }
     }
 
@@ -372,6 +414,7 @@ let Game = {
     treasure.kill()
     levelUnlock.kill()
   }
+
 
   // startLevelTwo: function(player, rec) {
   //   this.state.start('Two')

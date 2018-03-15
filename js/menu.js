@@ -8,6 +8,6 @@ let Menu = {
   },
 
   startGame: function() {
-    this.state.start('Game')
+    this.state.start('Game', true, true, {level: 0})
   }
 }
