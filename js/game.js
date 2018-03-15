@@ -12,32 +12,19 @@ let timer
 let totalTime = 0
 let time
 let text
-let ninjaLives = 3
-let score
+let score = 100
 let bossHealth = 100
 let player
+let ninjaLives = 3
 let bg
 let rec
 let cursors
-let weapon = {}
+let weapon
 let fireButton
 let enemy
-let enemies
 let tween
 let boundary
 let walk
-let bullets
-let bulletTime = 0
-
-
-WebFontConfig = {
-  active: function() { 
-      // game.time.events.add(Phaser.Timer.SECOND, createText, this);
-  },
-  google: {
-      families: ["Knewave"]
-  }
-}
 let boundaries
 let teleport
 let teleport2
@@ -45,10 +32,11 @@ let waterBoundary
 let waterBoundary2
 let log
 let levelUnlock
+let facing
+let enemyWeapon
 
 let Game = {
   preload: function() {
-    game.load.script("webfont", "//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js")
     game.load.image('lvl1bg', 'assets/images/lvl1bg.png')
     game.load.image('bg', 'assets/images/bg.png')
     game.load.image('bg2', 'assets/images/bg2.png')
@@ -57,7 +45,9 @@ let Game = {
     game.load.image('shuriken', 'assets/images/shuriken.png')
     game.load.image('enemy', 'assets/images/hilary2.png')
     game.load.image('boss','assets/images/head.png')
-    game.load.spritesheet('hamster', 'assets/images/hamster-animation-sheet.png', 37, 45, 5) 
+    game.load.image('hilary2', 'assets/images/hilary2.png')
+    game.load.image('autoEnemy', 'assets/images/head.png')
+    game.load.spritesheet('hamster', 'assets/images/hamster-animation-sheet.png', 37, 45) 
   },
   
   create: function() {
@@ -67,7 +57,8 @@ let Game = {
     // Add Background
     bg = game.add.sprite(0, 0, 'lvl1bg')
     //Reset Score
-    score = 0
+    let score = 0
+    let ninjaLives = 3
     
     // Add a Timer
     timer = game.time.create(false);
@@ -83,11 +74,13 @@ let Game = {
     bullets.setAll('outOfBoundsKill', true)
     bullets.setAll('checkWorldBounds', true)
     // Add Enemies
-    enemies = game.add.group()
-    enemies.enableBody = true
-    enemies.physicsBodyType = Phaser.Physics.ARCADE
+    autoEnemies = game.add.group()
+    autoEnemies.enableBody = true
+    autoEnemies.physicsBodyType = Phaser.Physics.ARCADE
     // Add Enemies function
-    this.createEnemies()
+    
+    this.createAutoEnemies()
+
     // Add boss
     this.bossHealthBar = new HealthBar(this.game, {x: 700, y: 50, width: 120});
     this.bossHealthBar.setPercent(bossHealth);
@@ -96,10 +89,31 @@ let Game = {
     healthText.anchor.setTo(0.5)
     healthText.font = 'Knewave'
     healthText.fontSize = 40
-    // Add Boss
     boss = game.add.sprite(800, 900, 'boss')
     timer.loop(4000, this.createBossActions, this)
+
+    // Add log, has to be called before player so that
+    // player appears on top
     
+    // Add Player
+    // player = game.add.sprite(240, 1304, 'hamster')
+    
+    // Player locations for testing
+    // player = game.add.sprite(700, 700, 'hamster')
+    log = game.add.sprite(370, 200, 'log')
+    player = game.add.sprite(1000, 500, 'hamster')
+    enemy = game.add.sprite(150, 500, 'hilary2')
+    
+    // Animations
+    player.animations.add('left', [5, 6, 7, 8, 8], 10, true);
+    player.animations.add('right', [0, 1, 2, 3, 4], 10, true);
+    player.animations.add('down', [10, 11, 12, 13, 14], 10, true);
+    player.animations.add('up', [15, 16, 17, 18, 19], 10, true);
+    player.animations.play('walk', 15, true)
+    walk = player.animations.add('walk', [0, 2, 4], 7, true);
+    
+    // PLAYER WEAPON //
+
     // Add Weapon
     weapon = game.add.weapon(30, 'shuriken')
 
@@ -108,23 +122,30 @@ let Game = {
     weapon.bulletSpeed = 200
     weapon.fireRate = 1200
     
-    // Add log, has to be called before player so that
-    // player appears on top
-    log = game.add.tileSprite(350, 280, 340, 50,'log')
+    // Makes sure weapon comes out of enemy
+    weapon.trackSprite(player, 30, 30, false)
     
-    // Add Player
-    // player = game.add.sprite(240, 1304, 'hamster')
+    // ENEMY WEAPON //
+    
+    // Add  Enemy Weapon
+    enemyWeapon = game.add.weapon(30, 'shuriken')
 
     // Player locations for testing
-    player = game.add.sprite(700, 700, 'hamster')
+    // player = game.add.sprite(700, 700, 'hamster')
     // player = game.add.sprite(115, 460, 'hamster')
+    // Weapon Methods
+    enemyWeapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS
+    enemyWeapon.bulletSpeed = 200
+    enemyWeapon.fireRate = 1200
+    enemyWeapon.autofire = true  
+    enemyWeapon.trackSprite(enemy, 30, 30, true)
+    
     // player = game.add.sprite(700, 0, 'hamster')
     walk = player.animations.add('walk')
-    player.animations.play('walk', 15, true)
 
     // Add Enemy
     // enemy = game.add.sprite(400, 200, 'hilary2')
-    // tween = game.add.tween(enemy)
+    tween = game.add.tween(enemy)
 
     // Multiple Boundaries
     function makeTileSprite(x,y,w,h,image) {
@@ -159,8 +180,8 @@ let Game = {
     waterBoundary2.alpha = 0
 
     // Rock
-    logCheck = game.add.tileSprite(350, 500, 340, 50,'log')
-    logCheck.alpha = 0
+    logCheck = game.add.sprite(370, 450, 'log')
+    // logCheck.alpha = 0
 
     // Treasure
     treasure = game.add.sprite(840, 670, 'treasure')
@@ -169,14 +190,14 @@ let Game = {
     levelUnlock = game.add.sprite(640, 800, 'log')
 
     // Moving enemy
-    // tween.to({ x: 700 }, 1000, 'Linear', true, 0, 20, true).loop(true)
+    tween.to({ x: 700 }, 4000, 'Linear', true, 0, 20, true).loop(true)
     
     // Enable physics   
     game.physics.enable([
       player, 
       weapon,
       boss, 
-      // enemy, 
+      enemy,
       teleport, 
       teleport2, 
       boundaries, 
@@ -207,6 +228,7 @@ let Game = {
 
     // Log Check
     log.body.collideWorldBounds = true
+    // log.body.immovable = true
     logCheck.body.collideWorldBounds = true
     logCheck.body.immovable = true
 
@@ -229,9 +251,6 @@ let Game = {
     // Have Camera follow
     game.camera.follow(player)
 
-    // Makes sure weapon comes out of enemy
-    weapon.trackSprite(player, 30, 30, true)
-
     // Keys for player movement/actions
     cursors = game.input.keyboard.createCursorKeys()
     fireButton = game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR)
@@ -252,20 +271,24 @@ let Game = {
     time.font = 'Knewave'
     time.fontSize = 40
   },
-
+  
   update: function() {
     // game.physics.arcade.collide(player, rec, this.startLevelTwo, null, this)
-    game.physics.arcade.collide(player, enemies, this.killPlayer, null, this)
+    game.physics.arcade.overlap(enemyWeapon.bullets, player, this.killPlayer, null, this)
     game.physics.arcade.collide(player, log, this.moveRock, null, this)
     game.physics.arcade.collide(player, waterBoundary, this.killPlayer, null, this)
     game.physics.arcade.collide(player, waterBoundary2, this.killPlayer, null, this)
     game.physics.arcade.collide(player, boss, this.killPlayer, null, this)
-    game.physics.arcade.overlap(weapon.bullets, enemies, this.killEnemy, null, this)
-    game.physics.arcade.collide(weapon.bullets, boss, this.killBoss, null, this)
+    game.physics.arcade.collide(player, enemy, this.killPlayer, null, this)
+    game.physics.arcade.collide(player, autoEnemies, this.killPlayer, null, this)
+    game.physics.arcade.overlap(weapon.bullets, autoEnemies, this.killEnemy, null, this)
+    game.physics.arcade.overlap(weapon.bullets, boss, this.killBoss, null, this)
+    game.physics.arcade.overlap(weapon.bullets, enemy, this.killEnemy, null, this)
     game.physics.arcade.collide(player, teleport, this.teleportPlayer, null, this)
     game.physics.arcade.collide(player, teleport2, this.teleportPlayer2, null, this)
     game.physics.arcade.collide(player, boundaries)
-    game.physics.arcade.collide(log, waterBoundary)
+    game.physics.arcade.collide(log, waterBoundary, this.testFunc, null, this)
+    game.physics.arcade.collide(player, levelUnlock)
     game.physics.arcade.collide(player, treasure, this.spawnWeapon, null, this)
     game.physics.arcade.collide(player, logCheck, this.checkPlatfrom, null, this)
 
@@ -274,20 +297,28 @@ let Game = {
 
     if (cursors.left.isDown) {
       player.body.velocity.x = -300;
+      player.animations.play('left')
+      weapon.fireAngle = Phaser.ANGLE_LEFT
     }
 
     else if (cursors.right.isDown) {
       player.body.velocity.x = 300;
+      player.animations.play('right')
+      weapon.fireAngle = Phaser.ANGLE_RIGHT
     }
 
     else if (cursors.up.isDown) {
       player.body.velocity.y = -300;
+      player.animations.play('up')
+      weapon.fireAngle = Phaser.ANGLE_UP
     }
 
     else if (cursors.down.isDown) {
       player.body.velocity.y = 300;
+      player.animations.play('down')
+      weapon.fireAngle = Phaser.ANGLE_DOWN
     }
-
+   
     else if (fireButton.isDown) {
       if (this.enableWeapon) {
         weapon.fire()
@@ -295,12 +326,19 @@ let Game = {
     }
   },
 
+  updateCounter: function() {
+    totalTime++
+    time.setText('Time: ' + totalTime);
+  },
+
   killEnemy: function(weapon, enemy) {
+    score += 200
+    console.log('score', score)
+    scoreDisplay.setText('Score: ' + `${score}`)
     enemy.kill()
     weapon.kill()
-    score += 100
-    scoreDisplay.text = ('Score: ' + `${score}`)
-    console.log('hey')
+    enemyWeapon.autofire = false
+    console.log('killEnemy')
   },
 
   createBossActions: function() {         
@@ -317,6 +355,7 @@ let Game = {
 
   killBoss: function(weapon, boss) {
     score += 200
+    console.log('score', score)
     scoreDisplay.text = ('Score: ' + `${score}`)
     bossHealth -= 40  
     boss.kill()
@@ -327,56 +366,26 @@ let Game = {
       console.log('bossHealth', bossHealth)
       boss.kill()
       weapon.kill()
-      score += 500
+      score += 1000
       bossHealth = 100
       game.state.start('EndGame')
     }
     
   },
 
-  createEnemies: function() {
+  createAutoEnemies: function() { 
     for(let y = 0; y < 3; y++){
       for(let x = 0; x < 1; x++) {
-        let enemy = enemies.create(x*350, y*350, 'enemy')
-        enemy.anchor.setTo(0.5, 0.5)
-        enemy.body.velocity.x = 0;
-        enemy.body.velocity.y = 0;    
+        let autoEnemy = autoEnemies.create(x*900, y*800, 'autoEnemy')
+        autoEnemy.anchor.setTo(0.5, 0.5)
+        autoEnemy.body.velocity.x = 0
+        autoEnemy.body.velocity.y = 0
+        autoEnemy.body.immovable = true
       }
     }
 
-    var tween = game.add.tween(enemies).to({x: 500}, 2000, Phaser.Easing.Linear.None,true,0,1000,)
+    var tween = game.add.tween(autoEnemies).to({x: 500}, 4000, Phaser.Easing.Linear.None,true,0,1000,)
     tween.yoyo(true)
-  },
-
-  // shootBullet: function() {
-  //   if (this.time.now > bulletTime) {
-  //     bullet = bullets.getFirstExists(false)
-  //     if (bullet) {
-  //       bullet.reset(this.enemy.x, this.enemy.y)
-
-  //       bullet.body.velocity.y = -600
-
-  //       bulletTime = this.time.now + 900
-  //     }
-  //   }
-  // },
-
-  killPlayer: function(player, enemy) {
-    enemy.body.velocity.x = 0;
-    enemy.body.velocity.y = 0;
-    player.kill()
-    ninjaLives--
-    ninjaLivesDisplay.text = ('Lives: ' + `${ninjaLives}`)
-    if (ninjaLives === 0) {
-      score = 0
-      ninjaLives = 3
-      game.state.start('GameOver')
-    } else {
-      player.reset(player.body.velocity.x = 0, player.body.velocity.y = 0)
-    }  
-    console.log("ninja Lives", (ninjaLives))
-    player.reset(player.body.velocity.x = 240, player.body.velocity.y = 1304)
-    console.log('hey')
   },
 
   teleportPlayer: function(player, teleport) {
@@ -388,21 +397,12 @@ let Game = {
   },
 
   // Move the log
-  moveRock: function (player, log) {
+  moveRock: function (player, logs) {
     this.rockMoved = true
     logCheck.kill()
-    log.reset(log.body.x = 350, log.body.y = 500)      
+    logs.reset(logs.body.x = 370, logs.body.y = 450)
   },
 
-  startLevelTwo: function(player, rec) {
-    this.state.start('Two')
-  },
-
-  updateCounter: function() {
-    totalTime++
-    time.setText('Time: ' + totalTime)
-  },
-  
   // Check if log has been moved
   checkPlatfrom: function(player, logCheck) {
     player.reset(player.body.velocity.x = 240, player.body.velocity.y = 1304)
@@ -413,7 +413,22 @@ let Game = {
     this.enableWeapon = true
     treasure.kill()
     levelUnlock.kill()
-  }
+  },
+
+  killPlayer: function(player, enemy) {
+    console.log("ninja lives", ninjaLives)
+    player.kill()
+    ninjaLives-= 1
+    console.log("ninja lives", ninjaLives)
+    ninjaLivesDisplay.text = ('Lives: ' + `${ninjaLives}`)
+    if (ninjaLives == 0) {
+      ninjaLives = 3
+      score = 0
+      game.state.start('GameOver')
+    }
+    player.reset(player.body.velocity.x = 240, player.body.velocity.y = 1304)
+    console.log('killplayer')
+  },
 
 
   // startLevelTwo: function(player, rec) {
