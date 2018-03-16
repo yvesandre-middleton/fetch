@@ -24,9 +24,11 @@ let Game = {
     game.load.image('bg2', 'assets/images/bg2.png')
     game.load.image('log', 'assets/images/log1.png')
     game.load.image('treasure', 'assets/images/treasure.png')
+    game.load.image('treasure2', 'assets/images/treasure2.png')
     game.load.image('shuriken', 'assets/images/shuriken.png')
     game.load.image('hilary2', 'assets/images/hilary2.png')
-    game.load.spritesheet('hamster', 'assets/images/hamster-animation-sheet.png', 37, 45) 
+    game.load.image('weaponText', 'assets/images/weapon-text.png')
+    game.load.spritesheet('hamster', 'assets/images/hamster-animation-sheet.png', 37, 45, 5) 
   },
   
   create: function() {
@@ -34,6 +36,8 @@ let Game = {
     // Set World Bounds
     initWorldBounds(0, 0, 996, 1304)
 
+
+  
     // Add Background
     bg = makeSprite(0, 0, 'lvl1bg')
 
@@ -234,6 +238,14 @@ let Game = {
     this.enableWeapon = true
     treasure.kill()
     levelUnlock.kill()
+    game.add.sprite(840, 670, 'treasure2')
+    let weaponText = game.add.sprite(740, 530, 'weaponText')
+    // weaponText.anchor.setTo(0.5, 0.5)
+    weaponText.alpha = 1
+    game.add.tween(weaponText).to( { alpha: 0 }, 7000, Phaser.Easing.Linear.None, true)
+    
+
+    // game.add.sprite(800,550,'weaponText')
   }
 
   // startLevelTwo: function(player, rec) {
