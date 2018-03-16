@@ -6,9 +6,6 @@ endGame.prototype = {
 
   create: function() {
       let playerName = prompt("Please enter username")
-      if (playerName == '') {
-        playerName == 'Player'
-      }
       let timeBonus = 0
       let livesBonus = ninjaLives * 100
       if (totalTime > 50) {
