@@ -46,8 +46,8 @@ HealthBar.prototype.mergeWithDefaultConfiguration = function(newConfig) {
             color: '#FEFF03'
         },
         animationDuration: 200,
-        flipped: false,
-        isFixedToCamera: false
+        flipped: true,
+        isFixedToCamera: true
     };
 
     return mergeObjetcs(defaultConfig, newConfig);

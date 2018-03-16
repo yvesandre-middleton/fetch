@@ -1,4 +1,4 @@
-let game = new Phaser.Game(1000, 800, '')
+let game = new Phaser.Game(800, 600, '')
 game.state.add('Menu', Menu)
 game.state.add('Game', Game)
 game.state.add('Two', Two)
