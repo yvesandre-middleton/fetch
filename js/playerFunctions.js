@@ -70,6 +70,8 @@ function playerMovement(player, weapon) {
     player.body.velocity.y = 300;
     player.animations.play('down')
     weapon.fireAngle = Phaser.ANGLE_DOWN
+  } else {
+    player.animations.play('down')
   }
 }
 

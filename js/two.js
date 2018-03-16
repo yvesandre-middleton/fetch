@@ -36,13 +36,17 @@ let Two = {
     game.load.image('cliff3', 'assets/images/cliff3-1665x1156.png')
     
     game.load.spritesheet('hamster', 'assets/images/hamster-animation-sheet.png', 37, 45) 
+    game.load.spritesheet('red-hamster-left', 'assets/images/hamster-left-red-animation-sheet.png', 37, 45) 
+    game.load.spritesheet('red-hamster-front', 'assets/images/hamster-front-red-animation-sheet.png', 37, 45) 
+    game.load.spritesheet('red-hamster-back', 'assets/images/hamster-back-red-animation-sheet.png', 37, 45) 
   },
   
   create: function() {
     initWorldBounds(0, 0, 2750, 1500, 'bg')
     game.add.image(0,0,'bg')
 
-    player = makeSprite(220, 1350, 'hamster')
+    // player = makeSprite(220, 1350, 'hamster')
+    player = makeSprite(1200, 0, 'hamster')
     initPlayerAnimations(player)
      
     // Add a Timer
@@ -51,11 +55,18 @@ let Two = {
      timer.start()
 
     // Add Enemies
-    enemy = makeSprite(300, 0, 'hamster')
-    enemy2 = makeSprite(1400, 10, 'hamster')
-    enemy3 = makeSprite(1870, 1450, 'hamster')
-    enemy4 = makeSprite(2380, 1430, 'hamster')
-    enemy5 = makeSprite(2700, 870, 'hamster')
+    enemy = makeSprite(300, 0, 'red-hamster-front')
+    enemy2 = makeSprite(1400, 10, 'red-hamster-left')
+    enemy3 = makeSprite(1870, 1450, 'red-hamster-left')
+    enemy4 = makeSprite(2380, 1430, 'red-hamster-back')
+    enemy5 = makeSprite(2700, 870, 'red-hamster-front')
+
+    // Enemy Animations
+    enemy.animations.add('down', [0, 1, 2, 3, 4], 10, true);
+    enemy2.animations.add('down', [0, 1, 2, 3, 4], 10, true);
+    enemy3.animations.add('down', [0, 1, 2, 3, 4], 10, true);
+    enemy4.animations.add('down', [0, 1, 2, 3, 4], 10, true);
+    enemy5.animations.add('down', [0, 1, 2, 3, 4], 10, true);
 
     // Add Enemy Weapon
     enemyWeapon = game.add.weapon(30, 'shuriken')
@@ -174,7 +185,7 @@ let Two = {
     // Second Log Move
     collisionGroup(log2)
 
-    // idk yet
+    // Second Log Replacement
     collisionGroup(someLog2)
     someLog2.body.immovable = true
 
@@ -189,7 +200,7 @@ let Two = {
     gameControls()
 
     // Player score
-    scoreDisplay = game.add.text(100, 5, "Score: " + `${score}  `)
+    scoreDisplay = game.add.text(100, 5, "Score: " + `${score}`)
     scoreDisplay.fixedToCamera = true
     scoreDisplay.font = 'Knewave'
     scoreDisplay.fontSize = 40
@@ -208,6 +219,12 @@ let Two = {
   },
     
   update: function() {
+    enemy.animations.play('down', 15, true)
+    enemy2.animations.play('down', 15, true)
+    enemy3.animations.play('down', 15, true)
+    enemy4.animations.play('down', 15, true)
+    enemy5.animations.play('down', 15, true)
+
     game.physics.arcade.collide(player, boundaries)
 
     game.physics.arcade.collide(player, enemy, this.killPlayerCollide, null, this)
