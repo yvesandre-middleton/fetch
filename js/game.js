@@ -36,7 +36,7 @@ let Game = {
     // Set World Bounds
     initWorldBounds(0, 0, 996, 1304)
      
-    // Add a Timer
+    // Add Timer
     timer = game.time.create(false);
     timer.loop(1250, this.updateCounter, this)
     timer.start()
