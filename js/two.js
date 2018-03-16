@@ -191,12 +191,12 @@ let Two = {
     gameControls()
 
     //player score
-    scoreDisplay = game.add.text(100, 5, "Score: " + `${score}  `)
+    scoreDisplay = game.add.text(25, 5, "Score: " + `${score}  `, { fill: 'white'})
     scoreDisplay.fixedToCamera = true
     scoreDisplay.font = 'Knewave'
     scoreDisplay.fontSize = 40
     //player lives
-    ninjaLivesDisplay = game.add.text(scoreDisplay.x, scoreDisplay.y + 45, "Lives: " + `${ninjaLives} `)
+    ninjaLivesDisplay = game.add.text(scoreDisplay.x, scoreDisplay.y + 45, "Lives: " + `${ninjaLives} `, { fill: 'white'})
     ninjaLivesDisplay.fixedToCamera = true
     ninjaLivesDisplay.font = 'Knewave'
     ninjaLivesDisplay.fontSize = 40
@@ -205,6 +205,7 @@ let Two = {
     time.fixedToCamera = true
     time.font = 'Knewave'
     time.fontSize = 40
+    time.addColor('white', 0);
   },
     
   update: function() {
@@ -243,37 +244,63 @@ let Two = {
   killPlayer: function(player, enemyWeapon) {
     player.reset(player.body.velocity.x = 220, player.body.velocity.y = 1350)
     enemyWeapon.kill()
+    ninjaLives-= 1
+    console.log("ninja lives", ninjaLives)
+    ninjaLivesDisplay.text = ('Lives: ' + `${ninjaLives}`)
+    if (ninjaLives == 0) {
+      ninjaLives = 3
+      score = 0
+      game.state.start('GameOver')
+    }
   },
 
   killPlayerCollide: function(player, enemy) {
     player.reset(player.body.velocity.x = 220, player.body.velocity.y = 1350)
+    ninjaLives-= 1
+    console.log("ninja lives", ninjaLives)
+    ninjaLivesDisplay.text = ('Lives: ' + `${ninjaLives}`)
+    if (ninjaLives == 0) {
+      ninjaLives = 3
+      score = 0
+      game.state.start('GameOver')
+    }
   },
   
   killEnemy: function(weapon, enemy) {
+    score += 200
+    scoreDisplay.setText('Score: ' + `${score}`)
     enemy.kill()
     weapon.kill()
     fireOff(enemyWeapon)
   },
 
   killEnemy2: function(weapon, enemy2) {
+    score += 200
+    scoreDisplay.setText('Score: ' + `${score}`)
     enemy2.kill()
     weapon.kill()
     fireOff(enemyWeapon2)
   },
 
   killEnemy3: function(weapon, enemy3) {
+    score += 200
+    scoreDisplay.setText('Score: ' + `${score}`)
     enemy3.kill()
     weapon.kill()
     fireOff(enemyWeapon3)
   },
 
   killEnemy4: function(weapon, enemy4) {
+    score += 200
+    scoreDisplay.setText('Score: ' + `${score}`)
     enemy4.kill()
     weapon.kill()
     fireOff(enemyWeapon4)
   },
 
   killEnemy5: function(weapon, enemy5) {
+    score += 200
+    scoreDisplay.setText('Score: ' + `${score}`)
     enemy5.kill()
     weapon.kill()
     fireOff(enemyWeapon5)

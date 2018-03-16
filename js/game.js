@@ -60,22 +60,19 @@ let Game = {
     timer.start()
     // Add Background
     bg = makeSprite(0, 0, 'lvl1bg')
-
-    // // Health Bar
-    // let barConfig = {x: 200, y: 100};
-    // bossHealthBar = new HealthBar(this.game, barConfig);
+    // Add Treasure Chest
+    treasure = makeSprite(840, 670, 'treasure')
 
     //Add boss
-    this.bossHealthBar = new HealthBar(this.game, {x: 700, y: 50, width: 120});
-    this.bossHealthBar.setPercent(bossHealth);
-    healthText = game.add.text(this.bossHealthBar.x, this.bossHealthBar.y + 50, "Health ");
-    healthText.fixedToCamera = true
-    healthText.anchor.setTo(0.5)
-    healthText.font = 'Knewave'
-    healthText.fontSize = 40
-    boss = game.add.sprite(800, 900, 'boss')
-    // boss.body.immovable = true
-    timer.loop(4000, this.createBossActions, this)
+    // this.bossHealthBar = new HealthBar(this.game, {x: 700, y: 50, width: 120});
+    // this.bossHealthBar.setPercent(bossHealth);
+    // healthText = game.add.text(this.bossHealthBar.x, this.bossHealthBar.y + 50, "Health ");
+    // healthText.fixedToCamera = true
+    // healthText.anchor.setTo(0.5)
+    // healthText.font = 'Knewave'
+    // healthText.fontSize = 40
+    // boss = game.add.sprite(800, 900, 'boss')
+    // timer.loop(4000, this.createBossActions, this)
 
 
     // Add log, has to be called before player so that
@@ -89,7 +86,7 @@ let Game = {
     // log = game.add.sprite(370, 200, 'log')
 
     log = makeSprite(370, 200, 'log')
-    player = makeSprite(700, 460, 'hamster')
+    player = makeSprite(240, 1304, 'hamster')
     enemy = makeSprite(150, 500, 'hilary2')
 
     // Create
@@ -130,7 +127,7 @@ let Game = {
     boundaries.add(makeWorldSprite(0, 530, 134, 780, 'bg'))
 
     //Exit Boundary
-    boundaries.add(makeWorldSprite(685, 1090, 200, 220, 'bg'))
+    levelTwoExit = boundaries.add(makeWorldSprite(685, 1090, 200, 220, 'bg'))
     boundaries.add(makeWorldSprite(996, 425, 100, 880, 'bg'))
 
     // Makes images transparent
@@ -152,9 +149,6 @@ let Game = {
     logCheck = makeSprite(370, 450, 'log')
     alpha(logCheck)
 
-    // Treasure
-    treasure = makeSprite(840, 670, 'treasure')
-
     // Level Unlock
     levelUnlock = makeSprite(640, 800, 'log')
 
@@ -169,13 +163,12 @@ let Game = {
     bullets.setAll('anchor.y', 1)
     bullets.setAll('outOfBoundsKill', true)
     bullets.setAll('checkWorldBounds', true)
-    // Add Enemies
-    autoEnemies = game.add.group()
-    autoEnemies.enableBody = true
-    autoEnemies.physicsBodyType = Phaser.Physics.ARCADE
+    // // Add Enemies
+    // autoEnemies = game.add.group()
+    // autoEnemies.enableBody = true
+    // autoEnemies.physicsBodyType = Phaser.Physics.ARCADE
     // Add Enemies function
-    
-    this.createAutoEnemies()
+    // this.createAutoEnemies()
     
     // Enable physics   
     game.physics.enable([
@@ -183,7 +176,7 @@ let Game = {
       weapon,
       enemyWeapon, 
       enemy, 
-      boss,
+      // boss,
       teleport, 
       teleport2, 
       boundaries, 
@@ -196,7 +189,7 @@ let Game = {
 
 
       //REFACTOR
-    boss.body.immovable = true
+    // boss.body.immovable = true
       
 
     // Make sure player can't leave canvas view
@@ -231,12 +224,12 @@ let Game = {
     gameControls()
 
     //player score
-    scoreDisplay = game.add.text(100, 5, "Score: " + `${score}  `)
+    scoreDisplay = game.add.text(25, 5, "Score: " + `${score}  `, { fill: 'white'})
     scoreDisplay.fixedToCamera = true
     scoreDisplay.font = 'Knewave'
     scoreDisplay.fontSize = 40
     //player lives
-    ninjaLivesDisplay = game.add.text(scoreDisplay.x, scoreDisplay.y + 45, "Lives: " + `${ninjaLives} `)
+    ninjaLivesDisplay = game.add.text(scoreDisplay.x, scoreDisplay.y + 45, "Lives: " + `${ninjaLives} `, { fill: 'white'})
     ninjaLivesDisplay.fixedToCamera = true
     ninjaLivesDisplay.font = 'Knewave'
     ninjaLivesDisplay.fontSize = 40
@@ -245,10 +238,11 @@ let Game = {
     time.fixedToCamera = true
     time.font = 'Knewave'
     time.fontSize = 40
+    time.addColor('white', 0);
   },
   
   update: function() {
-    // game.physics.arcade.collide(player, rec, this.startLevelTwo, null, this)
+    game.physics.arcade.collide(player, levelTwoExit, this.startLevelTwo, null, this)
     // game.physics.arcade.collide(player, enemy, this.killPlayer, null, this)
     game.physics.arcade.collide(player, log, this.moveLog, null, this)
     game.physics.arcade.collide(player, waterBoundaries, this.killPlayer, null, this)
@@ -262,11 +256,11 @@ let Game = {
     game.physics.arcade.collide(player, logCheck, this.checkPlatfrom, null, this)
 
     game.physics.arcade.overlap(enemyWeapon.bullets, player, this.killPlayer, null, this)
-    game.physics.arcade.collide(player, boss, this.killPlayer, null, this)
+    // game.physics.arcade.collide(player, boss, this.killPlayer, null, this)
     // game.physics.arcade.collide(player, enemy, this.killPlayer, null, this)
-    game.physics.arcade.collide(player, autoEnemies, this.killPlayer, null, this)
-    game.physics.arcade.collide(weapon.bullets, autoEnemies, this.killEnemy, null, this)
-    game.physics.arcade.collide(weapon.bullets, boss, this.killBoss, null, this)
+    // game.physics.arcade.collide(player, autoEnemies, this.killPlayer, null, this)
+    // game.physics.arcade.collide(weapon.bullets, autoEnemies, this.killEnemy, null, this)
+    // game.physics.arcade.collide(weapon.bullets, boss, this.killBoss, null, this)
     game.physics.arcade.overlap(weapon.bullets, enemy, this.killEnemy, null, this)
     
 
@@ -331,7 +325,6 @@ let Game = {
 
   killEnemy: function(weapon, enemy) {
     score += 200
-    console.log('score', score)
     scoreDisplay.setText('Score: ' + `${score}`)
     enemy.kill()
     weapon.kill()
@@ -339,53 +332,53 @@ let Game = {
     console.log('killEnemy')
   },
 
-  createBossActions: function() {         
-    var tween = game.add.tween(boss).to({x: 500}, 2000, Phaser.Easing.Linear.None,true,0,1000,)
-    var tween1 = game.add.tween(boss).to({angle: 180}, 3000, Phaser.Easing.Quadratic.In, true);
-    var tween2 = game.add.tween(boss).to({angle: 360}, 2000, Phaser.Easing.Quadratic.Out, true);
-    var tween3 = game.add.tween(boss).to({angle: 180}, 3000, Phaser.Easing.Quadratic.InOut, true);
-    var tween4 = game.add.tween(boss).to({angle: 360}, 2000, Phaser.Easing.Quadratic.InOut, true);
-    tween.yoyo(true)
-    tween2.yoyo(true)
-    tween3.yoyo(true)
-    tween4.yoyo(true)
-  },
+  // createBossActions: function() {         
+  //   var tween = game.add.tween(boss).to({x: 500}, 2000, Phaser.Easing.Linear.None,true,0,1000,)
+  //   var tween1 = game.add.tween(boss).to({angle: 180}, 3000, Phaser.Easing.Quadratic.In, true);
+  //   var tween2 = game.add.tween(boss).to({angle: 360}, 2000, Phaser.Easing.Quadratic.Out, true);
+  //   var tween3 = game.add.tween(boss).to({angle: 180}, 3000, Phaser.Easing.Quadratic.InOut, true);
+  //   var tween4 = game.add.tween(boss).to({angle: 360}, 2000, Phaser.Easing.Quadratic.InOut, true);
+  //   tween.yoyo(true)
+  //   tween2.yoyo(true)
+  //   tween3.yoyo(true)
+  //   tween4.yoyo(true)
+  // },
 
-  killBoss: function(weapon, boss) {
-    score += 200
-    console.log('score', score)
-    scoreDisplay.text = ('Score: ' + `${score}`)
-    bossHealth -= 40  
-    boss.kill()
-    this.bossHealthBar.setPercent(bossHealth)
-    console.log('bossHealth', bossHealth)
+  // killBoss: function(weapon, boss) {
+  //   score += 200
+  //   console.log('score', score)
+  //   scoreDisplay.text = ('Score: ' + `${score}`)
+  //   bossHealth -= 40  
+  //   boss.kill()
+  //   this.bossHealthBar.setPercent(bossHealth)
+  //   console.log('bossHealth', bossHealth)
 
-    if (bossHealth < 0) {
-      console.log('bossHealth', bossHealth)
-      boss.kill()
-      weapon.kill()
-      score += 500
-      bossHealth = 100
-      game.state.start('EndGame')
-    }
+  //   if (bossHealth < 0) {
+  //     console.log('bossHealth', bossHealth)
+  //     boss.kill()
+  //     weapon.kill()
+  //     score += 500
+  //     bossHealth = 100
+  //     game.state.start('EndGame')
+  //   }
     
-  },
+  // },
 
-  createAutoEnemies: function() { 
-    for(let y = 0; y < 3; y++){
-      for(let x = 0; x < 1; x++) {
-        let autoEnemy = autoEnemies.create(x*900, y*800, 'autoEnemy')
-        autoEnemy.anchor.setTo(0.5, 0.5)
-        autoEnemy.body.velocity.x = 0
-        autoEnemy.body.velocity.y = 0
-        autoEnemy.body.immovable = true
-      }
-    }
+  // createAutoEnemies: function() { 
+  //   for(let y = 0; y < 3; y++){
+  //     for(let x = 0; x < 1; x++) {
+  //       let autoEnemy = autoEnemies.create(x*900, y*800, 'autoEnemy')
+  //       autoEnemy.anchor.setTo(0.5, 0.5)
+  //       autoEnemy.body.velocity.x = 0
+  //       autoEnemy.body.velocity.y = 0
+  //       autoEnemy.body.immovable = true
+  //     }
+  //   }
 
-    var tween = game.add.tween(autoEnemies).to({x: 500}, 4000, Phaser.Easing.Linear.None,true,0,1000,)
-    tween.yoyo(true)
+  //   var tween = game.add.tween(autoEnemies).to({x: 500}, 4000, Phaser.Easing.Linear.None,true,0,1000,)
+  //   tween.yoyo(true)
 
-  },
+  // },
 
   killPlayer: function(player, enemy) {
     console.log("ninja lives", ninjaLives)
@@ -439,12 +432,10 @@ let Game = {
     // weaponText.anchor.setTo(0.5, 0.5)
     weaponText.alpha = 1
     game.add.tween(weaponText).to( { alpha: 0 }, 7000, Phaser.Easing.Linear.None, true)
-    
-
     // game.add.sprite(800,550,'weaponText')
-  }
+  },
 
-  // startLevelTwo: function(player, rec) {
-  //   this.state.start('Two')
-  // }
+  startLevelTwo: function(player, levelTwoExit) {
+    this.state.start('Two')
+  }
 }
