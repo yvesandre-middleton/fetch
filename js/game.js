@@ -47,20 +47,16 @@ let Game = {
     game.load.image('boss','assets/images/head.png')
     game.load.image('hilary2', 'assets/images/hilary2.png')
     game.load.image('autoEnemy', 'assets/images/head.png')
-    game.load.spritesheet('hamster', 'assets/images/hamster-animation-sheet.png', 37, 45) 
+    game.load.spritesheet('hamster', 'assets/images/hamster-animation-sheet.png', 37, 45)
   },
   
   create: function() {
     this.resetScore()
     // Set World Bounds
     game.world.setBounds(0, 0, 996, 1304)
-
     // Add Background
     bg = game.add.sprite(0, 0, 'lvl1bg')
-    //Reset Score
-    let score = 0
-    let ninjaLives = 3
-    
+
     // Add a Timer
     timer = game.time.create(false);
     timer.loop(1250, this.updateCounter, this)
@@ -329,6 +325,7 @@ let Game = {
 
   resetScore: function() {
     score = 0
+    totalTime = 0
   },
 
   updateCounter: function() {
