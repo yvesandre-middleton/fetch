@@ -1,16 +1,4 @@
-// let Menu = {
-//   preload: function() {
-//     game.load.image('titleScreen', 'assets/images/titlescreen.png')
-//   },
 
-//   create: function() {
-//     this.add.button(0,0, 'menu', this.startGame, this)
-//   },
-
-//   startGame: function() {
-//     this.state.start('Game', true, true, {level: 0})
-//   }
-// }
 let max = 0
   let front_emitter;
   let mid_emitter;
