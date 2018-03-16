@@ -44,6 +44,10 @@ let Two = {
 
     player = makeSprite(220, 1350, 'hamster')
     initPlayerAnimations(player)
+     // Add a Timer
+     timer = game.time.create(false);
+     timer.loop(1250, this.updateCounter, this)
+     timer.start()
 
     // Add Enemies
     enemy = makeSprite(300, 0, 'hamster')
@@ -185,6 +189,22 @@ let Two = {
     // Main Character Controls / View
     camera(player)
     gameControls()
+
+    //player score
+    scoreDisplay = game.add.text(100, 5, "Score: " + `${score}  `)
+    scoreDisplay.fixedToCamera = true
+    scoreDisplay.font = 'Knewave'
+    scoreDisplay.fontSize = 40
+    //player lives
+    ninjaLivesDisplay = game.add.text(scoreDisplay.x, scoreDisplay.y + 45, "Lives: " + `${ninjaLives} `)
+    ninjaLivesDisplay.fixedToCamera = true
+    ninjaLivesDisplay.font = 'Knewave'
+    ninjaLivesDisplay.fontSize = 40
+    // timer display
+    time = game.add.text(scoreDisplay.x, scoreDisplay.y + 90)
+    time.fixedToCamera = true
+    time.font = 'Knewave'
+    time.fontSize = 40
   },
     
   update: function() {
@@ -284,5 +304,10 @@ let Two = {
     game.time.events.add(500, () => {
       someLog2.alpha = true
     })
+  },
+
+  updateCounter: function() {
+    totalTime++
+    time.setText('Time: ' + totalTime);
   }
 }
