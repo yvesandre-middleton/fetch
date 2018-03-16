@@ -19,7 +19,7 @@ let Game = {
     game.load.image('lvl1bg', 'assets/images/lvl1bg.png')
     game.load.image('bg', 'assets/images/bg.png')
     game.load.image('bg2', 'assets/images/bg2.png')
-    game.load.image('log', 'assets/images/log1.png')
+    game.load.image('log', 'assets/images/movable-log-lvl1-376x297.png')
     game.load.image('treasure', 'assets/images/treasure.png')
     game.load.image('treasure2', 'assets/images/treasure2.png')
     game.load.image('shuriken', 'assets/images/shuriken.png')
@@ -56,8 +56,8 @@ let Game = {
     timer.loop(4000, this.createBossActions, this)
 
     // Add Sprites
-    log = makeSprite(370, 200, 'log')
-    player = makeSprite(250, 1304, 'hamster')
+    log = makeSprite(376, 297, 'log')
+    player = makeSprite(200, 0, 'hamster')
     enemy = makeSprite(150, 500, 'hilary2')
     
     // Animations  
@@ -94,14 +94,14 @@ let Game = {
     // Water Boundary
     waterBoundaries = game.add.group()
     waterBoundaries.add(makeWaterSprite(385, 600, 300, 750, 'bg'))
-    waterBoundaries.add(makeWaterSprite(385, 420, 300, 70, 'bg'))
+    waterBoundaries.add(makeWaterSprite(385, 420, 300, 60, 'bg'))
     alpha(waterBoundaries)
 
     // Log
     logCheck = makeSprite(370, 450, 'log')
     alpha(logCheck)
 
-    someLog = makeSprite(370, 450, 'log')
+    someLog = makeSprite(376, 500, 'log')
     alpha(someLog)
 
     // Treasure
@@ -306,12 +306,12 @@ let Game = {
 
   teleportPlayer: function(player, teleport) {
     player.kill()
-    timeDelay(1000, player, 140, 280)
+    timeDelay(500, player, 140, 280)
   },
 
   teleportPlayer2: function(player, teleport) {
     player.kill()
-    timeDelay(1000, player, 140, 460)
+    timeDelay(500, player, 140, 460)
   },
 
   // Move the log
