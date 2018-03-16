@@ -56,7 +56,6 @@ let Game = {
     game.world.setBounds(0, 0, 996, 1304)
     // Add Background
     bg = game.add.sprite(0, 0, 'lvl1bg')
-
     // Add a Timer
     timer = game.time.create(false);
     timer.loop(1250, this.updateCounter, this)

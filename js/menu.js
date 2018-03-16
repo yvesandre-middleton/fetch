@@ -68,6 +68,7 @@ let Menu = {
     mid_emitter.start(false, 12000, 40);
     front_emitter.start(false, 6000, 1000);
 
+    game.input.onDown.add(this.restartGame, this)
   },
 
   update: function() {
@@ -110,8 +111,8 @@ let Menu = {
     particle.body.velocity.x = max - Math.floor(Math.random() * 30);
   },
 
-  startGame: function() {
-    this.state.start('Game', true, true, {level: 0})
+  restartGame: function() {
+    game.state.start('Game')
   }
 
 }
