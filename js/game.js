@@ -57,7 +57,7 @@ let Game = {
 
     // Add Sprites
     log = makeSprite(370, 200, 'log')
-    player = makeSprite(700, 460, 'hamster')
+    player = makeSprite(250, 1304, 'hamster')
     enemy = makeSprite(150, 500, 'hilary2')
     
     // Animations  
