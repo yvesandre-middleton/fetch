@@ -41,11 +41,13 @@ let Game = {
     game.load.image('bg2', 'assets/images/bg2.png')
     game.load.image('log', 'assets/images/log1.png')
     game.load.image('treasure', 'assets/images/treasure.png')
+    game.load.image('treasure2', 'assets/images/treasure2.png')
     game.load.image('shuriken', 'assets/images/shuriken.png')
     game.load.image('hilary2', 'assets/images/hilary2.png')
     game.load.image('autoEnemy', 'assets/images/head.png')
     game.load.image('boss', 'assets/images/head.png')
     game.load.spritesheet('hamster', 'assets/images/hamster-animation-sheet.png', 37, 45)
+    game.load.image('weaponText', 'assets/images/weapon-text.png') 
   },
   
   create: function() {
@@ -72,7 +74,9 @@ let Game = {
     healthText.font = 'Knewave'
     healthText.fontSize = 40
     boss = game.add.sprite(800, 900, 'boss')
+    // boss.body.immovable = true
     timer.loop(4000, this.createBossActions, this)
+
 
     // Add log, has to be called before player so that
     // player appears on top
@@ -189,6 +193,11 @@ let Game = {
       treasure,
       levelUnlock], 
       Phaser.Physics.ARCADE)
+
+
+      //REFACTOR
+    boss.body.immovable = true
+      
 
     // Make sure player can't leave canvas view
     collision(player)
@@ -425,6 +434,14 @@ let Game = {
     this.enableWeapon = true
     treasure.kill()
     levelUnlock.kill()
+    game.add.sprite(840, 670, 'treasure2')
+    let weaponText = game.add.sprite(740, 530, 'weaponText')
+    // weaponText.anchor.setTo(0.5, 0.5)
+    weaponText.alpha = 1
+    game.add.tween(weaponText).to( { alpha: 0 }, 7000, Phaser.Easing.Linear.None, true)
+    
+
+    // game.add.sprite(800,550,'weaponText')
   }
 
   // startLevelTwo: function(player, rec) {
