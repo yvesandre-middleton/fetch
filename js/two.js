@@ -44,7 +44,8 @@ let Two = {
 
     player = makeSprite(220, 1350, 'hamster')
     initPlayerAnimations(player)
-     // Add a Timer
+     
+    // Add a Timer
      timer = game.time.create(false);
      timer.loop(1250, this.updateCounter, this)
      timer.start()
@@ -133,9 +134,6 @@ let Two = {
     boundaries.add(makeSprite(0, 325, 'cliff1'))
     boundaries.add(makeSprite(264, 325, 'cliff2'))
     boundaries.add(makeSprite(1665, 1156, 'cliff3'))
-
-    // boundaries.add(makeSprite(139, 1226, 'river1'))
-    // boundaries.add(makeSprite(202, 1074, 'river2'))
     
     boundaries.add(makeSprite(656, 489, 'water1'))
     boundaries.add(makeSprite(656, 900, 'water2'))
@@ -190,17 +188,19 @@ let Two = {
     camera(player)
     gameControls()
 
-    //player score
+    // Player score
     scoreDisplay = game.add.text(100, 5, "Score: " + `${score}  `)
     scoreDisplay.fixedToCamera = true
     scoreDisplay.font = 'Knewave'
     scoreDisplay.fontSize = 40
-    //player lives
+    
+    // Player lives
     ninjaLivesDisplay = game.add.text(scoreDisplay.x, scoreDisplay.y + 45, "Lives: " + `${ninjaLives} `)
     ninjaLivesDisplay.fixedToCamera = true
     ninjaLivesDisplay.font = 'Knewave'
     ninjaLivesDisplay.fontSize = 40
-    // timer display
+    
+    // Timer display
     time = game.add.text(scoreDisplay.x, scoreDisplay.y + 90)
     time.fixedToCamera = true
     time.font = 'Knewave'
