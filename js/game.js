@@ -324,6 +324,13 @@ let Game = {
     timeDelay(1000, player, 140, 460)
   },
 
+  fadeOutLog: function() {
+    game.time.events.add(1000, function() {
+      game.add.tween(levelUnlock).to({alpha: 0}, 1500, Phaser.Easing.Linear.None, true)
+    }, this)
+      console.log('test')
+  },
+
   // Move the log
   moveLog: function (player, logs) {
     game.world.bringToTop(player)
@@ -352,7 +359,9 @@ let Game = {
   spawnWeapon: function(player, treasure) {
     this.enableWeapon = true
     treasure.kill()
-    levelUnlock.kill()
+    this.fadeOutLog()
+    levelUnlock.body.immovable = false
+    levelUnlock.body.collideWorldBounds = false
     game.add.sprite(840, 670, 'treasure2')
     let weaponText = game.add.sprite(740, 530, 'weaponText')
     weaponText.alpha = 1
