@@ -1,11 +1,19 @@
-let leaderboard = [
+let scores = [
   {
     name: 'bob',
-    score: '105'
+    score: '1005'
   },
   {
     name: 'ted',
-    score: '144'
+    score: '550'
+  },
+  {
+    name: 'snpr',
+    score: '1050'
+  },
+  {
+    name: 'ghost33',
+    score: '1200'
   }
 ]
 
@@ -81,7 +89,7 @@ let Game = {
     boundaries.add(makeWorldSprite(0, 530, 134, 780, 'bg'))
 
     //Exit Boundary
-    levelTwoExit = boundaries.add(makeWorldSprite(685, 1090, 200, 220, 'bg'))
+    levelOneExit = boundaries.add(makeWorldSprite(685, 1090, 200, 220, 'bg'))
     boundaries.add(makeWorldSprite(996, 425, 100, 880, 'bg'))
 
     // Makes images transparent
@@ -96,7 +104,7 @@ let Game = {
     // Water Boundary
     waterBoundaries = game.add.group()
     waterBoundaries.add(makeWaterSprite(385, 600, 300, 750, 'bg'))
-    waterBoundaries.add(makeWaterSprite(385, 420, 300, 70, 'bg'))
+    waterBoundaries.add(makeWaterSprite(385, 380, 300, 70, 'bg'))
     alpha(waterBoundaries)
 
     // Log
@@ -108,7 +116,6 @@ let Game = {
 
     // Level Unlock
     levelUnlock = makeSprite(640, 800, 'log')
-
     bullets = game.add.group()
     bullets.enableBody = true
     bullets.physicsBodyType = Phaser.Physics.ARCADE
@@ -181,23 +188,23 @@ let Game = {
     scoreDisplay = game.add.text(25, 5, "Score: " + `${score}  `, { fill: 'white'})
     scoreDisplay.fixedToCamera = true
     scoreDisplay.font = 'Knewave'
-    scoreDisplay.fontSize = 40
+    scoreDisplay.fontSize = 30
     //player lives
     ninjaLivesDisplay = game.add.text(scoreDisplay.x, scoreDisplay.y + 45, "Lives: " + `${ninjaLives} `, { fill: 'white'})
     ninjaLivesDisplay.fixedToCamera = true
     ninjaLivesDisplay.font = 'Knewave'
-    ninjaLivesDisplay.fontSize = 40
+    ninjaLivesDisplay.fontSize = scoreDisplay.fontSize
     
     // Timer display
     time = game.add.text(scoreDisplay.x, scoreDisplay.y + 90)
     time.fixedToCamera = true
     time.font = 'Knewave'
-    time.fontSize = 40
+    time.fontSize = scoreDisplay.fontSize
     time.addColor('white', 0);
   },
   
   update: function() {
-    game.physics.arcade.collide(player, levelTwoExit, this.startLevelTwo, null, this)
+    game.physics.arcade.collide(player, levelOneExit, this.startLevelTwo, null, this)
     // game.physics.arcade.collide(player, enemy, this.killPlayer, null, this)
     game.physics.arcade.collide(player, log, this.moveLog, null, this)
     game.physics.arcade.collide(player, waterBoundaries, this.killPlayer, null, this)
@@ -331,6 +338,7 @@ let Game = {
       console.log('test')
   },
 
+
   // Move the log
   moveLog: function (player, logs) {
     game.world.bringToTop(player)
@@ -371,7 +379,7 @@ let Game = {
   //   game.add.tween(weaponText).to({ alpha: 0 }, 7000, Phaser.Easing.Linear.None, true)
   // }
 
-  startLevelTwo: function(player, levelTwoExit) {
-    this.state.start('Two')
+  startLevelTwo: function(player, levelOneExit) {
+    this.state.start('Endgame')
   }
 }
