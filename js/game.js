@@ -271,8 +271,8 @@ let Game = {
   },
 
   createAutoEnemies: function() { 
-    for(let y = 0; y < 3; y++){
-      for(let x = 0; x < 1; x++) {
+    for (let y = 0; y < 3; y++) {
+      for (let x = 0; x < 1; x++) {
         let autoEnemy = autoEnemies.create(x*900, y*800, 'autoEnemy')
         autoEnemy.anchor.setTo(0.5, 0.5)
         autoEnemy.body.velocity.x = 0
@@ -289,7 +289,7 @@ let Game = {
     console.log("ninja lives", ninjaLives)
     player.kill()
     timeDelay(500, player, 240, 1304)
-    ninjaLives-= 1
+    ninjaLives -= 1
     
     console.log("ninja lives", ninjaLives)
     ninjaLivesDisplay.text = ('Lives: ' + `${ninjaLives}`)
