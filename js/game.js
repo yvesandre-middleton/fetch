@@ -19,7 +19,7 @@ let Game = {
     game.load.image('lvl1bg', 'assets/images/lvl1bg.png')
     game.load.image('bg', 'assets/images/bg.png')
     game.load.image('bg2', 'assets/images/bg2.png')
-    game.load.image('log', 'assets/images/movable-log-lvl1-376x297.png')
+    game.load.image('log', 'assets/images/log1.png')
     game.load.image('treasure', 'assets/images/treasure.png')
     game.load.image('treasure2', 'assets/images/treasure2.png')
     game.load.image('shuriken', 'assets/images/shuriken.png')
@@ -58,9 +58,9 @@ let Game = {
     // timer.loop(4000, this.createBossActions, this)
 
     // Add Sprites
-    log = makeSprite(376, 297, 'log')
-    player = makeSprite(200, 0, 'hamster')
-    enemy = makeSprite(150, 500, 'hilary2')
+    log = makeSprite(370, 200, 'log')
+    player = makeSprite(240, 1304, 'hamster')
+    // enemy = makeSprite(150, 500, 'hilary2')
     
     // Animations  
     initPlayerAnimations(player)
@@ -316,12 +316,19 @@ let Game = {
 
   teleportPlayer: function(player, teleport) {
     player.kill()
-    timeDelay(500, player, 140, 280)
+    timeDelay(1000, player, 140, 280)
   },
 
   teleportPlayer2: function(player, teleport) {
     player.kill()
-    timeDelay(500, player, 140, 460)
+    timeDelay(1000, player, 140, 460)
+  },
+
+  fadeOutLog: function() {
+    game.time.events.add(1000, function() {
+      game.add.tween(levelUnlock).to({alpha: 0}, 1500, Phaser.Easing.Linear.None, true)
+    }, this)
+      console.log('test')
   },
 
   // Move the log
@@ -352,7 +359,9 @@ let Game = {
   spawnWeapon: function(player, treasure) {
     this.enableWeapon = true
     treasure.kill()
-    levelUnlock.kill()
+    this.fadeOutLog()
+    levelUnlock.body.immovable = false
+    levelUnlock.body.collideWorldBounds = false
     game.add.sprite(840, 670, 'treasure2')
     let weaponText = game.add.sprite(740, 530, 'weaponText')
     weaponText.alpha = 1
