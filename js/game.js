@@ -298,6 +298,7 @@ let Game = {
   killPlayer: function(player, enemy) {
     console.log("ninja lives", ninjaLives)
     player.kill()
+    // game.state.start('EndGame')
     timeDelay(500, player, 240, 1304)
     ninjaLives-= 1
     
