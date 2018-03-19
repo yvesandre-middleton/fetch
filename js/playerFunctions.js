@@ -16,8 +16,8 @@ function initWeapon(weapon) {
 
 function initEnemyWeapon(weapon) {
   weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS
-  weapon.bulletSpeed = 200
-  weapon.fireRate = 600
+  weapon.bulletSpeed = 190
+  weapon.fireRate = 800
   weapon.autofire = false
 }
 

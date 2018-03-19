@@ -315,6 +315,7 @@ let Two = {
 
   killPlayer: function(player, enemyWeapon) {  
     player.reset(player.body.velocity.x = 220, player.body.velocity.y = 1350)
+    timeDelay(500, player, 240, 1304)
 
     enemyWeapon.kill()
     
