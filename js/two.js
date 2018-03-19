@@ -130,7 +130,7 @@ let Two = {
     tween2.to({ x: 2700 }, 2000, 'Linear', true, 0, 20, true).loop(true)
     
     tween3 = game.add.tween(enemy3)
-    tween3.to({ y: 1250 }, 1000, 'Linear', true, 0, 20, true).loop(true)
+    tween3.to({ y: 1250 }, 2000, 'Linear', true, 0, 20, true).loop(true)
     
     tween4 = game.add.tween(enemy2)
     tween4.to({ y: 270 }, 2000, 'Linear', true, 0, 20, true).loop(true)
@@ -160,7 +160,7 @@ let Two = {
     boundaries.add(makeSprite(1517, 0, 'wall5'))
     boundaries.add(makeSprite(2243, 1, 'wall6'))
     boundaries.add(makeSprite(2076, 552, 'wall7'))
-    boundaries.add(makeSprite(2345, 0, 'wall8'))
+    
     boundaries.add(makeSprite(1620, 0, 'wall9'))
     boundaries.add(makeSprite(1729, 822, 'wall10'))
     boundaries.add(makeSprite(2133, 1042, 'wall11'))
@@ -168,6 +168,9 @@ let Two = {
     boundaries.add(makeSprite(1729, 876, 'wall13'))
     boundaries.add(makeSprite(1729, 1070, 'wall14'))
     boundaries.add(makeSprite(1964, 1245, 'wall15'))
+    
+    levelTwoExit = boundaries.add(makeSprite(2345, 0, 'wall8'))
+    
     
     boundaries.add(makeSprite(0, 325, 'cliff1'))
     boundaries.add(makeSprite(264, 325, 'cliff2'))
@@ -178,6 +181,7 @@ let Two = {
     boundaries.add(makeSprite(1340, 900, 'water3'))
     boundaries.add(makeSprite(576, 1356, 'water4'))
     boundaries.add(makeSprite(465, 489, 'water5'))
+ 
     
     alpha(boundaries)
 
@@ -229,20 +233,20 @@ let Two = {
     // Player score
     scoreDisplay = game.add.text(25, 5, "Score: " + `${score}`, { fill: 'white'})
     scoreDisplay.fixedToCamera = true
-    scoreDisplay.font = 'Knewave'
-    scoreDisplay.fontSize = 40
+    scoreDisplay.font = 'Press Start 2P'
+    scoreDisplay.fontSize = 16
     
     // Player lives
-    ninjaLivesDisplay = game.add.text(scoreDisplay.x, scoreDisplay.y + 45, "Lives: " + `${ninjaLives} `, { fill: 'white'})
+    ninjaLivesDisplay = game.add.text(scoreDisplay.x, scoreDisplay.y +20, "Lives: " + `${ninjaLives} `, { fill: 'white'})
     ninjaLivesDisplay.fixedToCamera = true
-    ninjaLivesDisplay.font = 'Knewave'
-    ninjaLivesDisplay.fontSize = 40
+    ninjaLivesDisplay.font = 'Press Start 2P'
+    ninjaLivesDisplay.fontSize = scoreDisplay.fontSize
     
     // Timer display
-    time = game.add.text(scoreDisplay.x, scoreDisplay.y + 90)
+    time = game.add.text(scoreDisplay.x, scoreDisplay.y + 40)
     time.fixedToCamera = true
-    time.font = 'Knewave'
-    time.fontSize = 40
+    time.font = 'Press Start 2P'
+    time.fontSize = scoreDisplay.fontSize
     time.addColor('white', 0);
   },
     
@@ -309,7 +313,8 @@ let Two = {
     enemy5.animations.play('down', 15, true)
 
     game.physics.arcade.collide(player, boundaries)
-
+    
+    game.physics.arcade.collide(player, levelTwoExit, this.startLevelThree, null, this)
     game.physics.arcade.collide(player, enemy, this.killPlayerCollide, null, this)
     game.physics.arcade.collide(player, enemy2, this.killPlayerCollide, null, this)
     game.physics.arcade.collide(player, enemy3, this.killPlayerCollide, null, this)
@@ -345,7 +350,8 @@ let Two = {
     deathSound.play()
     
     player.reset(player.body.velocity.x = 220, player.body.velocity.y = 1350)
-
+    // game.state.start('EndGame')
+  
     enemyWeapon.kill()
     
     ninjaLives -= 1
@@ -475,5 +481,11 @@ let Two = {
   updateCounter: function() {
     totalTime++
     time.setText('Time: ' + totalTime);
+  },
+
+  startLevelThree: function(player, levelTwoExit) {
+    console.log("test")
+    this.state.start('Three')
   }
+
 }

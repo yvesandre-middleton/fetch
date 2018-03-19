@@ -50,7 +50,7 @@ function playerMovement(player, weapon) {
   walkingSound = game.add.audio('walking')
 
   if (cursors.left.isDown) {
-    player.body.velocity.x = -300;
+    player.body.velocity.x = -220;
     player.animations.play('left')
 
     // walkingSound.loop = true
@@ -60,7 +60,7 @@ function playerMovement(player, weapon) {
   }
 
   else if (cursors.right.isDown) {
-    player.body.velocity.x = 300;
+    player.body.velocity.x = 220;
     player.animations.play('right')
 
     // walkingSound.loop = true
@@ -70,7 +70,7 @@ function playerMovement(player, weapon) {
   }
 
   else if (cursors.up.isDown) {
-    player.body.velocity.y = -300;
+    player.body.velocity.y = -220;
     player.animations.play('up')
 
     // walkingSound.loop = true
@@ -80,7 +80,7 @@ function playerMovement(player, weapon) {
   }
 
   else if (cursors.down.isDown) {
-    player.body.velocity.y = 300;
+    player.body.velocity.y = 220;
     player.animations.play('down')
 
     // walkingSound.loop = true

@@ -1,11 +1,19 @@
-let leaderboard = [
+let scores = [
   {
     name: 'bob',
-    score: '105'
+    score: '1005'
   },
   {
     name: 'ted',
-    score: '144'
+    score: '550'
+  },
+  {
+    name: 'snpr',
+    score: '1050'
+  },
+  {
+    name: 'ghost33',
+    score: '1200'
   }
 ]
 
@@ -110,7 +118,7 @@ let Game = {
     boundaries.add(makeWorldSprite(270, 280, 100, 50, 'bg'))
 
     //Exit Boundary
-    levelTwoExit = boundaries.add(makeWorldSprite(685, 1090, 200, 220, 'bg'))
+    levelOneExit = boundaries.add(makeWorldSprite(685, 1090, 200, 220, 'bg'))
     boundaries.add(makeWorldSprite(996, 425, 100, 880, 'bg'))
 
     // Makes images transparent
@@ -211,25 +219,25 @@ let Game = {
     // Player score
     scoreDisplay = game.add.text(25, 5, "Score: " + `${score}  `, { fill: 'white'})
     scoreDisplay.fixedToCamera = true
-    scoreDisplay.font = 'Knewave'
-    scoreDisplay.fontSize = 40
+    scoreDisplay.font = 'Press Start 2P'
+    scoreDisplay.fontSize = 16
     
     //Player lives
-    ninjaLivesDisplay = game.add.text(scoreDisplay.x, scoreDisplay.y + 45, "Lives: " + `${ninjaLives} `, { fill: 'white'})
+    ninjaLivesDisplay = game.add.text(scoreDisplay.x, scoreDisplay.y + 20, "Lives: " + `${ninjaLives} `, { fill: 'white'})
     ninjaLivesDisplay.fixedToCamera = true
-    ninjaLivesDisplay.font = 'Knewave'
-    ninjaLivesDisplay.fontSize = 40
+    ninjaLivesDisplay.font = 'Press Start 2P'
+    ninjaLivesDisplay.fontSize = scoreDisplay.fontSize
     
     // Timer display
-    time = game.add.text(scoreDisplay.x, scoreDisplay.y + 90)
+    time = game.add.text(scoreDisplay.x, scoreDisplay.y + 40)
     time.fixedToCamera = true
-    time.font = 'Knewave'
-    time.fontSize = 40
+    time.font = 'Press Start 2P'
+    time.fontSize = scoreDisplay.fontSize
     time.addColor('white', 0);
   },
   
   update: function() {
-    game.physics.arcade.collide(player, levelTwoExit, this.startLevelTwo, null, this)
+    game.physics.arcade.collide(player, levelOneExit, this.startLevelTwo, null, this)
     // game.physics.arcade.collide(player, enemy, this.killPlayer, null, this)
     game.physics.arcade.collide(player, log, this.moveLog, null, this)
     game.physics.arcade.collide(player, waterBoundaries, this.killPlayer, null, this)
@@ -334,6 +342,7 @@ let Game = {
 
     console.log("ninja lives", ninjaLives)
     player.kill()
+    // game.state.start('EndGame')
     timeDelay(500, player, 240, 1304)
     ninjaLives -= 1
     
@@ -368,6 +377,7 @@ let Game = {
     }, this)
       console.log('test')
   },
+
 
   // Move the log
   moveLog: function (player, logs) {
