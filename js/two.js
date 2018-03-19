@@ -45,8 +45,8 @@ let Two = {
     initWorldBounds(0, 0, 2750, 1500, 'bg')
     game.add.image(0,0,'bg')
 
-    // player = makeSprite(220, 1350, 'hamster')
-    player = makeSprite(1200, 0, 'hamster')
+    player = makeSprite(220, 1350, 'hamster')
+    // player = makeSprite(2300, 1100, 'hamster')
     initPlayerAnimations(player)
      
     // Add a Timer
@@ -219,6 +219,24 @@ let Two = {
   },
     
   update: function() {
+
+    if (player.body.y < 300) {
+      enemyWeapon.autofire = true
+    } 
+    
+    if (player.body.x > 1100) {
+      enemyWeapon2.autofire = true      
+    }
+
+    if (player.body.x > 1500) {
+      enemyWeapon3.autofire = true      
+    }
+
+    if (player.body.x > 2300) {
+      enemyWeapon4.autofire = true      
+      enemyWeapon5.autofire = true      
+    }
+
     enemy.animations.play('down', 15, true)
     enemy2.animations.play('down', 15, true)
     enemy3.animations.play('down', 15, true)
