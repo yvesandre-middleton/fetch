@@ -49,25 +49,25 @@ function camera(player) {
 
 function playerMovement(player, weapon) {
   if (cursors.left.isDown) {
-    player.body.velocity.x = -300;
+    player.body.velocity.x = -220;
     player.animations.play('left')
     weapon.fireAngle = Phaser.ANGLE_LEFT
   }
 
   else if (cursors.right.isDown) {
-    player.body.velocity.x = 300;
+    player.body.velocity.x = 220;
     player.animations.play('right')
     weapon.fireAngle = Phaser.ANGLE_RIGHT
   }
 
   else if (cursors.up.isDown) {
-    player.body.velocity.y = -300;
+    player.body.velocity.y = -220;
     player.animations.play('up')
     weapon.fireAngle = Phaser.ANGLE_UP
   }
 
   else if (cursors.down.isDown) {
-    player.body.velocity.y = 300;
+    player.body.velocity.y = 220;
     player.animations.play('down')
     weapon.fireAngle = Phaser.ANGLE_DOWN
   } else {
