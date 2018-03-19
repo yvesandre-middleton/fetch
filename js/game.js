@@ -60,8 +60,7 @@ let Game = {
 
     // Add Sprites
     log = makeSprite(376, 297, 'log')
-    player = makeSprite(700, 200, 'hamster')
-    // enemy = makeSprite(150, 500, 'hilary2')
+    player = makeSprite(240, 1304, 'hamster')
     
     // Animations  
     initPlayerAnimations(player)
@@ -87,7 +86,7 @@ let Game = {
     boundaries.add(makeWorldSprite(996, 425, 100, 880, 'bg'))
 
     // Makes images transparent
-    alpha(boundaries)
+    alpha(boundaries  )
 
     // Teleportation
     teleport = game.add.tileSprite(60, 450, 50, 60, 'bg')
