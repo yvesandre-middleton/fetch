@@ -23,7 +23,6 @@ let Game = {
     game.load.image('treasure', 'assets/images/treasure.png')
     game.load.image('treasure2', 'assets/images/treasure2.png')
     game.load.image('shuriken', 'assets/images/shuriken.png')
-    // game.load.image('hilary2', 'assets/images/hilary2.png')
     game.load.image('autoEnemy', 'assets/images/head.png')
     game.load.image('boss', 'assets/images/head.png')
     game.load.spritesheet('hamster', 'assets/images/hamster-animation-sheet.png', 37, 45)
@@ -43,6 +42,7 @@ let Game = {
 
     // Add Background
     bg = makeSprite(0, 0, 'lvl1bg')
+    
     // Add Treasure Chest
     treasure = makeSprite(840, 670, 'treasure')
 
@@ -96,14 +96,14 @@ let Game = {
     // Water Boundary
     waterBoundaries = game.add.group()
     waterBoundaries.add(makeWaterSprite(385, 600, 300, 750, 'bg'))
-    waterBoundaries.add(makeWaterSprite(385, 420, 300, 60, 'bg'))
+    waterBoundaries.add(makeWaterSprite(385, 420, 300, 50, 'bg'))
     alpha(waterBoundaries)
 
     // Log
     logCheck = makeSprite(370, 450, 'log')
     alpha(logCheck)
 
-    someLog = makeSprite(376, 500, 'log')
+    someLog = makeSprite(376, 490, 'log')
     alpha(someLog)
 
     // Level Unlock
