@@ -45,8 +45,8 @@ let Two = {
     initWorldBounds(0, 0, 2750, 1500, 'bg')
     game.add.image(0,0,'bg')
 
-    // player = makeSprite(220, 1350, 'hamster')
-    player = makeSprite(1200, 0, 'hamster')
+    player = makeSprite(220, 1350, 'hamster')
+    // player = makeSprite(2300, 1100, 'hamster')
     initPlayerAnimations(player)
      
     // Add a Timer
@@ -199,12 +199,13 @@ let Two = {
     camera(player)
     gameControls()
 
-    //player score
+    // Player score
     scoreDisplay = game.add.text(25, 5, "Score: " + `${score}  `, { fill: 'white'})
     scoreDisplay.fixedToCamera = true
     scoreDisplay.font = 'Knewave'
     scoreDisplay.fontSize = 40
-    //player lives
+    
+    // Player lives
     ninjaLivesDisplay = game.add.text(scoreDisplay.x, scoreDisplay.y + 45, "Lives: " + `${ninjaLives} `, { fill: 'white'})
     ninjaLivesDisplay.fixedToCamera = true
     ninjaLivesDisplay.font = 'Knewave'
@@ -219,6 +220,24 @@ let Two = {
   },
     
   update: function() {
+
+    if (player.body.y < 300) {
+      enemyWeapon.autofire = true
+    } 
+    
+    if (player.body.x > 1100) {
+      enemyWeapon2.autofire = true      
+    }
+
+    if (player.body.x > 1500) {
+      enemyWeapon3.autofire = true      
+    }
+
+    if (player.body.x > 2300) {
+      enemyWeapon4.autofire = true      
+      enemyWeapon5.autofire = true      
+    }
+
     enemy.animations.play('down', 15, true)
     enemy2.animations.play('down', 15, true)
     enemy3.animations.play('down', 15, true)
@@ -239,11 +258,11 @@ let Two = {
     game.physics.arcade.collide(weapon.bullets, enemy4, this.killEnemy4, null, this)
     game.physics.arcade.collide(weapon.bullets, enemy5, this.killEnemy5, null, this)
     
-    game.physics.arcade.collide(enemyWeapon.bullets, player, this.killPlayer, null, this)
-    game.physics.arcade.collide(enemyWeapon2.bullets, player, this.killPlayer, null, this)
-    game.physics.arcade.collide(enemyWeapon3.bullets, player, this.killPlayer, null, this)
-    game.physics.arcade.collide(enemyWeapon4.bullets, player, this.killPlayer, null, this)
-    game.physics.arcade.collide(enemyWeapon5.bullets, player, this.killPlayer, null, this)
+    // game.physics.arcade.collide(enemyWeapon.bullets, player, this.killPlayer, null, this)
+    // game.physics.arcade.collide(enemyWeapon2.bullets, player, this.killPlayer, null, this)
+    // game.physics.arcade.collide(enemyWeapon3.bullets, player, this.killPlayer, null, this)
+    // game.physics.arcade.collide(enemyWeapon4.bullets, player, this.killPlayer, null, this)
+    // game.physics.arcade.collide(enemyWeapon5.bullets, player, this.killPlayer, null, this)
     
     game.physics.arcade.collide(player, log, this.moveLog, null, this)
     game.physics.arcade.collide(player, log2, this.moveSecondLog, null, this)
