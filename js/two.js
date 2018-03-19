@@ -200,13 +200,13 @@ let Two = {
     gameControls()
 
     // Player score
-    scoreDisplay = game.add.text(100, 5, "Score: " + `${score}`)
+    scoreDisplay = game.add.text(25, 5, "Score: " + `${score}  `, { fill: 'white'})
     scoreDisplay.fixedToCamera = true
     scoreDisplay.font = 'Knewave'
     scoreDisplay.fontSize = 40
     
     // Player lives
-    ninjaLivesDisplay = game.add.text(scoreDisplay.x, scoreDisplay.y + 45, "Lives: " + `${ninjaLives} `)
+    ninjaLivesDisplay = game.add.text(scoreDisplay.x, scoreDisplay.y + 45, "Lives: " + `${ninjaLives} `, { fill: 'white'})
     ninjaLivesDisplay.fixedToCamera = true
     ninjaLivesDisplay.font = 'Knewave'
     ninjaLivesDisplay.fontSize = 40
@@ -216,6 +216,7 @@ let Two = {
     time.fixedToCamera = true
     time.font = 'Knewave'
     time.fontSize = 40
+    time.addColor('white', 0);
   },
     
   update: function() {
@@ -224,19 +225,56 @@ let Two = {
       enemyWeapon.autofire = true
     } 
     
+    else {
+      enemyWeapon.autofire = false
+    }
+    
     if (player.body.x > 1100) {
       enemyWeapon2.autofire = true      
+    } 
+    
+    else {
+      enemyWeapon2.autofire = false
     }
-
+    
     if (player.body.x > 1500) {
       enemyWeapon3.autofire = true      
+    } 
+    
+    else {
+      enemyWeapon3.autofire = false
     }
-
+    
     if (player.body.x > 2300) {
       enemyWeapon4.autofire = true      
       enemyWeapon5.autofire = true      
+    } 
+    
+    else {
+      enemyWeapon4.autofire = false
+      enemyWeapon5.autofire = false
+    }
+    
+    if (this.dead) {
+      enemyWeapon.autofire = false
     }
 
+    if (this.dead2) {
+      enemyWeapon2.autofire = false
+    }
+
+    if (this.dead3) {
+      enemyWeapon3.autofire = false
+    }
+
+    if (this.dead4) {
+      enemyWeapon4.autofire = false
+    }
+    
+    if (this.dead5) {
+      enemyWeapon5.autofire = false
+    }
+    
     enemy.animations.play('down', 15, true)
     enemy2.animations.play('down', 15, true)
     enemy3.animations.play('down', 15, true)
@@ -278,37 +316,73 @@ let Two = {
   killPlayer: function(player, enemyWeapon) {
     player.reset(player.body.velocity.x = 220, player.body.velocity.y = 1350)
     enemyWeapon.kill()
+    ninjaLives-= 1
+    console.log("ninja lives", ninjaLives)
+    ninjaLivesDisplay.text = ('Lives: ' + `${ninjaLives}`)
+    if (ninjaLives == 0) {
+      ninjaLives = 3
+      score = 0
+      game.state.start('GameOver')
+    }
   },
 
   killPlayerCollide: function(player, enemy) {
     player.reset(player.body.velocity.x = 220, player.body.velocity.y = 1350)
+    ninjaLives-= 1
+    console.log("ninja lives", ninjaLives)
+    ninjaLivesDisplay.text = ('Lives: ' + `${ninjaLives}`)
+    if (ninjaLives == 0) {
+      ninjaLives = 3
+      score = 0
+      game.state.start('GameOver')
+    }
   },
   
   killEnemy: function(weapon, enemy) {
+    this.dead = true
+    
+    score += 200
+    scoreDisplay.setText('Score: ' + `${score}`)
     enemy.kill()
-    weapon.kill()
     fireOff(enemyWeapon)
+    weapon.kill()
   },
 
   killEnemy2: function(weapon, enemy2) {
+    this.dead2 = true
+    
+    score += 200
+    scoreDisplay.setText('Score: ' + `${score}`)
     enemy2.kill()
     weapon.kill()
     fireOff(enemyWeapon2)
   },
 
   killEnemy3: function(weapon, enemy3) {
+    this.dead3 = true
+    
+    score += 200
+    scoreDisplay.setText('Score: ' + `${score}`)
     enemy3.kill()
     weapon.kill()
     fireOff(enemyWeapon3)
   },
 
   killEnemy4: function(weapon, enemy4) {
+    this.dead4 = true
+    
+    score += 200
+    scoreDisplay.setText('Score: ' + `${score}`)
     enemy4.kill()
     weapon.kill()
     fireOff(enemyWeapon4)
   },
 
   killEnemy5: function(weapon, enemy5) {
+    this.dead5 = true
+    
+    score += 200
+    scoreDisplay.setText('Score: ' + `${score}`)
     enemy5.kill()
     weapon.kill()
     fireOff(enemyWeapon5)
