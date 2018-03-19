@@ -225,19 +225,56 @@ let Two = {
       enemyWeapon.autofire = true
     } 
     
+    else {
+      enemyWeapon.autofire = false
+    }
+    
     if (player.body.x > 1100) {
       enemyWeapon2.autofire = true      
+    } 
+    
+    else {
+      enemyWeapon2.autofire = false
     }
-
+    
     if (player.body.x > 1500) {
       enemyWeapon3.autofire = true      
+    } 
+    
+    else {
+      enemyWeapon3.autofire = false
     }
-
+    
     if (player.body.x > 2300) {
       enemyWeapon4.autofire = true      
       enemyWeapon5.autofire = true      
+    } 
+    
+    else {
+      enemyWeapon4.autofire = false
+      enemyWeapon5.autofire = false
+    }
+    
+    if (this.dead) {
+      enemyWeapon.autofire = false
     }
 
+    if (this.dead2) {
+      enemyWeapon2.autofire = false
+    }
+
+    if (this.dead3) {
+      enemyWeapon3.autofire = false
+    }
+
+    if (this.dead4) {
+      enemyWeapon4.autofire = false
+    }
+    
+    if (this.dead5) {
+      enemyWeapon5.autofire = false
+    }
+    
     enemy.animations.play('down', 15, true)
     enemy2.animations.play('down', 15, true)
     enemy3.animations.play('down', 15, true)
@@ -258,11 +295,11 @@ let Two = {
     game.physics.arcade.collide(weapon.bullets, enemy4, this.killEnemy4, null, this)
     game.physics.arcade.collide(weapon.bullets, enemy5, this.killEnemy5, null, this)
     
-    // game.physics.arcade.collide(enemyWeapon.bullets, player, this.killPlayer, null, this)
-    // game.physics.arcade.collide(enemyWeapon2.bullets, player, this.killPlayer, null, this)
-    // game.physics.arcade.collide(enemyWeapon3.bullets, player, this.killPlayer, null, this)
-    // game.physics.arcade.collide(enemyWeapon4.bullets, player, this.killPlayer, null, this)
-    // game.physics.arcade.collide(enemyWeapon5.bullets, player, this.killPlayer, null, this)
+    game.physics.arcade.collide(enemyWeapon.bullets, player, this.killPlayer, null, this)
+    game.physics.arcade.collide(enemyWeapon2.bullets, player, this.killPlayer, null, this)
+    game.physics.arcade.collide(enemyWeapon3.bullets, player, this.killPlayer, null, this)
+    game.physics.arcade.collide(enemyWeapon4.bullets, player, this.killPlayer, null, this)
+    game.physics.arcade.collide(enemyWeapon5.bullets, player, this.killPlayer, null, this)
     
     game.physics.arcade.collide(player, log, this.moveLog, null, this)
     game.physics.arcade.collide(player, log2, this.moveSecondLog, null, this)
@@ -276,12 +313,17 @@ let Two = {
     }
   },
 
-  killPlayer: function(player, enemyWeapon) {
+  killPlayer: function(player, enemyWeapon) {  
     player.reset(player.body.velocity.x = 220, player.body.velocity.y = 1350)
+
     enemyWeapon.kill()
-    ninjaLives-= 1
+    
+    ninjaLives -= 1
+    
     console.log("ninja lives", ninjaLives)
+    
     ninjaLivesDisplay.text = ('Lives: ' + `${ninjaLives}`)
+    
     if (ninjaLives == 0) {
       ninjaLives = 3
       score = 0
@@ -291,9 +333,13 @@ let Two = {
 
   killPlayerCollide: function(player, enemy) {
     player.reset(player.body.velocity.x = 220, player.body.velocity.y = 1350)
-    ninjaLives-= 1
+        
+    ninjaLives -= 1
+    
     console.log("ninja lives", ninjaLives)
+    
     ninjaLivesDisplay.text = ('Lives: ' + `${ninjaLives}`)
+    
     if (ninjaLives == 0) {
       ninjaLives = 3
       score = 0
@@ -302,14 +348,18 @@ let Two = {
   },
   
   killEnemy: function(weapon, enemy) {
+    this.dead = true
+    
     score += 200
     scoreDisplay.setText('Score: ' + `${score}`)
     enemy.kill()
-    weapon.kill()
     fireOff(enemyWeapon)
+    weapon.kill()
   },
 
   killEnemy2: function(weapon, enemy2) {
+    this.dead2 = true
+    
     score += 200
     scoreDisplay.setText('Score: ' + `${score}`)
     enemy2.kill()
@@ -318,6 +368,8 @@ let Two = {
   },
 
   killEnemy3: function(weapon, enemy3) {
+    this.dead3 = true
+    
     score += 200
     scoreDisplay.setText('Score: ' + `${score}`)
     enemy3.kill()
@@ -326,6 +378,8 @@ let Two = {
   },
 
   killEnemy4: function(weapon, enemy4) {
+    this.dead4 = true
+    
     score += 200
     scoreDisplay.setText('Score: ' + `${score}`)
     enemy4.kill()
@@ -334,6 +388,8 @@ let Two = {
   },
 
   killEnemy5: function(weapon, enemy5) {
+    this.dead5 = true
+    
     score += 200
     scoreDisplay.setText('Score: ' + `${score}`)
     enemy5.kill()
