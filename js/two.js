@@ -295,11 +295,11 @@ let Two = {
     game.physics.arcade.collide(weapon.bullets, enemy4, this.killEnemy4, null, this)
     game.physics.arcade.collide(weapon.bullets, enemy5, this.killEnemy5, null, this)
     
-    // game.physics.arcade.collide(enemyWeapon.bullets, player, this.killPlayer, null, this)
-    // game.physics.arcade.collide(enemyWeapon2.bullets, player, this.killPlayer, null, this)
-    // game.physics.arcade.collide(enemyWeapon3.bullets, player, this.killPlayer, null, this)
-    // game.physics.arcade.collide(enemyWeapon4.bullets, player, this.killPlayer, null, this)
-    // game.physics.arcade.collide(enemyWeapon5.bullets, player, this.killPlayer, null, this)
+    game.physics.arcade.collide(enemyWeapon.bullets, player, this.killPlayer, null, this)
+    game.physics.arcade.collide(enemyWeapon2.bullets, player, this.killPlayer, null, this)
+    game.physics.arcade.collide(enemyWeapon3.bullets, player, this.killPlayer, null, this)
+    game.physics.arcade.collide(enemyWeapon4.bullets, player, this.killPlayer, null, this)
+    game.physics.arcade.collide(enemyWeapon5.bullets, player, this.killPlayer, null, this)
     
     game.physics.arcade.collide(player, log, this.moveLog, null, this)
     game.physics.arcade.collide(player, log2, this.moveSecondLog, null, this)
@@ -313,12 +313,17 @@ let Two = {
     }
   },
 
-  killPlayer: function(player, enemyWeapon) {
+  killPlayer: function(player, enemyWeapon) {  
     player.reset(player.body.velocity.x = 220, player.body.velocity.y = 1350)
+
     enemyWeapon.kill()
-    ninjaLives-= 1
+    
+    ninjaLives -= 1
+    
     console.log("ninja lives", ninjaLives)
+    
     ninjaLivesDisplay.text = ('Lives: ' + `${ninjaLives}`)
+    
     if (ninjaLives == 0) {
       ninjaLives = 3
       score = 0
@@ -328,9 +333,13 @@ let Two = {
 
   killPlayerCollide: function(player, enemy) {
     player.reset(player.body.velocity.x = 220, player.body.velocity.y = 1350)
-    ninjaLives-= 1
+        
+    ninjaLives -= 1
+    
     console.log("ninja lives", ninjaLives)
+    
     ninjaLivesDisplay.text = ('Lives: ' + `${ninjaLives}`)
+    
     if (ninjaLives == 0) {
       ninjaLives = 3
       score = 0
