@@ -18,7 +18,6 @@ function initEnemyWeapon(weapon) {
   weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS
   weapon.bulletSpeed = 200
   weapon.fireRate = 600
-  weapon.autofire = false
 }
 
 function makeWeapon(quanitity, image) {
@@ -48,30 +47,49 @@ function camera(player) {
 }
 
 function playerMovement(player, weapon) {
+  walkingSound = game.add.audio('walking')
+
   if (cursors.left.isDown) {
     player.body.velocity.x = -300;
     player.animations.play('left')
+
+    // walkingSound.loop = true
+    // walkingSound.play()
+    
     weapon.fireAngle = Phaser.ANGLE_LEFT
   }
 
   else if (cursors.right.isDown) {
     player.body.velocity.x = 300;
     player.animations.play('right')
+
+    // walkingSound.loop = true
+    // walkingSound.play()
+
     weapon.fireAngle = Phaser.ANGLE_RIGHT
   }
 
   else if (cursors.up.isDown) {
     player.body.velocity.y = -300;
     player.animations.play('up')
+
+    // walkingSound.loop = true
+    // walkingSound.play()
+
     weapon.fireAngle = Phaser.ANGLE_UP
   }
 
   else if (cursors.down.isDown) {
     player.body.velocity.y = 300;
     player.animations.play('down')
+
+    // walkingSound.loop = true
+    // walkingSound.play()
+
     weapon.fireAngle = Phaser.ANGLE_DOWN
   } else {
     player.animations.play('down')
+    // walkingSound.pause()
   }
 }
 

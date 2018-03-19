@@ -28,11 +28,38 @@ let Game = {
     game.load.image('boss', 'assets/images/head.png')
     game.load.spritesheet('hamster', 'assets/images/hamster-animation-sheet.png', 37, 45)
     game.load.image('weaponText', 'assets/images/weapon-text.png') 
+
+    // REFACTOR
+    game.load.audio('treasure', 'assets/audio/SFX/chest-open-sfx.wav')
+    game.load.audio('exit', 'assets/audio/SFX/exit-sfx.wav')
+    game.load.audio('push-log', 'assets/audio/SFX/push-sfx.wav')
+    game.load.audio('stairs', 'assets/audio/SFX/stairs-sfx.wav')
+    game.load.audio('walking', 'assets/audio/SFX/walking-sfx.wav')
+    game.load.audio('death', 'assets/audio/SFX/player-dies-sfx.wav')
+    game.load.audio('lvl2', 'assets/audio/music/lvl2.wav')
+    game.load.audio('lvl1', 'assets/audio/music/lvl1.wav')
+    game.load.audio('shuriken', 'assets/audio/SFX/shuriken.mp3')    
+  
   },
   
   create: function() {
     this.resetScore()
     
+    // Sounds
+    // REFACTOR
+
+    stairSound = game.add.audio('stairs')
+    treasureSound = game.add.audio('treasure')
+    exitSound = game.add.audio('exit')
+    logSound = game.add.audio('push-log')
+    deathSound = game.add.audio('death')
+    lvl2Sound = game.add.audio('lvl2')
+    lvl1Sound = game.add.audio('lvl1')
+    shootingSound = game.add.audio('shuriken')
+
+    lvl1Sound.loop = true
+    lvl1Sound.play()
+
     // Set World Bounds
     initWorldBounds(0, 0, 996, 1304)
      
@@ -61,6 +88,7 @@ let Game = {
     // Add Sprites
     log = makeSprite(376, 297, 'log')
     player = makeSprite(240, 1304, 'hamster')
+    // player = makeSprite(200, 200, 'hamster')
     
     // Animations  
     initPlayerAnimations(player)
@@ -227,6 +255,7 @@ let Game = {
  
     if (fireButton.isDown && this.enableWeapon) {
       weapon.fire()
+      shootingSound.play()
     }
   },
 
@@ -300,6 +329,9 @@ let Game = {
   // },
 
   killPlayer: function(player, enemy) {
+
+    deathSound.play()
+
     console.log("ninja lives", ninjaLives)
     player.kill()
     timeDelay(500, player, 240, 1304)
@@ -319,11 +351,13 @@ let Game = {
   },
 
   teleportPlayer: function(player, teleport) {
+    stairSound.play()
     player.kill()
     timeDelay(1000, player, 140, 280)
   },
 
   teleportPlayer2: function(player, teleport) {
+    stairSound.play()    
     player.kill()
     timeDelay(1000, player, 140, 460)
   },
@@ -337,6 +371,9 @@ let Game = {
 
   // Move the log
   moveLog: function (player, logs) {
+
+    logSound.play()
+
     game.world.bringToTop(player)
     
     this.logMoved = true
@@ -355,6 +392,7 @@ let Game = {
 
   checkPlatfrom: function(player, logCheck) {
     if (!this.logMoved) {
+      deathSound.play()
       player.kill()
       timeDelay(500, player, 240, 1304)
     } else {
@@ -373,11 +411,15 @@ let Game = {
     weaponText.alpha = 1
     game.add.tween(weaponText).to( { alpha: 0 }, 7000, Phaser.Easing.Linear.None, true)
     // game.add.sprite(800,550,'weaponText')
+  
+    treasureSound.play()
   },
   //   game.add.tween(weaponText).to({ alpha: 0 }, 7000, Phaser.Easing.Linear.None, true)
   // }
 
   startLevelTwo: function(player, levelTwoExit) {
+    game.sound.remove(lvl1Sound)
+    exitSound.play()
     this.state.start('Two')
   }
 }
