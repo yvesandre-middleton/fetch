@@ -45,8 +45,8 @@ let Two = {
     initWorldBounds(0, 0, 2750, 1500, 'bg')
     game.add.image(0,0,'bg')
 
-    player = makeSprite(2520, 1350, 'hamster')
-    // player = makeSprite(1200, 0, 'hamster')
+    player = makeSprite(220, 1350, 'hamster')
+    // player = makeSprite(2300, 1100, 'hamster')
     initPlayerAnimations(player)
      
     // Add a Timer
@@ -103,7 +103,7 @@ let Two = {
     tween2.to({ x: 2700 }, 2000, 'Linear', true, 0, 20, true).loop(true)
     
     tween3 = game.add.tween(enemy3)
-    tween3.to({ y: 1250 }, 1000, 'Linear', true, 0, 20, true).loop(true)
+    tween3.to({ y: 1250 }, 2000, 'Linear', true, 0, 20, true).loop(true)
     
     tween4 = game.add.tween(enemy2)
     tween4.to({ y: 270 }, 2000, 'Linear', true, 0, 20, true).loop(true)
@@ -203,26 +203,82 @@ let Two = {
     camera(player)
     gameControls()
 
-    //player score
+    // Player score
     scoreDisplay = game.add.text(25, 5, "Score: " + `${score}  `, { fill: 'white'})
     scoreDisplay.fixedToCamera = true
-    scoreDisplay.font = 'Knewave'
-    scoreDisplay.fontSize = 40
-    //player lives
-    ninjaLivesDisplay = game.add.text(scoreDisplay.x, scoreDisplay.y + 45, "Lives: " + `${ninjaLives} `, { fill: 'white'})
+    scoreDisplay.font = 'Press Start 2P'
+    scoreDisplay.fontSize = 16
+    
+    // Player lives
+    ninjaLivesDisplay = game.add.text(scoreDisplay.x, scoreDisplay.y +20, "Lives: " + `${ninjaLives} `, { fill: 'white'})
     ninjaLivesDisplay.fixedToCamera = true
-    ninjaLivesDisplay.font = 'Knewave'
-    ninjaLivesDisplay.fontSize = 40
+    ninjaLivesDisplay.font = 'Press Start 2P'
+    ninjaLivesDisplay.fontSize = scoreDisplay.fontSize
     
     // Timer display
-    time = game.add.text(scoreDisplay.x, scoreDisplay.y + 90)
+    time = game.add.text(scoreDisplay.x, scoreDisplay.y + 40)
     time.fixedToCamera = true
-    time.font = 'Knewave'
-    time.fontSize = 40
+    time.font = 'Press Start 2P'
+    time.fontSize = scoreDisplay.fontSize
     time.addColor('white', 0);
   },
     
   update: function() {
+
+    if (player.body.y < 300) {
+      enemyWeapon.autofire = true
+    } 
+    
+    else {
+      enemyWeapon.autofire = false
+    }
+    
+    if (player.body.x > 1100) {
+      enemyWeapon2.autofire = true      
+    } 
+    
+    else {
+      enemyWeapon2.autofire = false
+    }
+    
+    if (player.body.x > 1500) {
+      enemyWeapon3.autofire = true      
+    } 
+    
+    else {
+      enemyWeapon3.autofire = false
+    }
+    
+    if (player.body.x > 2300) {
+      enemyWeapon4.autofire = true      
+      enemyWeapon5.autofire = true      
+    } 
+    
+    else {
+      enemyWeapon4.autofire = false
+      enemyWeapon5.autofire = false
+    }
+    
+    if (this.dead) {
+      enemyWeapon.autofire = false
+    }
+
+    if (this.dead2) {
+      enemyWeapon2.autofire = false
+    }
+
+    if (this.dead3) {
+      enemyWeapon3.autofire = false
+    }
+
+    if (this.dead4) {
+      enemyWeapon4.autofire = false
+    }
+    
+    if (this.dead5) {
+      enemyWeapon5.autofire = false
+    }
+    
     enemy.animations.play('down', 15, true)
     enemy2.animations.play('down', 15, true)
     enemy3.animations.play('down', 15, true)
@@ -262,13 +318,18 @@ let Two = {
     }
   },
 
-  killPlayer: function(player, enemyWeapon) {
+  killPlayer: function(player, enemyWeapon) {  
     player.reset(player.body.velocity.x = 220, player.body.velocity.y = 1350)
-    game.state.start('EndGame')
+    // game.state.start('EndGame')
+  
     enemyWeapon.kill()
-    ninjaLives-= 1
+    
+    ninjaLives -= 1
+    
     console.log("ninja lives", ninjaLives)
+    
     ninjaLivesDisplay.text = ('Lives: ' + `${ninjaLives}`)
+    
     if (ninjaLives == 0) {
       ninjaLives = 3
       score = 0
@@ -278,9 +339,13 @@ let Two = {
 
   killPlayerCollide: function(player, enemy) {
     player.reset(player.body.velocity.x = 220, player.body.velocity.y = 1350)
-    ninjaLives-= 1
+        
+    ninjaLives -= 1
+    
     console.log("ninja lives", ninjaLives)
+    
     ninjaLivesDisplay.text = ('Lives: ' + `${ninjaLives}`)
+    
     if (ninjaLives == 0) {
       ninjaLives = 3
       score = 0
@@ -289,14 +354,18 @@ let Two = {
   },
   
   killEnemy: function(weapon, enemy) {
+    this.dead = true
+    
     score += 200
     scoreDisplay.setText('Score: ' + `${score}`)
     enemy.kill()
-    weapon.kill()
     fireOff(enemyWeapon)
+    weapon.kill()
   },
 
   killEnemy2: function(weapon, enemy2) {
+    this.dead2 = true
+    
     score += 200
     scoreDisplay.setText('Score: ' + `${score}`)
     enemy2.kill()
@@ -305,6 +374,8 @@ let Two = {
   },
 
   killEnemy3: function(weapon, enemy3) {
+    this.dead3 = true
+    
     score += 200
     scoreDisplay.setText('Score: ' + `${score}`)
     enemy3.kill()
@@ -313,6 +384,8 @@ let Two = {
   },
 
   killEnemy4: function(weapon, enemy4) {
+    this.dead4 = true
+    
     score += 200
     scoreDisplay.setText('Score: ' + `${score}`)
     enemy4.kill()
@@ -321,6 +394,8 @@ let Two = {
   },
 
   killEnemy5: function(weapon, enemy5) {
+    this.dead5 = true
+    
     score += 200
     scoreDisplay.setText('Score: ' + `${score}`)
     enemy5.kill()

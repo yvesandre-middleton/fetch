@@ -5,6 +5,7 @@ endGame.prototype = {
   // },
 
   create: function() {
+
       let placeholder = 'Player1'
       let playerName = prompt("Please enter name", placeholder)
       if (playerName === '' || playerName === null) {
@@ -54,6 +55,20 @@ endGame.prototype = {
       console.log("leaderboard", scores)
 
       
+      leaderboard.push({name: `${playerName}`, score: `${finalScore}`})
+      console.log("leaderboard", leaderboard)
+
+      // $.ajax({
+      //   url: '/scores',
+      //   method: 'POST',
+      //   data: leaderboard,
+      //   success: function (data) {
+      //     console.log('Success: ', data)
+      //     console.log(data)
+      //     }
+      //   })
+
+      egText.anchor.set(0.5);
       game.input.onDown.add(this.restartGame, this)
   },
 

@@ -27,11 +27,11 @@ let Game = {
     game.load.image('lvl1bg', 'assets/images/lvl1bg.png')
     game.load.image('bg', 'assets/images/bg.png')
     game.load.image('bg2', 'assets/images/bg2.png')
-    game.load.image('log', 'assets/images/log1.png')
+    game.load.image('log', 'assets/images/movable-log-lvl1-376x297.png')
+    game.load.image('exit-log', 'assets/images/exit-barrier-log-lvl1.png')
     game.load.image('treasure', 'assets/images/treasure.png')
     game.load.image('treasure2', 'assets/images/treasure2.png')
     game.load.image('shuriken', 'assets/images/shuriken.png')
-    // game.load.image('hilary2', 'assets/images/hilary2.png')
     game.load.image('autoEnemy', 'assets/images/head.png')
     game.load.image('boss', 'assets/images/head.png')
     game.load.spritesheet('hamster', 'assets/images/hamster-animation-sheet.png', 37, 45)
@@ -51,6 +51,7 @@ let Game = {
 
     // Add Background
     bg = makeSprite(0, 0, 'lvl1bg')
+    
     // Add Treasure Chest
     treasure = makeSprite(840, 670, 'treasure')
 
@@ -66,9 +67,8 @@ let Game = {
     // timer.loop(4000, this.createBossActions, this)
 
     // Add Sprites
-    log = makeSprite(370, 200, 'log')
+    log = makeSprite(376, 297, 'log')
     player = makeSprite(240, 1304, 'hamster')
-    // enemy = makeSprite(150, 500, 'hilary2')
     
     // Animations  
     initPlayerAnimations(player)
@@ -87,13 +87,14 @@ let Game = {
     boundaries.add(makeWorldSprite(700, 100, 320, 320, 'bg'))
     boundaries.add(makeWorldSprite(0, 0, 996, 110, 'bg'))
     boundaries.add(makeWorldSprite(0, 530, 134, 780, 'bg'))
+    boundaries.add(makeWorldSprite(270, 280, 100, 50, 'bg'))
 
     //Exit Boundary
     levelOneExit = boundaries.add(makeWorldSprite(685, 1090, 200, 220, 'bg'))
     boundaries.add(makeWorldSprite(996, 425, 100, 880, 'bg'))
 
     // Makes images transparent
-    alpha(boundaries)
+    alpha(boundaries  )
 
     // Teleportation
     teleport = game.add.tileSprite(60, 450, 50, 60, 'bg')
@@ -104,18 +105,19 @@ let Game = {
     // Water Boundary
     waterBoundaries = game.add.group()
     waterBoundaries.add(makeWaterSprite(385, 600, 300, 750, 'bg'))
-    waterBoundaries.add(makeWaterSprite(385, 380, 300, 70, 'bg'))
+    waterBoundaries.add(makeWaterSprite(385, 420, 300, 50, 'bg'))
     alpha(waterBoundaries)
 
     // Log
-    logCheck = makeSprite(370, 450, 'log')
+    logCheck = makeSprite(376, 490, 'log')
     alpha(logCheck)
 
-    someLog = makeSprite(370, 450, 'log')
+    someLog = makeSprite(376, 490, 'log')
     alpha(someLog)
 
     // Level Unlock
-    levelUnlock = makeSprite(640, 800, 'log')
+    levelUnlock = makeSprite(690, 800, 'exit-log')
+
     bullets = game.add.group()
     bullets.enableBody = true
     bullets.physicsBodyType = Phaser.Physics.ARCADE
@@ -150,7 +152,6 @@ let Game = {
       levelUnlock], 
       Phaser.Physics.ARCADE)
 
-
       //REFACTOR
     // boss.body.immovable = true
       
@@ -165,6 +166,9 @@ let Game = {
     
     // Teleport Down
     collideImmovable(teleport2)
+
+    // Log Check
+    immovable(logCheck)
     
     // Water Death
     collisionGroup(waterBoundaries)
@@ -184,21 +188,22 @@ let Game = {
     // Keys for player movement/actions
     gameControls()
 
-    //player score
+    // Player score
     scoreDisplay = game.add.text(25, 5, "Score: " + `${score}  `, { fill: 'white'})
     scoreDisplay.fixedToCamera = true
-    scoreDisplay.font = 'Knewave'
-    scoreDisplay.fontSize = 30
-    //player lives
-    ninjaLivesDisplay = game.add.text(scoreDisplay.x, scoreDisplay.y + 45, "Lives: " + `${ninjaLives} `, { fill: 'white'})
+    scoreDisplay.font = 'Press Start 2P'
+    scoreDisplay.fontSize = 16
+    
+    //Player lives
+    ninjaLivesDisplay = game.add.text(scoreDisplay.x, scoreDisplay.y + 20, "Lives: " + `${ninjaLives} `, { fill: 'white'})
     ninjaLivesDisplay.fixedToCamera = true
-    ninjaLivesDisplay.font = 'Knewave'
+    ninjaLivesDisplay.font = 'Press Start 2P'
     ninjaLivesDisplay.fontSize = scoreDisplay.fontSize
     
     // Timer display
-    time = game.add.text(scoreDisplay.x, scoreDisplay.y + 90)
+    time = game.add.text(scoreDisplay.x, scoreDisplay.y + 40)
     time.fixedToCamera = true
-    time.font = 'Knewave'
+    time.font = 'Press Start 2P'
     time.fontSize = scoreDisplay.fontSize
     time.addColor('white', 0);
   },
@@ -305,8 +310,9 @@ let Game = {
   killPlayer: function(player, enemy) {
     console.log("ninja lives", ninjaLives)
     player.kill()
+    // game.state.start('EndGame')
     timeDelay(500, player, 240, 1304)
-    ninjaLives-= 1
+    ninjaLives -= 1
     
     console.log("ninja lives", ninjaLives)
     ninjaLivesDisplay.text = ('Lives: ' + `${ninjaLives}`)
@@ -347,7 +353,7 @@ let Game = {
     
     if (this.logMoved) {
       game.time.events.add(500, () => {
-        logs.reset(logs.body.x = 370, logs.body.y = 450)
+        logs.reset(logs.body.x = 376, logs.body.y = 490)
         logs.kill()
       })
 
@@ -361,6 +367,8 @@ let Game = {
     if (!this.logMoved) {
       player.kill()
       timeDelay(500, player, 240, 1304)
+    } else {
+      logCheck.kill()
     }
   },
 
