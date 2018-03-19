@@ -183,20 +183,20 @@ let Game = {
     // Player score
     scoreDisplay = game.add.text(25, 5, "Score: " + `${score}  `, { fill: 'white'})
     scoreDisplay.fixedToCamera = true
-    scoreDisplay.font = 'Knewave'
-    scoreDisplay.fontSize = 40
+    scoreDisplay.font = 'Press Start 2P'
+    scoreDisplay.fontSize = 16
     
     //Player lives
-    ninjaLivesDisplay = game.add.text(scoreDisplay.x, scoreDisplay.y + 45, "Lives: " + `${ninjaLives} `, { fill: 'white'})
+    ninjaLivesDisplay = game.add.text(scoreDisplay.x, scoreDisplay.y + 20, "Lives: " + `${ninjaLives} `, { fill: 'white'})
     ninjaLivesDisplay.fixedToCamera = true
-    ninjaLivesDisplay.font = 'Knewave'
-    ninjaLivesDisplay.fontSize = 40
+    ninjaLivesDisplay.font = 'Press Start 2P'
+    ninjaLivesDisplay.fontSize = 16
     
     // Timer display
-    time = game.add.text(scoreDisplay.x, scoreDisplay.y + 90)
+    time = game.add.text(scoreDisplay.x, scoreDisplay.y + 40)
     time.fixedToCamera = true
-    time.font = 'Knewave'
-    time.fontSize = 40
+    time.font = 'Press Start 2P'
+    time.fontSize = 16
     time.addColor('white', 0);
   },
   

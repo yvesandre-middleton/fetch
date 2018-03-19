@@ -103,7 +103,7 @@ let Two = {
     tween2.to({ x: 2700 }, 2000, 'Linear', true, 0, 20, true).loop(true)
     
     tween3 = game.add.tween(enemy3)
-    tween3.to({ y: 1250 }, 1000, 'Linear', true, 0, 20, true).loop(true)
+    tween3.to({ y: 1250 }, 2000, 'Linear', true, 0, 20, true).loop(true)
     
     tween4 = game.add.tween(enemy2)
     tween4.to({ y: 270 }, 2000, 'Linear', true, 0, 20, true).loop(true)
@@ -202,20 +202,20 @@ let Two = {
     // Player score
     scoreDisplay = game.add.text(25, 5, "Score: " + `${score}  `, { fill: 'white'})
     scoreDisplay.fixedToCamera = true
-    scoreDisplay.font = 'Knewave'
-    scoreDisplay.fontSize = 40
+    scoreDisplay.font = 'Press Start 2P'
+    scoreDisplay.fontSize = 16
     
     // Player lives
-    ninjaLivesDisplay = game.add.text(scoreDisplay.x, scoreDisplay.y + 45, "Lives: " + `${ninjaLives} `, { fill: 'white'})
+    ninjaLivesDisplay = game.add.text(scoreDisplay.x, scoreDisplay.y +20, "Lives: " + `${ninjaLives} `, { fill: 'white'})
     ninjaLivesDisplay.fixedToCamera = true
-    ninjaLivesDisplay.font = 'Knewave'
-    ninjaLivesDisplay.fontSize = 40
+    ninjaLivesDisplay.font = 'Press Start 2P'
+    ninjaLivesDisplay.fontSize = 16
     
     // Timer display
-    time = game.add.text(scoreDisplay.x, scoreDisplay.y + 90)
+    time = game.add.text(scoreDisplay.x, scoreDisplay.y + 40)
     time.fixedToCamera = true
-    time.font = 'Knewave'
-    time.fontSize = 40
+    time.font = 'Press Start 2P'
+    time.fontSize = 16
     time.addColor('white', 0);
   },
     
@@ -315,7 +315,7 @@ let Two = {
 
   killPlayer: function(player, enemyWeapon) {  
     player.reset(player.body.velocity.x = 220, player.body.velocity.y = 1350)
-    timeDelay(500, player, 240, 1304)
+    
 
     enemyWeapon.kill()
     
