@@ -19,7 +19,7 @@ MongoClient.connect(MONGODB_URI, (err, db) => {
   }
   console.log(`connected to mongo db: ${MONGODB_URI}`)
 
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json())
 app.use(express.static("public"))
 
 
@@ -36,7 +36,7 @@ const DataHelpers = require("./lib/data-helpers.js")(db)
 const scoresRoutes = require("./routes/scores")(DataHelpers)
 
 // Mount the tweets routes at the "/tweets" path prefix:
-app.use("/scores", scoresRoutes)
+app.use("/leaderboard", scoresRoutes)
 
 app.listen(PORT, () => {
   console.log("Example app listening on port " + PORT)
