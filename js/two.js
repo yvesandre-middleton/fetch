@@ -70,10 +70,10 @@ let Two = {
     lvl2Sound.play()
     
     initWorldBounds(0, 0, 2750, 1500, 'bg')
-    game.add.image(0,0,'bg')
+    game.add.image(0, 0, 'bg')
 
-    player = makeSprite(220, 1500, 'hamster')
-    // player = makeSprite(2300, 1100, 'hamster')
+    // player = makeSprite(220, 1500, 'hamster')
+    player = makeSprite(2300, 1100, 'hamster')
     initPlayerAnimations(player)
      
     // Add a Timer
@@ -169,8 +169,7 @@ let Two = {
     boundaries.add(makeSprite(1729, 1070, 'wall14'))
     boundaries.add(makeSprite(1964, 1245, 'wall15'))
     
-    levelTwoExit = boundaries.add(makeSprite(2345, 0, 'wall8'))
-    
+    levelTwoExit = makeSprite(2345, 0, 'wall8')
     
     boundaries.add(makeSprite(0, 325, 'cliff1'))
     boundaries.add(makeSprite(264, 325, 'cliff2'))
@@ -182,8 +181,7 @@ let Two = {
     boundaries.add(makeSprite(576, 1356, 'water4'))
     boundaries.add(makeSprite(465, 489, 'water5'))
  
-    
-    alpha(boundaries)
+    // alpha(boundaries)
 
     game.physics.enable([
       player,
@@ -200,7 +198,8 @@ let Two = {
       boundaries,
       log,
       log2,
-      someLog2],
+      someLog2,
+      levelTwoExit],
       Phaser.Physics.ARCADE)
 
     // Player World Bounds
@@ -327,11 +326,11 @@ let Two = {
     game.physics.arcade.collide(weapon.bullets, enemy4, this.killEnemy4, null, this)
     game.physics.arcade.collide(weapon.bullets, enemy5, this.killEnemy5, null, this)
     
-    game.physics.arcade.collide(enemyWeapon.bullets, player, this.killPlayer, null, this)
-    game.physics.arcade.collide(enemyWeapon2.bullets, player, this.killPlayer, null, this)
-    game.physics.arcade.collide(enemyWeapon3.bullets, player, this.killPlayer, null, this)
-    game.physics.arcade.collide(enemyWeapon4.bullets, player, this.killPlayer, null, this)
-    game.physics.arcade.collide(enemyWeapon5.bullets, player, this.killPlayer, null, this)
+    // game.physics.arcade.collide(enemyWeapon.bullets, player, this.killPlayer, null, this)
+    // game.physics.arcade.collide(enemyWeapon2.bullets, player, this.killPlayer, null, this)
+    // game.physics.arcade.collide(enemyWeapon3.bullets, player, this.killPlayer, null, this)
+    // game.physics.arcade.collide(enemyWeapon4.bullets, player, this.killPlayer, null, this)
+    // game.physics.arcade.collide(enemyWeapon5.bullets, player, this.killPlayer, null, this)
     
     game.physics.arcade.collide(player, log, this.moveLog, null, this)
     game.physics.arcade.collide(player, log2, this.moveSecondLog, null, this)
@@ -484,7 +483,7 @@ let Two = {
   },
 
   startLevelThree: function(player, levelTwoExit) {
-    console.log("test")
+    exitSound.play()
     this.state.start('Three')
   }
 
