@@ -11,4 +11,4 @@ game.state.start('Menu')
 // game.state.start('Three')
 // game.state.start('Menu')
 
-game.state.start('Game')
+game.state.start('Three')
