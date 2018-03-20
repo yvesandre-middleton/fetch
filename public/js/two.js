@@ -45,13 +45,11 @@ let Two = {
     game.load.audio('exit', 'assets/audio/SFX/exit-sfx.wav')
     game.load.audio('push-log', 'assets/audio/SFX/push-sfx.wav')
     game.load.audio('stairs', 'assets/audio/SFX/stairs-sfx.wav')
-    // game.load.audio('walking', 'assets/audio/SFX/walking-sfx.wav')
     game.load.audio('walking', 'assets/audio/SFX/walking-sfx-short.wav')    
     game.load.audio('death', 'assets/audio/SFX/player-dies-sfx.wav')
     game.load.audio('lvl2', 'assets/audio/music/lvl2.wav')
     game.load.audio('lvl3', 'assets/audio/music/lvl3.wav') // Add this later
     game.load.audio('shuriken', 'assets/audio/SFX/shuriken.mp3')
-    
   },
   
   create: function() {
@@ -72,8 +70,8 @@ let Two = {
     initWorldBounds(0, 0, 2750, 1500, 'bg')
     game.add.image(0, 0, 'bg')
 
-    player = makeSprite(220, 1500, 'hamster')
-    // player = makeSprite(2300, 1100, 'hamster')
+    player = makeSprite(220, 2000, 'hamster')
+    // player = makeSprite(2300, 2000, 'hamster')
     initPlayerAnimations(player)
      
     // Add a Timer
@@ -171,13 +169,16 @@ let Two = {
     
     levelTwoExit = makeSprite(2345, 0, 'wall8')
     alpha(levelTwoExit)
-    
+
+    bridgeTopBoundary = makeWorldSprite(330, 0, 130, 40, 'log2')
+    alpha(bridgeTopBoundary)
+
     boundaries.add(makeSprite(0, 325, 'cliff1'))
-    boundaries.add(makeSprite(264, 325, 'cliff2'))
+    boundaries.add(makeSprite(264, 315, 'cliff2'))
     boundaries.add(makeSprite(1665, 1156, 'cliff3'))
     
-    boundaries.add(makeSprite(656, 489, 'water1'))
-    boundaries.add(makeSprite(656, 900, 'water2'))
+    boundaries.add(makeSprite(656, 475, 'water1'))
+    boundaries.add(makeSprite(656, 1000, 'water2'))
     boundaries.add(makeSprite(1340, 900, 'water3'))
     boundaries.add(makeSprite(576, 1356, 'water4'))
     boundaries.add(makeSprite(465, 489, 'water5'))
@@ -196,6 +197,7 @@ let Two = {
       enemyWeapon3,
       enemyWeapon4,
       enemyWeapon5,
+      bridgeTopBoundary,
       boundaries,
       log,
       log2,
@@ -208,6 +210,9 @@ let Two = {
   
     // World Boundaries
     collisionGroup(boundaries)
+
+    // Bridge Top Boundary
+    immovable(bridgeTopBoundary)
 
     // First Log Move
     collisionGroup(log)
@@ -231,7 +236,7 @@ let Two = {
     gameControls()
 
     // Player score
-    scoreDisplay = game.add.text(25, 5, "Score: " + `${score}`, { fill: 'white'})
+    scoreDisplay = game.add.text(25, 5, "Score: " + `${score}`, {fill: 'white'})
     scoreDisplay.fixedToCamera = true
     scoreDisplay.font = 'Press Start 2P'
     scoreDisplay.fontSize = 16
@@ -247,11 +252,10 @@ let Two = {
     time.fixedToCamera = true
     time.font = 'Press Start 2P'
     time.fontSize = scoreDisplay.fontSize
-    time.addColor('white', 0);
+    time.addColor('white', 0)
   },
     
   update: function() {
-
     if (player.body.y < 300) {
       enemyWeapon.autofire = true
     } 
@@ -313,6 +317,7 @@ let Two = {
     enemy5.animations.play('down', 15, true)
 
     game.physics.arcade.collide(player, boundaries)
+    game.physics.arcade.collide(player, bridgeTopBoundary)
     
     game.physics.arcade.collide(player, levelTwoExit, this.startLevelThree, null, this)
     game.physics.arcade.collide(player, enemy, this.killPlayerCollide, null, this)
@@ -327,11 +332,11 @@ let Two = {
     game.physics.arcade.collide(weapon.bullets, enemy4, this.killEnemy4, null, this)
     game.physics.arcade.collide(weapon.bullets, enemy5, this.killEnemy5, null, this)
     
-    // game.physics.arcade.collide(enemyWeapon.bullets, player, this.killPlayer, null, this)
-    // game.physics.arcade.collide(enemyWeapon2.bullets, player, this.killPlayer, null, this)
-    // game.physics.arcade.collide(enemyWeapon3.bullets, player, this.killPlayer, null, this)
-    // game.physics.arcade.collide(enemyWeapon4.bullets, player, this.killPlayer, null, this)
-    // game.physics.arcade.collide(enemyWeapon5.bullets, player, this.killPlayer, null, this)
+    game.physics.arcade.collide(enemyWeapon.bullets, player, this.killPlayer, null, this)
+    game.physics.arcade.collide(enemyWeapon2.bullets, player, this.killPlayer, null, this)
+    game.physics.arcade.collide(enemyWeapon3.bullets, player, this.killPlayer, null, this)
+    game.physics.arcade.collide(enemyWeapon4.bullets, player, this.killPlayer, null, this)
+    game.physics.arcade.collide(enemyWeapon5.bullets, player, this.killPlayer, null, this)
     
     game.physics.arcade.collide(player, log, this.moveLog, null, this)
     game.physics.arcade.collide(player, log2, this.moveSecondLog, null, this)
@@ -350,8 +355,7 @@ let Two = {
     deathSound.play()
     
     player.reset(player.body.velocity.x = 220, player.body.velocity.y = 1350)
-    // game.state.start('EndGame')
-  
+    
     enemyWeapon.kill()
     
     ninjaLives -= 1
@@ -382,6 +386,7 @@ let Two = {
     if (ninjaLives == 0) {
       ninjaLives = 3
       score = 0
+      
       game.sound.remove(lvl2Sound)
       game.state.start('GameOver') 
     }
@@ -394,9 +399,10 @@ let Two = {
     
     score += 200
     scoreDisplay.setText('Score: ' + `${score}`)
+    
     enemy.kill()
-    fireOff(enemyWeapon)
     weapon.kill()
+    fireOff(enemyWeapon)
   },
 
   killEnemy2: function(weapon, enemy2) {
@@ -406,6 +412,7 @@ let Two = {
     
     score += 200
     scoreDisplay.setText('Score: ' + `${score}`)
+    
     enemy2.kill()
     weapon.kill()
     fireOff(enemyWeapon2)
@@ -418,6 +425,7 @@ let Two = {
     
     score += 200
     scoreDisplay.setText('Score: ' + `${score}`)
+    
     enemy3.kill()
     weapon.kill()
     fireOff(enemyWeapon3)
@@ -430,6 +438,7 @@ let Two = {
     
     score += 200
     scoreDisplay.setText('Score: ' + `${score}`)
+    
     enemy4.kill()
     weapon.kill()
     fireOff(enemyWeapon4)
@@ -442,6 +451,7 @@ let Two = {
     
     score += 200
     scoreDisplay.setText('Score: ' + `${score}`)
+    
     enemy5.kill()
     weapon.kill()
     fireOff(enemyWeapon5)
@@ -486,6 +496,7 @@ let Two = {
   startLevelThree: function(player, levelTwoExit) {
     exitSound.play()
     game.sound.remove(lvl2Sound)
+    
     this.state.start('Three')
   }
 }
