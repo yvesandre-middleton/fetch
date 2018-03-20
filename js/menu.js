@@ -10,13 +10,19 @@ let max = 0
 let Menu = {
  preload: function() {
     game.load.image('titleScreen', 'assets/images/titlescreen.png')
-    // game.load.image('sky', 'assets/skies/sky3.png');
     game.load.spritesheet('snowflakes', 'assets/images/snowflakes.png', 17, 17);
     game.load.spritesheet('snowflakes_large', 'assets/images/snowflakes_large.png', 64, 64);
+
+    game.load.audio('menuSound', 'assets/audio/music/sakura-sakura-title-screen.mp3')
   },
 
 
   create: function() {
+
+    menuSound = game.add.audio('menuSound')
+    
+    menuSound.loop = true
+    menuSound.play()
 
     game.add.image(0, 0, 'titleScreen');
 
@@ -88,19 +94,16 @@ let Menu = {
   },
 
   setXSpeed: function(emitter, max) {
-
     emitter.setXSpeed(max - 20, max);
     emitter.forEachAlive(this.setParticleXSpeed, this, max);
-
   },
 
   setParticleXSpeed: function(particle, max) {
-
     particle.body.velocity.x = max - Math.floor(Math.random() * 30);
   },
 
   restartGame: function() {
+    game.sound.remove(menuSound)
     game.state.start('Game')
   }
-
 }

@@ -39,13 +39,40 @@ let Two = {
     game.load.spritesheet('red-hamster-left', 'assets/images/hamster-left-red-animation-sheet.png', 37, 45) 
     game.load.spritesheet('red-hamster-front', 'assets/images/hamster-front-red-animation-sheet.png', 37, 45) 
     game.load.spritesheet('red-hamster-back', 'assets/images/hamster-back-red-animation-sheet.png', 37, 45) 
+  
+    // REFACTOR
+    game.load.audio('enemy-death', 'assets/audio/SFX/enemy-dies-sfx.wav')
+    game.load.audio('exit', 'assets/audio/SFX/exit-sfx.wav')
+    game.load.audio('push-log', 'assets/audio/SFX/push-sfx.wav')
+    game.load.audio('stairs', 'assets/audio/SFX/stairs-sfx.wav')
+    // game.load.audio('walking', 'assets/audio/SFX/walking-sfx.wav')
+    game.load.audio('walking', 'assets/audio/SFX/walking-sfx-short.wav')    
+    game.load.audio('death', 'assets/audio/SFX/player-dies-sfx.wav')
+    game.load.audio('lvl2', 'assets/audio/music/lvl2.wav')
+    game.load.audio('lvl3', 'assets/audio/music/lvl3.wav') // Add this later
+    game.load.audio('shuriken', 'assets/audio/SFX/shuriken.mp3')
+    
   },
   
   create: function() {
-    initWorldBounds(0, 0, 2750, 1500, 'bg')
-    game.add.image(0,0,'bg')
+    
+    // Sounds // REFACTOR
+    exitSound = game.add.audio('exit') // MAKE SURE TO ADD
+    logSound = game.add.audio('push-log')
+    deathSound = game.add.audio('death')
+    enemyDeathSound = game.add.audio('enemy-death')
+    lvl2Sound = game.add.audio('lvl2')
+    lvl3Sound = game.add.audio('lvl3') // MAKE SURE TO ADD
+    shootingSound = game.add.audio('shuriken')
+    walkingSound = game.add.audio('walking')
 
-    player = makeSprite(220, 1350, 'hamster')
+    lvl2Sound.loop = true
+    // lvl2Sound.play()
+    
+    initWorldBounds(0, 0, 2750, 1500, 'bg')
+    game.add.image(0, 0, 'bg')
+
+    player = makeSprite(220, 1500, 'hamster')
     // player = makeSprite(2300, 1100, 'hamster')
     initPlayerAnimations(player)
      
@@ -142,8 +169,8 @@ let Two = {
     boundaries.add(makeSprite(1729, 1070, 'wall14'))
     boundaries.add(makeSprite(1964, 1245, 'wall15'))
     
-    levelTwoExit = boundaries.add(makeSprite(2345, 0, 'wall8'))
-    
+    levelTwoExit = makeSprite(2345, 0, 'wall8')
+    alpha(levelTwoExit)
     
     boundaries.add(makeSprite(0, 325, 'cliff1'))
     boundaries.add(makeSprite(264, 325, 'cliff2'))
@@ -155,7 +182,6 @@ let Two = {
     boundaries.add(makeSprite(576, 1356, 'water4'))
     boundaries.add(makeSprite(465, 489, 'water5'))
  
-    
     alpha(boundaries)
 
     game.physics.enable([
@@ -173,7 +199,8 @@ let Two = {
       boundaries,
       log,
       log2,
-      someLog2],
+      someLog2,
+      levelTwoExit],
       Phaser.Physics.ARCADE)
 
     // Player World Bounds
@@ -204,7 +231,7 @@ let Two = {
     gameControls()
 
     // Player score
-    scoreDisplay = game.add.text(25, 5, "Score: " + `${score}  `, { fill: 'white'})
+    scoreDisplay = game.add.text(25, 5, "Score: " + `${score}`, { fill: 'white'})
     scoreDisplay.fixedToCamera = true
     scoreDisplay.font = 'Press Start 2P'
     scoreDisplay.fontSize = 16
@@ -300,11 +327,11 @@ let Two = {
     game.physics.arcade.collide(weapon.bullets, enemy4, this.killEnemy4, null, this)
     game.physics.arcade.collide(weapon.bullets, enemy5, this.killEnemy5, null, this)
     
-    game.physics.arcade.collide(enemyWeapon.bullets, player, this.killPlayer, null, this)
-    game.physics.arcade.collide(enemyWeapon2.bullets, player, this.killPlayer, null, this)
-    game.physics.arcade.collide(enemyWeapon3.bullets, player, this.killPlayer, null, this)
-    game.physics.arcade.collide(enemyWeapon4.bullets, player, this.killPlayer, null, this)
-    game.physics.arcade.collide(enemyWeapon5.bullets, player, this.killPlayer, null, this)
+    // game.physics.arcade.collide(enemyWeapon.bullets, player, this.killPlayer, null, this)
+    // game.physics.arcade.collide(enemyWeapon2.bullets, player, this.killPlayer, null, this)
+    // game.physics.arcade.collide(enemyWeapon3.bullets, player, this.killPlayer, null, this)
+    // game.physics.arcade.collide(enemyWeapon4.bullets, player, this.killPlayer, null, this)
+    // game.physics.arcade.collide(enemyWeapon5.bullets, player, this.killPlayer, null, this)
     
     game.physics.arcade.collide(player, log, this.moveLog, null, this)
     game.physics.arcade.collide(player, log2, this.moveSecondLog, null, this)
@@ -315,10 +342,13 @@ let Two = {
 
     if (fireButton.isDown) {
       weapon.fire()
+      shootingSound.play()
     }
   },
 
   killPlayer: function(player, enemyWeapon) {  
+    deathSound.play()
+    
     player.reset(player.body.velocity.x = 220, player.body.velocity.y = 1350)
     enemyWeapon.kill()
     
@@ -331,11 +361,14 @@ let Two = {
     if (ninjaLives == 0) {
       ninjaLives = 3
       score = 0
+      game.sound.remove(lvl2Sound)      
       game.state.start('GameOver')
     }
   },
 
   killPlayerCollide: function(player, enemy) {
+    deathSound.play()
+
     player.reset(player.body.velocity.x = 220, player.body.velocity.y = 1350)
         
     ninjaLives -= 1
@@ -347,11 +380,14 @@ let Two = {
     if (ninjaLives == 0) {
       ninjaLives = 3
       score = 0
-      game.state.start('GameOver')
+      game.sound.remove(lvl2Sound)
+      game.state.start('GameOver') 
     }
   },
   
   killEnemy: function(weapon, enemy) {
+    enemyDeathSound.play()
+    
     this.dead = true
     
     score += 200
@@ -362,6 +398,8 @@ let Two = {
   },
 
   killEnemy2: function(weapon, enemy2) {
+    enemyDeathSound.play()
+    
     this.dead2 = true
     
     score += 200
@@ -372,6 +410,8 @@ let Two = {
   },
 
   killEnemy3: function(weapon, enemy3) {
+    enemyDeathSound.play()
+    
     this.dead3 = true
     
     score += 200
@@ -382,6 +422,8 @@ let Two = {
   },
 
   killEnemy4: function(weapon, enemy4) {
+    enemyDeathSound.play()
+    
     this.dead4 = true
     
     score += 200
@@ -392,6 +434,8 @@ let Two = {
   },
 
   killEnemy5: function(weapon, enemy5) {
+    enemyDeathSound.play()
+    
     this.dead5 = true
     
     score += 200
@@ -402,6 +446,8 @@ let Two = {
   },
 
   moveLog: function(player, log) {
+    logSound.play()
+
     game.world.bringToTop(player)
 
     game.time.events.add(200, () => {
@@ -417,6 +463,8 @@ let Two = {
   },
 
   moveSecondLog: function(player, log2) {
+    logSound.play()
+
     game.time.events.add(500, () => {
       this.logMoved = true
       log2.reset(log2.body.velocity.x = 1762, log2.body.velocity.y = 886), this
@@ -434,8 +482,8 @@ let Two = {
   },
 
   startLevelThree: function(player, levelTwoExit) {
-    console.log("test")
+    exitSound.play()
+    game.sound.remove(lvl2Sound)
     this.state.start('Three')
   }
-
 }

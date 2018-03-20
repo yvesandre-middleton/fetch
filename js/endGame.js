@@ -54,6 +54,8 @@ endGame.prototype = {
       })
       console.log("leaderboard", leaderboard)
 
+      leaderboardText.text = 'Leaderboard: ' + 
+
       // $.ajax({
       //   url: '/scores',
       //   method: 'POST',
