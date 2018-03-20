@@ -40,7 +40,7 @@ endGame.prototype = {
         game.add.text(30, 20 )
 
         leaderboard.push({name: `${playerName}`, score: `${finalScore}`})
-
+        console.log("leaderboard", leaderboard)
         leaderboard.sort(function (a, b) {
           return b.score - a.score
         })
@@ -48,30 +48,7 @@ endGame.prototype = {
         game.input.onDown.add(this.restartGame, this)
       })
       
-      // let playerName = prompt("Please enter name", placeholder)
-      // if (playerName === '') {
-      //   playerName = 'player'
-      // }
       
-
-      // for(let score in leaderboard){
-      //   console.log("scoreboard", score["name"])
-      // }
-
-      // console.log("score", `${score}`)
-      // console.log("Time", `${totalTime}`)
-      // console.log("time bonus", `${timeBonus}`)
-      // console.log("Lives bonus", `${livesBonus}`)
-      // console.log("final score", finalScore)
-      
-      
-
-      // scores.push({name: `${playerName}`, score: `${finalScore}`})
-      // scoreEntry = {name: `${playerName}`, score: `${finalScore}`}
-      //saveScore(scoreEntry)
-    
-      
-      console.log("leaderboard", leaderboard)
 
       // leaderboardText.text = 'Leaderboard: ' + 
 

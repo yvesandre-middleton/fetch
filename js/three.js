@@ -158,15 +158,6 @@ let Three = {
       bossWeapon.bulletGravity.y = 200
       bossWeapon.fireAngle = Phaser.ANGLE_DOWN
     }
-      
-        // bossWeapon.fireOffset(0, -32);
-
-        // bossWeapon.fireOffset(-16, -16);
-        // bossWeapon.fireOffset(16, -16);
-
-        // bossWeapon.fireOffset(-32, 0);
-        // bossWeapon.fireOffset(0, 0);
-        // bossWeapon.fireOffset(32, 0);
 
     game.physics.arcade.collide(player, boundaries)
 
@@ -218,12 +209,7 @@ let Three = {
   createBossActions: function() { 
     tween1 = game.add.tween(boss)   
     tween1.to({ y: 150 }, 2000, 'Linear', true, 0, 20, true).loop(true)
-    weapon.multiFire = true
-    // var tween = game.add.tween(boss).to({x: 300}, 2000, Phaser.Easing.Linear.None,true,0,1000,) 
-    // var tween1 = game.add.tween(boss).to({y: 500}, 2000, Phaser.Easing.Linear.None,true,0,1000,)
-    // tween.yoyo(true)
-    // tween1.yoyo(true)
-    
+    weapon.multiFire = true    
   },
 
   killBoss: function(weapon, boss) {

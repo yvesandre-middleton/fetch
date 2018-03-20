@@ -1,22 +1,4 @@
-let leaderboard = [
-  {
-    name: 'bob',
-    score: '1005'
-  },
-  {
-    name: 'ted',
-    score: '550'
-  },
-  {
-    name: 'snpr',
-    score: '1050'
-  },
-  {
-    name: 'ghost33',
-    score: '1200'
-  }
-]
-
+let leaderboard = []
 let score = 0
 let ninjaLives = 3
 let totalTime = 0
