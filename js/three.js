@@ -22,17 +22,23 @@ let Three = {
   
       // REFACTOR
       game.load.audio('shootingSound', 'assets/audio/SFX/shuriken.mp3')
+      game.load.audio('lvl3', 'assets/audio/music/lvl3.wav')
+      game.load.audio('win', 'assets/audio/music/win-game.mp3')
     },
 
     create: function() {
 
+      lvl3Sound = game.add.audio('lvl3')
+      lvl3Sound.loop = true
+      lvl3Sound.play()
+
       shootingSound = game.add.audio('shootingSound')
+      winSound = game.add.audio('win') // ADD THIS LATER
 
       initWorldBounds(0, 0, 900, 2000, 'lvl3bg')
       game.add.image(0, 0, 'lvl3bg')
 
-      player = makeSprite(325, 800, 'hamster')
-      // player = makeSprite(1200, 0, 'hamster')
+      player = makeSprite(440, 2000, 'hamster')
       initPlayerAnimations(player)
 
       weapon = makeWeapon(30, 'shuriken')

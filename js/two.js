@@ -67,13 +67,13 @@ let Two = {
     walkingSound = game.add.audio('walking')
 
     lvl2Sound.loop = true
-    lvl2Sound.play()
+    // lvl2Sound.play()
     
     initWorldBounds(0, 0, 2750, 1500, 'bg')
     game.add.image(0, 0, 'bg')
 
-    // player = makeSprite(220, 1500, 'hamster')
-    player = makeSprite(2300, 1100, 'hamster')
+    player = makeSprite(220, 1500, 'hamster')
+    // player = makeSprite(2300, 1100, 'hamster')
     initPlayerAnimations(player)
      
     // Add a Timer
@@ -170,6 +170,7 @@ let Two = {
     boundaries.add(makeSprite(1964, 1245, 'wall15'))
     
     levelTwoExit = makeSprite(2345, 0, 'wall8')
+    alpha(levelTwoExit)
     
     boundaries.add(makeSprite(0, 325, 'cliff1'))
     boundaries.add(makeSprite(264, 325, 'cliff2'))
@@ -181,7 +182,7 @@ let Two = {
     boundaries.add(makeSprite(576, 1356, 'water4'))
     boundaries.add(makeSprite(465, 489, 'water5'))
  
-    // alpha(boundaries)
+    alpha(boundaries)
 
     game.physics.enable([
       player,
@@ -484,7 +485,7 @@ let Two = {
 
   startLevelThree: function(player, levelTwoExit) {
     exitSound.play()
+    game.sound.remove(lvl2Sound)
     this.state.start('Three')
   }
-
 }
