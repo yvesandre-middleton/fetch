@@ -72,7 +72,7 @@ let Two = {
     initWorldBounds(0, 0, 2750, 1500, 'bg')
     game.add.image(0, 0, 'bg')
 
-    player = makeSprite(220, 1500, 'hamster')
+    player = makeSprite(500, 200, 'hamster')
     // player = makeSprite(2300, 1100, 'hamster')
     initPlayerAnimations(player)
      
@@ -171,7 +171,10 @@ let Two = {
     
     levelTwoExit = makeSprite(2345, 0, 'wall8')
     alpha(levelTwoExit)
-    
+
+    bridgeTopBoundary = makeWorldSprite(330, 0, 130, 40, 'log2')
+    alpha(bridgeTopBoundary)
+
     boundaries.add(makeSprite(0, 325, 'cliff1'))
     boundaries.add(makeSprite(264, 325, 'cliff2'))
     boundaries.add(makeSprite(1665, 1156, 'cliff3'))
@@ -196,6 +199,7 @@ let Two = {
       enemyWeapon3,
       enemyWeapon4,
       enemyWeapon5,
+      bridgeTopBoundary,
       boundaries,
       log,
       log2,
@@ -208,6 +212,9 @@ let Two = {
   
     // World Boundaries
     collisionGroup(boundaries)
+
+    // Bridge Top Boundary
+    immovable(bridgeTopBoundary)
 
     // First Log Move
     collisionGroup(log)
@@ -313,6 +320,7 @@ let Two = {
     enemy5.animations.play('down', 15, true)
 
     game.physics.arcade.collide(player, boundaries)
+    game.physics.arcade.collide(player, bridgeTopBoundary)
     
     game.physics.arcade.collide(player, levelTwoExit, this.startLevelThree, null, this)
     game.physics.arcade.collide(player, enemy, this.killPlayerCollide, null, this)
