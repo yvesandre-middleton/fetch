@@ -1,9 +1,8 @@
+let bossHealth = 100
 let Three = {
   preload: function() {
-      // game.load.image('bg', 'assets/900x2000.png')
       game.load.image('shuriken', 'assets/images/shuriken.png')
-      game.load.image('boss', 'assets/images/head.png')
-
+      // game.load.image('corn', 'assets/images/corn-kernel.png')
       game.load.image('lvl3bg', 'assets/images/lvl3bg-900x2000.png')
 
       // Boundaries
@@ -16,10 +15,12 @@ let Three = {
       game.load.image('wall7', 'assets/images/lvl3-wall7-789x111.png')
 
       game.load.spritesheet('hamster', 'assets/images/hamster-animation-sheet.png', 37, 45) 
-      game.load.spritesheet('red-hamster-left', 'assets/images/hamster-left-red-animation-sheet.png', 37, 45) 
-      game.load.spritesheet('red-hamster-front', 'assets/images/hamster-front-red-animation-sheet.png', 37, 45) 
-      game.load.spritesheet('red-hamster-back', 'assets/images/hamster-back-red-animation-sheet.png', 37, 45)
-  
+      // game.load.spritesheet('red-hamster-left', 'assets/images/hamster-left-red-animation-sheet.png', 37, 45) 
+      // game.load.spritesheet('red-hamster-front', 'assets/images/hamster-front-red-animation-sheet.png', 37, 45) 
+      // game.load.spritesheet('red-hamster-back', 'assets/images/hamster-back-red-animation-sheet.png', 37, 45)
+      
+      game.load.spritesheet('boss', 'assets/images/boss-spritesheet-175x170.png', 175, 170)
+       
       // REFACTOR
       game.load.audio('shootingSound', 'assets/audio/SFX/shuriken.mp3')
       game.load.audio('lvl3', 'assets/audio/music/lvl3.wav')
@@ -41,24 +42,42 @@ let Three = {
       player = makeSprite(440, 2000, 'hamster')
       initPlayerAnimations(player)
 
-      weapon = makeWeapon(30, 'shuriken')
-      initWeapon(weapon)
-
-      //Add boss
-      // this.bossHealthBar = new HealthBar(this.game, {x: 700, y: 50, width: 120});
-      // this.bossHealthBar.setPercent(bossHealth);
-      // healthText = game.add.text(this.bossHealthBar.x, this.bossHealthBar.y + 50, "Health ");
-      // healthText.fixedToCamera = true
-      // healthText.anchor.setTo(0.5)
-      // healthText.font = 'Knewave'
-      // healthText.fontSize = 40
-      // boss = game.add.sprite(800, 900, 'boss')
-      // timer.loop(4000, this.createBossActions, this)
-
       // Add a Timer
       timer = game.time.create(false);
       timer.loop(1250, this.updateCounter, this)
       timer.start()
+
+      //Add boss
+      boss = makeSprite(500, 320, 'boss')
+     
+      // Boss Animations
+      boss.animations.add('down', [0, 1, 2, 3, 4], 15, true);
+
+      // Add Boss Weapon
+      bossWeapon = game.add.weapon(30, 'shuriken')
+  
+      // Weapon Methods
+      initEnemyWeapon(bossWeapon)
+      bossWeapon.fireAngle = Phaser.ANGLE_DOWN
+      bossWeapon.trackSprite(boss, 30, 30, false)
+
+      // Boss Health Bar
+      this.bossHealthBar = new HealthBar(this.game, {x: 700, y: 50, width: 120});
+      this.bossHealthBar.setPercent(bossHealth);
+      
+      // Health Bar Text
+      healthText = game.add.text(this.bossHealthBar.x, this.bossHealthBar.y + 50, "Health ", { fill: 'white'} );
+      healthText.fixedToCamera = true
+      healthText.anchor.setTo(0.5)
+      healthText.font = 'Press Start 2P'
+      healthText.fontSize = 16
+      // boss = game.add.sprite(500, 320, 'boss')
+      timer.loop(4000, this.createBossActions, this)
+
+      weapon = makeWeapon(30, 'shuriken')
+      weapon.multiFire = true
+      initWeapon(weapon)
+
 
       boundaries = game.add.group()
       boundaries.add(makeSprite(201, 823, 'wall1'))
@@ -73,12 +92,16 @@ let Three = {
 
       game.physics.enable([
         player,
-      //   boss,
+        boss,
+        bossWeapon,
         boundaries
         ],
         Phaser.Physics.ARCADE)
 
       // boss.body.immovable = true
+
+       // Make sure boss doesn't move on hit
+      immovable(boss)
 
       // Player World Bounds
       collision(player)
@@ -111,8 +134,44 @@ let Three = {
   },
     
   update: function() {
-    game.physics.arcade.collide(player, boundaries)
+    if (cursors.left.isDown)
+    {
+    bossWeapon.bulletGravity.y = 800
+    bossWeapon.fireAngle = Phaser.ANGLE_LEFT
+    }
+    else if (cursors.right.isDown)
+    {
+    bossWeapon.bulletGravity.y = 800
+    bossWeapon.fireAngle = Phaser.ANGLE_RIGHT
+    }
+    else if (cursors.down.isDown)
+    {
+    bossWeapon.bulletGravity.y = 200
+    bossWeapon.fireAngle = Phaser.ANGLE_DOWN
+    }
+      
+        bossWeapon.fireOffset(0, -32);
+
+        bossWeapon.fireOffset(-16, -16);
+        bossWeapon.fireOffset(16, -16);
+
+        bossWeapon.fireOffset(-32, 0);
+        bossWeapon.fireOffset(0, 0);
+        bossWeapon.fireOffset(32, 0);
+
+        bossWeapon.autofire = true
     
+
+    game.physics.arcade.collide(player, boundaries)
+
+    game.physics.arcade.collide(player, boss, this.killPlayer, null, this)
+    game.physics.arcade.collide(player, boss, this.killPlayerCollide, null, this)
+    game.physics.arcade.collide(weapon.bullets, boss, this.killBoss, null, this)
+    game.physics.arcade.collide(weapon.bullets, boss, this.killEnemy, null, this)
+
+    game.physics.arcade.collide(bossWeapon.bullets, player, this.killPlayer, null, this)
+    // game.physics.arcade.collide(player, enemy, this.killPlayer, null, this)
+
     startingVelocity(player)
     playerMovement(player, weapon)
 
@@ -120,10 +179,13 @@ let Three = {
       weapon.fire()
       shootingSound.play()
     }
+  
+    boss.animations.play('down')
+  
   },
 
   killPlayer: function(player, enemyWeapon) {
-    player.reset(player.body.velocity.x = 220, player.body.velocity.y = 1350)
+    player.reset(player.body.velocity.x = 440, player.body.velocity.y = 2000)
     enemyWeapon.kill()
     ninjaLives-= 1
     console.log("ninja lives", ninjaLives)
@@ -136,7 +198,7 @@ let Three = {
   },
 
   killPlayerCollide: function(player, enemy) {
-    player.reset(player.body.velocity.x = 220, player.body.velocity.y = 1350)
+    player.reset(player.body.velocity.x = 440, player.body.velocity.y = 2000)
     ninjaLives-= 1
     console.log("ninja lives", ninjaLives)
     ninjaLivesDisplay.text = ('Lives: ' + `${ninjaLives}`)
@@ -147,13 +209,40 @@ let Three = {
     }
   },
 
+  createBossActions: function() {         
+    var tween = game.add.tween(boss).to({x: 300}, 2000, Phaser.Easing.Linear.None,true,0,1000,) 
+    // var tween1 = game.add.tween(boss).to({angle: 180}, 3000, Phaser.Easing.Quadratic.In, true);
+    // var tween2 = game.add.tween(boss).to({angle: 360}, 2000, Phaser.Easing.Quadratic.Out, true);
+    // var tween3 = game.add.tween(boss).to({angle: 180}, 3000, Phaser.Easing.Quadratic.InOut, true);
+    // var tween4 = game.add.tween(boss).to({angle: 360}, 2000, Phaser.Easing.Quadratic.InOut, true);
+    tween.yoyo(true)
+    // tween2.yoyo(true)
+    // tween3.yoyo(true)
+    // tween4.yoyo(true)
+  },
+
+  killBoss: function(weapon, boss) {
+    score += 200
+    console.log('score', score)
+    scoreDisplay.text = ('Score: ' + `${score}`)
+    bossHealth -= 40  
+    boss.kill()
+    this.bossHealthBar.setPercent(bossHealth)
+    console.log('bossHealth', bossHealth)
+
+    if (bossHealth < 0) {
+      console.log('bossHealth', bossHealth)
+      boss.kill()
+      weapon.kill()
+      score += 500
+      bossHealth = 100
+      game.state.start('EndGame')
+    }
+  },
+
   updateCounter: function() {
     totalTime++
     time.setText('Time: ' + totalTime);
-  },
+  }
 
-  // startLevelThree: function(player, levelTwoExit) {
-  //   console.log("test")
-  //   this.state.start('Three')
-  // }
 }

@@ -54,7 +54,7 @@ endGame.prototype = {
       })
       console.log("leaderboard", leaderboard)
 
-      leaderboardText.text = 'Leaderboard: ' + 
+      // leaderboardText.text = 'Leaderboard: ' + 
 
       // $.ajax({
       //   url: '/scores',

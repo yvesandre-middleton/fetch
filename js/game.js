@@ -17,7 +17,6 @@ let leaderboard = [
   }
 ]
 
-let bossHealth = 100
 let score = 0
 let ninjaLives = 3
 let totalTime = 0
@@ -81,17 +80,6 @@ let Game = {
     
     // Add Treasure Chest
     treasure = makeSprite(840, 670, 'treasure')
-
-    //Add boss
-    // this.bossHealthBar = new HealthBar(this.game, {x: 700, y: 50, width: 120});
-    // this.bossHealthBar.setPercent(bossHealth);
-    // healthText = game.add.text(this.bossHealthBar.x, this.bossHealthBar.y + 50, "Health ");
-    // healthText.fixedToCamera = true
-    // healthText.anchor.setTo(0.5)
-    // healthText.font = 'Knewave'
-    // healthText.fontSize = 40
-    // boss = game.add.sprite(800, 900, 'boss')
-    // timer.loop(4000, this.createBossActions, this)
 
     // Add Sprites
     log = makeSprite(376, 297, 'log')
@@ -169,7 +157,6 @@ let Game = {
       weapon,
       // enemyWeapon, 
       // enemy, 
-      // boss,
       teleport, 
       teleport2, 
       boundaries, 
@@ -250,12 +237,8 @@ let Game = {
     game.physics.arcade.collide(player, logCheck, this.checkPlatfrom, null, this)
 
     // game.physics.arcade.overlap(enemyWeapon.bullets, player, this.killPlayer, null, this)
-    // game.physics.arcade.collide(player, boss, this.killPlayer, null, this)
-    // game.physics.arcade.collide(player, enemy, this.killPlayer, null, this)
     // game.physics.arcade.collide(player, autoEnemies, this.killPlayer, null, this)
     // game.physics.arcade.collide(weapon.bullets, autoEnemies, this.killEnemy, null, this)
-    // game.physics.arcade.collide(weapon.bullets, boss, this.killBoss, null, this)
-    // game.physics.arcade.collide(player, boss, this.killPlayer, null, this)
     // game.physics.arcade.overlap(weapon.bullets, enemy, this.killEnemy, null, this)
     
     startingVelocity(player)
@@ -287,36 +270,6 @@ let Game = {
     enemyWeapon.autofire = false
     console.log('killEnemy')
   },
-
-  // createBossActions: function() {         
-  //   var tween = game.add.tween(boss).to({x: 500}, 2000, Phaser.Easing.Linear.None,true,0,1000,)
-  //   var tween1 = game.add.tween(boss).to({angle: 180}, 3000, Phaser.Easing.Quadratic.In, true);
-  //   var tween2 = game.add.tween(boss).to({angle: 360}, 2000, Phaser.Easing.Quadratic.Out, true);
-  //   var tween3 = game.add.tween(boss).to({angle: 180}, 3000, Phaser.Easing.Quadratic.InOut, true);
-  //   var tween4 = game.add.tween(boss).to({angle: 360}, 2000, Phaser.Easing.Quadratic.InOut, true);
-  //   tween.yoyo(true)
-  //   tween2.yoyo(true)
-  //   tween3.yoyo(true)
-  //   tween4.yoyo(true)
-  // },
-
-  // killBoss: function(weapon, boss) {
-  //   score += 200
-  //   console.log('score', score)
-  //   scoreDisplay.text = ('Score: ' + `${score}`)
-  //   bossHealth -= 40  
-  //   boss.kill()
-  //   this.bossHealthBar.setPercent(bossHealth)
-  //   console.log('bossHealth', bossHealth)
-
-  //   if (bossHealth < 0) {
-  //     console.log('bossHealth', bossHealth)
-  //     boss.kill()
-  //     weapon.kill()
-  //     score += 500
-  //     bossHealth = 100
-  //     game.state.start('EndGame')
-  //   }
     
   // },
 
@@ -426,7 +379,7 @@ let Game = {
   },
   //   game.add.tween(weaponText).to({ alpha: 0 }, 7000, Phaser.Easing.Linear.None, true)
   // }
-  
+
   startLevelTwo: function(player, levelTwoExit) {
     game.sound.remove(lvl1Sound)
     exitSound.play()

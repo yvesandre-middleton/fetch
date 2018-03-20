@@ -158,7 +158,7 @@ HealthBar.prototype.kill = function() {
     this.barSprite.kill();
 };
 
-module.exports = HealthBar;
+// module.exports = HealthBar;
 
 
 
