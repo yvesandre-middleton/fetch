@@ -1,4 +1,4 @@
-let scores = [
+let leaderboard = [
   {
     name: 'bob',
     score: '1005'
@@ -388,6 +388,6 @@ let Game = {
   // }
 
   startLevelTwo: function(player, levelOneExit) {
-    this.state.start('Endgame')
+    this.state.start('Two')
   }
 }

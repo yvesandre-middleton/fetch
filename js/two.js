@@ -320,8 +320,6 @@ let Two = {
 
   killPlayer: function(player, enemyWeapon) {  
     player.reset(player.body.velocity.x = 220, player.body.velocity.y = 1350)
-    // game.state.start('EndGame')
-  
     enemyWeapon.kill()
     
     ninjaLives -= 1

@@ -193,8 +193,8 @@ let Three = {
     scoreDisplay.font = 'Press Start 2P'
     scoreDisplay.fontSize = 16
     
-    // Player lives
-    ninjaLivesDisplay = game.add.text(scoreDisplay.x, scoreDisplay.y +20, "Lives: " + `${ninjaLives} `, { fill: 'white'})
+    //Player lives
+    ninjaLivesDisplay = game.add.text(scoreDisplay.x, scoreDisplay.y + 20, "Lives: " + `${ninjaLives} `, { fill: 'white'})
     ninjaLivesDisplay.fixedToCamera = true
     ninjaLivesDisplay.font = 'Press Start 2P'
     ninjaLivesDisplay.fontSize = scoreDisplay.fontSize
