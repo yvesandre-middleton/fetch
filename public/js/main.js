@@ -8,4 +8,4 @@ game.state.add('EndGame', endGame)
 game.state.add('GameOver', gameOver)
 game.state.start('Menu')
 
-game.state.start('Two')
+// game.state.start('Three')
