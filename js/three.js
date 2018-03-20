@@ -2,7 +2,7 @@ let bossHealth = 100
 let Three = {
   preload: function() {
       game.load.image('shuriken', 'assets/images/shuriken.png')
-      // game.load.image('corn', 'assets/images/corn-kernel.png')
+      game.load.image('corn', 'assets/images/tiny-corn.png')
       game.load.image('lvl3bg', 'assets/images/lvl3bg-900x2000.png')
 
       // Boundaries
@@ -54,19 +54,22 @@ let Three = {
       boss.animations.add('down', [0, 1, 2, 3, 4], 15, true);
 
       // Add Boss Weapon
-      bossWeapon = game.add.weapon(30, 'shuriken')
+      bossWeapon = game.add.weapon(30, 'corn')
   
       // Weapon Methods
       initEnemyWeapon(bossWeapon)
       bossWeapon.fireAngle = Phaser.ANGLE_DOWN
       bossWeapon.trackSprite(boss, 30, 30, false)
 
+      tween = game.add.tween(boss)
+      tween.to({ x: 150 }, 2000, 'Linear', true, 0, 20, true).loop(true)
+
       // Boss Health Bar
-      this.bossHealthBar = new HealthBar(this.game, {x: 700, y: 50, width: 120});
+      this.bossHealthBar = new HealthBar(this.game, {x: 730, y: 30, width: 120});
       this.bossHealthBar.setPercent(bossHealth);
       
       // Health Bar Text
-      healthText = game.add.text(this.bossHealthBar.x, this.bossHealthBar.y + 50, "Health ", { fill: 'white'} );
+      healthText = game.add.text(this.bossHealthBar.x + 10, this.bossHealthBar.y + 40, "Health ", { fill: 'white'} );
       healthText.fixedToCamera = true
       healthText.anchor.setTo(0.5)
       healthText.font = 'Press Start 2P'
@@ -134,33 +137,36 @@ let Three = {
   },
     
   update: function() {
+    if (player.body.y < 1000) {
+      bossWeapon.autofire = true
+    }
+    else {
+      bossWeapon.autofire = false
+    }
     if (cursors.left.isDown)
     {
-    bossWeapon.bulletGravity.y = 800
-    bossWeapon.fireAngle = Phaser.ANGLE_LEFT
+      bossWeapon.bulletGravity.y = 800
+      bossWeapon.fireAngle = Phaser.ANGLE_LEFT
     }
-    else if (cursors.right.isDown)
+    if (cursors.right.isDown)
     {
-    bossWeapon.bulletGravity.y = 800
-    bossWeapon.fireAngle = Phaser.ANGLE_RIGHT
+      bossWeapon.bulletGravity.y = 800
+      bossWeapon.fireAngle = Phaser.ANGLE_RIGHT
     }
-    else if (cursors.down.isDown)
+    if (cursors.down.isDown)
     {
-    bossWeapon.bulletGravity.y = 200
-    bossWeapon.fireAngle = Phaser.ANGLE_DOWN
+      bossWeapon.bulletGravity.y = 200
+      bossWeapon.fireAngle = Phaser.ANGLE_DOWN
     }
       
-        bossWeapon.fireOffset(0, -32);
+        // bossWeapon.fireOffset(0, -32);
 
-        bossWeapon.fireOffset(-16, -16);
-        bossWeapon.fireOffset(16, -16);
+        // bossWeapon.fireOffset(-16, -16);
+        // bossWeapon.fireOffset(16, -16);
 
-        bossWeapon.fireOffset(-32, 0);
-        bossWeapon.fireOffset(0, 0);
-        bossWeapon.fireOffset(32, 0);
-
-        bossWeapon.autofire = true
-    
+        // bossWeapon.fireOffset(-32, 0);
+        // bossWeapon.fireOffset(0, 0);
+        // bossWeapon.fireOffset(32, 0);
 
     game.physics.arcade.collide(player, boundaries)
 
@@ -209,16 +215,15 @@ let Three = {
     }
   },
 
-  createBossActions: function() {         
-    var tween = game.add.tween(boss).to({x: 300}, 2000, Phaser.Easing.Linear.None,true,0,1000,) 
-    // var tween1 = game.add.tween(boss).to({angle: 180}, 3000, Phaser.Easing.Quadratic.In, true);
-    // var tween2 = game.add.tween(boss).to({angle: 360}, 2000, Phaser.Easing.Quadratic.Out, true);
-    // var tween3 = game.add.tween(boss).to({angle: 180}, 3000, Phaser.Easing.Quadratic.InOut, true);
-    // var tween4 = game.add.tween(boss).to({angle: 360}, 2000, Phaser.Easing.Quadratic.InOut, true);
-    tween.yoyo(true)
-    // tween2.yoyo(true)
-    // tween3.yoyo(true)
-    // tween4.yoyo(true)
+  createBossActions: function() { 
+    tween1 = game.add.tween(boss)   
+    tween1.to({ y: 150 }, 2000, 'Linear', true, 0, 20, true).loop(true)
+    weapon.multiFire = true
+    // var tween = game.add.tween(boss).to({x: 300}, 2000, Phaser.Easing.Linear.None,true,0,1000,) 
+    // var tween1 = game.add.tween(boss).to({y: 500}, 2000, Phaser.Easing.Linear.None,true,0,1000,)
+    // tween.yoyo(true)
+    // tween1.yoyo(true)
+    
   },
 
   killBoss: function(weapon, boss) {
