@@ -1,7 +1,7 @@
 let gameOver = function(game) {}
 gameOver.prototype = {
   preload: function() {
-      game.load.image('endGame', 'assets/images/gameOverScreen.png')
+      game.load.image('gameOver', 'assets/images/gameOverScreen.png')
     },
 
   create: function() {
@@ -11,7 +11,7 @@ gameOver.prototype = {
           align: "center"
       }
       
-      let ninja = game.add.sprite(0, 0, 'endGame')
+      let ninja = game.add.sprite(0, 0, 'gameOver')
       
       game.input.onDown.add(this.restartGame, this)
       

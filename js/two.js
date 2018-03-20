@@ -45,13 +45,11 @@ let Two = {
     game.load.audio('exit', 'assets/audio/SFX/exit-sfx.wav')
     game.load.audio('push-log', 'assets/audio/SFX/push-sfx.wav')
     game.load.audio('stairs', 'assets/audio/SFX/stairs-sfx.wav')
-    // game.load.audio('walking', 'assets/audio/SFX/walking-sfx.wav')
     game.load.audio('walking', 'assets/audio/SFX/walking-sfx-short.wav')    
     game.load.audio('death', 'assets/audio/SFX/player-dies-sfx.wav')
     game.load.audio('lvl2', 'assets/audio/music/lvl2.wav')
     game.load.audio('lvl3', 'assets/audio/music/lvl3.wav') // Add this later
     game.load.audio('shuriken', 'assets/audio/SFX/shuriken.mp3')
-    
   },
   
   create: function() {
@@ -72,7 +70,6 @@ let Two = {
     initWorldBounds(0, 0, 2750, 1500, 'bg')
     game.add.image(0, 0, 'bg')
 
-    // player = makeSprite(600, 1200, 'hamster')
     player = makeSprite(220, 2000, 'hamster')
     initPlayerAnimations(player)
      
@@ -258,7 +255,6 @@ let Two = {
   },
     
   update: function() {
-
     if (player.body.y < 300) {
       enemyWeapon.autofire = true
     } 
@@ -358,8 +354,6 @@ let Two = {
     deathSound.play()
     
     player.reset(player.body.velocity.x = 220, player.body.velocity.y = 1350)
-    // game.state.start('EndGame')
-  
     enemyWeapon.kill()
     
     ninjaLives -= 1
