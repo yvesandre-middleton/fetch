@@ -72,8 +72,8 @@ let Two = {
     initWorldBounds(0, 0, 2750, 1500, 'bg')
     game.add.image(0, 0, 'bg')
 
-    player = makeSprite(500, 200, 'hamster')
-    // player = makeSprite(2300, 1100, 'hamster')
+    // player = makeSprite(600, 1200, 'hamster')
+    player = makeSprite(220, 2000, 'hamster')
     initPlayerAnimations(player)
      
     // Add a Timer
@@ -176,11 +176,11 @@ let Two = {
     alpha(bridgeTopBoundary)
 
     boundaries.add(makeSprite(0, 325, 'cliff1'))
-    boundaries.add(makeSprite(264, 325, 'cliff2'))
+    boundaries.add(makeSprite(264, 315, 'cliff2'))
     boundaries.add(makeSprite(1665, 1156, 'cliff3'))
     
-    boundaries.add(makeSprite(656, 489, 'water1'))
-    boundaries.add(makeSprite(656, 900, 'water2'))
+    boundaries.add(makeSprite(656, 475, 'water1'))
+    boundaries.add(makeSprite(656, 1000, 'water2'))
     boundaries.add(makeSprite(1340, 900, 'water3'))
     boundaries.add(makeSprite(576, 1356, 'water4'))
     boundaries.add(makeSprite(465, 489, 'water5'))
@@ -238,7 +238,7 @@ let Two = {
     gameControls()
 
     // Player score
-    scoreDisplay = game.add.text(25, 5, "Score: " + `${score}`, { fill: 'white'})
+    scoreDisplay = game.add.text(25, 5, "Score: " + `${score}`, {fill: 'white'})
     scoreDisplay.fixedToCamera = true
     scoreDisplay.font = 'Press Start 2P'
     scoreDisplay.fontSize = 16
