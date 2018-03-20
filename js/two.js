@@ -71,6 +71,7 @@ let Two = {
     game.add.image(0, 0, 'bg')
 
     player = makeSprite(220, 2000, 'hamster')
+    // player = makeSprite(2300, 2000, 'hamster')
     initPlayerAnimations(player)
      
     // Add a Timer
@@ -251,7 +252,7 @@ let Two = {
     time.fixedToCamera = true
     time.font = 'Press Start 2P'
     time.fontSize = scoreDisplay.fontSize
-    time.addColor('white', 0);
+    time.addColor('white', 0)
   },
     
   update: function() {
@@ -354,6 +355,7 @@ let Two = {
     deathSound.play()
     
     player.reset(player.body.velocity.x = 220, player.body.velocity.y = 1350)
+    
     enemyWeapon.kill()
     
     ninjaLives -= 1
@@ -384,6 +386,7 @@ let Two = {
     if (ninjaLives == 0) {
       ninjaLives = 3
       score = 0
+      
       game.sound.remove(lvl2Sound)
       game.state.start('GameOver') 
     }
@@ -396,9 +399,10 @@ let Two = {
     
     score += 200
     scoreDisplay.setText('Score: ' + `${score}`)
+    
     enemy.kill()
-    fireOff(enemyWeapon)
     weapon.kill()
+    fireOff(enemyWeapon)
   },
 
   killEnemy2: function(weapon, enemy2) {
@@ -408,6 +412,7 @@ let Two = {
     
     score += 200
     scoreDisplay.setText('Score: ' + `${score}`)
+    
     enemy2.kill()
     weapon.kill()
     fireOff(enemyWeapon2)
@@ -420,6 +425,7 @@ let Two = {
     
     score += 200
     scoreDisplay.setText('Score: ' + `${score}`)
+    
     enemy3.kill()
     weapon.kill()
     fireOff(enemyWeapon3)
@@ -432,6 +438,7 @@ let Two = {
     
     score += 200
     scoreDisplay.setText('Score: ' + `${score}`)
+    
     enemy4.kill()
     weapon.kill()
     fireOff(enemyWeapon4)
@@ -444,6 +451,7 @@ let Two = {
     
     score += 200
     scoreDisplay.setText('Score: ' + `${score}`)
+    
     enemy5.kill()
     weapon.kill()
     fireOff(enemyWeapon5)
@@ -488,6 +496,7 @@ let Two = {
   startLevelThree: function(player, levelTwoExit) {
     exitSound.play()
     game.sound.remove(lvl2Sound)
+    
     this.state.start('Three')
   }
 }

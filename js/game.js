@@ -46,7 +46,6 @@ let Game = {
     game.load.audio('lvl2', 'assets/audio/music/lvl2.wav')
     game.load.audio('lvl1', 'assets/audio/music/lvl1.wav')
     game.load.audio('shuriken', 'assets/audio/SFX/shuriken.mp3')    
-  
   },
   
   create: function() {
@@ -54,7 +53,6 @@ let Game = {
     
     // Sounds
     // REFACTOR
-
     stairSound = game.add.audio('stairs')
     treasureSound = game.add.audio('treasure')
     exitSound = game.add.audio('exit')
@@ -277,7 +275,7 @@ let Game = {
     game.time.events.add(1000, function() {
       game.add.tween(levelUnlock).to({alpha: 0}, 1500, Phaser.Easing.Linear.None, true)
     }, this)
-      console.log('test')
+    console.log('test')
   },
 
   moveLog: function (player, logs) {
@@ -311,13 +309,18 @@ let Game = {
 
   spawnWeapon: function(player, treasure) {
     this.enableWeapon = true
+    
     treasure.kill()
     this.fadeOutLog()
+    
     levelUnlock.body.immovable = false
     levelUnlock.body.collideWorldBounds = false
+    
     game.add.sprite(840, 670, 'treasure2')
+    
     let weaponText = game.add.sprite(740, 530, 'weaponText')
     weaponText.alpha = 1
+    
     game.add.tween(weaponText).to( { alpha: 0 }, 7000, Phaser.Easing.Linear.None, true)
   
     treasureSound.play()
@@ -326,6 +329,7 @@ let Game = {
   startLevelTwo: function(player, levelTwoExit) {
     game.sound.remove(lvl1Sound)
     exitSound.play()
+    
     this.state.start('Two')
   }
 }
