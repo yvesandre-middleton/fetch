@@ -131,17 +131,24 @@ let Three = {
   },
     
   update: function() {
-    if (cursors.left.isDown) {
+    if (player.body.y < 1000) {
+      bossWeapon.autofire = true
+    }
+    else {
+      bossWeapon.autofire = false
+    }
+    if (cursors.left.isDown)
+    {
       bossWeapon.bulletGravity.y = 800
       bossWeapon.fireAngle = Phaser.ANGLE_LEFT
     }
-
-    else if (cursors.right.isDown) {
+    if (cursors.right.isDown)
+    {
       bossWeapon.bulletGravity.y = 800
       bossWeapon.fireAngle = Phaser.ANGLE_RIGHT
-    } 
-    
-    else if (cursors.down.isDown) {
+    }
+    if (cursors.down.isDown)
+    {
       bossWeapon.bulletGravity.y = 200
       bossWeapon.fireAngle = Phaser.ANGLE_DOWN
     }
@@ -209,16 +216,15 @@ let Three = {
     }
   },
 
-  createBossActions: function() {         
-    var tween = game.add.tween(boss).to({x: 300}, 2000, Phaser.Easing.Linear.None,true,0,1000,) 
-    // var tween1 = game.add.tween(boss).to({angle: 180}, 3000, Phaser.Easing.Quadratic.In, true);
-    // var tween2 = game.add.tween(boss).to({angle: 360}, 2000, Phaser.Easing.Quadratic.Out, true);
-    // var tween3 = game.add.tween(boss).to({angle: 180}, 3000, Phaser.Easing.Quadratic.InOut, true);
-    // var tween4 = game.add.tween(boss).to({angle: 360}, 2000, Phaser.Easing.Quadratic.InOut, true);
-    tween.yoyo(true)
-    // tween2.yoyo(true)
-    // tween3.yoyo(true)
-    // tween4.yoyo(true)
+  createBossActions: function() { 
+    tween1 = game.add.tween(boss)   
+    tween1.to({ y: 150 }, 2000, 'Linear', true, 0, 20, true).loop(true)
+    weapon.multiFire = true
+    // var tween = game.add.tween(boss).to({x: 300}, 2000, Phaser.Easing.Linear.None,true,0,1000,) 
+    // var tween1 = game.add.tween(boss).to({y: 500}, 2000, Phaser.Easing.Linear.None,true,0,1000,)
+    // tween.yoyo(true)
+    // tween1.yoyo(true)
+    
   },
 
   killBoss: function(weapon, boss) {

@@ -5,53 +5,72 @@ endGame.prototype = {
   // },
 
   create: function() {
+    // Get the modal
+    var modal = document.getElementById('myModal');
 
-      let placeholder = 'Player1'
-      let playerName = prompt("Please enter name", placeholder)
-      if (playerName === '' || playerName === null) {
-        playerName = 'player'
-      }
-      let timeBonus = 0
-      let livesBonus = ninjaLives * 100
-      if (totalTime > 150) {
-        timeBonus = 100
-      } else if (totalTime > 90) {
-        timeBonus = 500
-      } else {
-        timeBonus = 1000
-      }
-      let finalScore = (score + timeBonus + livesBonus)
-      let endGameText = 'Congratulations ' + `${playerName} ` + '\nYou have completed your quest!'
-        + '\nLife Bonus ' + `${livesBonus} ` + '\nTime Bonus ' + 
-        `${timeBonus} ` + '\nTotal Score ' + `${finalScore} `
+
+      // let placeholder = 'Player1'
+      modal.style.display = "block";
+
+      let button = document.getElementById("testButton")
+      button.addEventListener("click", () => {
+          let playerName = document.querySelector("input").value
+          console.log("input", playerName)
+          modal.style.display = "none"
+          let timeBonus = 0
+        let livesBonus = ninjaLives * 100
+        if (totalTime > 150) {
+          timeBonus = 100
+        } else if (totalTime > 90) {
+          timeBonus = 500
+        } else {
+          timeBonus = 1000
+        }
+        let finalScore = (score + timeBonus + livesBonus)
+        let endGameText = 'Congratulations ' + `${playerName} ` + '\nYou have completed your quest!'
+          + '\nLife Bonus ' + `${livesBonus} ` + '\nTime Bonus ' + 
+          `${timeBonus} ` + '\nTotal Score ' + `${finalScore} `
+        
+        egText = game.add.text(game.world.centerX, 400, endGameText, { fill: "#ffffff" });
+        egText.fixedToCamera = true
+        egText.font = 'Press Start 2P'
+        egText.fontSize = 20
+        egText.anchor.set(0.5)
+        
+        game.add.text(30, 20 )
+
+        leaderboard.push({name: `${playerName}`, score: `${finalScore}`})
+
+        leaderboard.sort(function (a, b) {
+          return b.score - a.score
+        })
+
+        game.input.onDown.add(this.restartGame, this)
+      })
       
-      egText = game.add.text(game.world.centerX, 400, endGameText, { fill: "#ffffff" });
-      egText.fixedToCamera = true
-      egText.font = 'Knewave'
-      egText.fontSize = 40
-      egText.anchor.set(0.5);
+      // let playerName = prompt("Please enter name", placeholder)
+      // if (playerName === '') {
+      //   playerName = 'player'
+      // }
+      
 
       // for(let score in leaderboard){
       //   console.log("scoreboard", score["name"])
       // }
 
-      console.log("score", `${score}`)
-      console.log("Time", `${totalTime}`)
-      console.log("time bonus", `${timeBonus}`)
-      console.log("Lives bonus", `${livesBonus}`)
-      console.log("final score", finalScore)
+      // console.log("score", `${score}`)
+      // console.log("Time", `${totalTime}`)
+      // console.log("time bonus", `${timeBonus}`)
+      // console.log("Lives bonus", `${livesBonus}`)
+      // console.log("final score", finalScore)
       
-      game.add.text(30, 20 )
+      
 
       // scores.push({name: `${playerName}`, score: `${finalScore}`})
       // scoreEntry = {name: `${playerName}`, score: `${finalScore}`}
       //saveScore(scoreEntry)
     
-      leaderboard.push({name: `${playerName}`, score: `${finalScore}`})
-
-      leaderboard.sort(function (a, b) {
-        return b.score - a.score
-      })
+      
       console.log("leaderboard", leaderboard)
 
       // leaderboardText.text = 'Leaderboard: ' + 
@@ -66,8 +85,7 @@ endGame.prototype = {
       //     }
       //   })
 
-      egText.anchor.set(0.5);
-      game.input.onDown.add(this.restartGame, this)
+      
     },
 
 
