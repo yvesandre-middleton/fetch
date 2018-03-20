@@ -22,7 +22,7 @@ let Three = {
   
       // REFACTOR
       game.load.audio('shootingSound', 'assets/audio/SFX/shuriken.mp3')
-      game.load.audio('lvl3', 'assets/audio/music/lvl3.wav')
+      game.load.audio('lvl3', 'assets/audio/music/lvl3-new.wav')
       game.load.audio('win', 'assets/audio/music/win-game.mp3')
     },
 

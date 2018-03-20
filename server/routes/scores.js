@@ -18,18 +18,12 @@ module.exports = function(DataHelpers) {
 
   scoresRoutes.post('/', function(req, res) {
     console.log("scores", req.body)
-    if (!req.body.text) {
+    if (!req.body.name) {
       res.status(400).json({ error: 'invalid request: no data in POST body'})
       return
     }
 
-    const score = {
-      user: user,
-      content: {
-        text: req.body.text
-      },
-      created_at: Date.now()
-    }
+    const score = req.body;
 
     DataHelpers.saveScores(score, (err) => {
       if (err) {

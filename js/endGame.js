@@ -45,28 +45,87 @@ endGame.prototype = {
           return 1;
         return 0;
       }
-      scores.sort(compare)
+      // scores.sort(compare)
 
-      console.log("sorted scores", scores )
+      // console.log("sorted scores", scores )
       
-      scores.push({name: `${playerName}`, score: `${finalScore}`})
+      // scores.push({name: `${playerName}`, score: `${finalScore}`})
       // scoreEntry = {name: `${playerName}`, score: `${finalScore}`}
       //saveScore(scoreEntry)
-      console.log("leaderboard", scores)
+      // console.log("leaderboard", scores)
 
-      
-      leaderboard.push({name: `${playerName}`, score: `${finalScore}`})
-      console.log("leaderboard", leaderboard)
-
-      // $.ajax({
-      //   url: '/scores',
-      //   method: 'POST',
-      //   data: leaderboard,
-      //   success: function (data) {
-      //     console.log('Success: ', data)
-      //     console.log(data)
+      // $(function() {
+      //   var $newScore = endGame
+      //   var $allScores = $('.all-scores')
+      //   $newScore.on('submit', function (ev) {
+      //     ev.preventDefault()
+      //     if ($('textarea').val().length === 0) {
+      //       $('.error2').addClass('displayErrors')
+      //     } else if ($('textarea').val().length <= 140 && $('textarea').val().length !== 0) {
+      //     $.ajax({
+      //       url: '/tweets',
+      //       method: 'POST',
+      //       data: $(this).serialize(),
+      //       success: function (data) {
+      //         console.log('Success: ', data)
+      //         console.log(data)
+      //         loadTweets()
+      //         $('.tweet').remove()
+      //         $('textarea').val('')
+      //         $('.counter').text('140')
+      //         }
+      //     })
       //     }
       //   })
+      // })      
+
+      let playerScore = {name: `${playerName}`, score: `${finalScore}`};
+      leaderboard.push(playerScore)
+      console.log("leaderboard", leaderboard)
+
+      
+      $.ajax({
+        url: '/leaderboard',
+        method: 'POST',
+        data: JSON.stringify(playerScore),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (data) {
+          console.log('Success: ', data)
+          console.log(data)
+          loadScores()
+          },
+          failure: function (data) {
+            console.log('Failure: ', data)
+            console.log(data)
+          }
+        })
+
+      const loadScores = () => {
+        $.ajax({
+          url: '/leaderboard',
+          method: 'GET',
+          success: function (loadScores) {
+            console.log('Success: ', loadScores)
+            renderScores(loadScores)
+            // location.reload()
+          }
+        })
+      }
+      loadScores()
+
+      function renderScores(data) {
+        for (key of data) {
+          var $score = createScoreElement(key)
+          $('.all-scores').prepend($score)
+        }
+      }
+
+      function createScoreElement (score) {
+        return `<article class="score"> 
+                   <p> Name: ${score.name} Score:${score.score} </p>   
+                  </article>`
+      }
 
       egText.anchor.set(0.5);
       game.input.onDown.add(this.restartGame, this)
@@ -93,8 +152,6 @@ endGame.prototype = {
       // }
 
 }
-
-
 
 
 

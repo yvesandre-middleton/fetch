@@ -1,21 +1,4 @@
-let scores = [
-  {
-    name: 'bob',
-    score: '1005'
-  },
-  {
-    name: 'ted',
-    score: '550'
-  },
-  {
-    name: 'snpr',
-    score: '1050'
-  },
-  {
-    name: 'ghost33',
-    score: '1200'
-  }
-]
+let leaderboard = []
 
 let bossHealth = 100
 let score = 0
@@ -342,7 +325,7 @@ let Game = {
 
     console.log("ninja lives", ninjaLives)
     player.kill()
-    // game.state.start('EndGame')
+    game.state.start('EndGame')
     timeDelay(500, player, 240, 1304)
     ninjaLives -= 1
     
