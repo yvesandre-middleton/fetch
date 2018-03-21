@@ -1,8 +1,15 @@
 let endGame = function(game) {}
 endGame.prototype = {
+  preload: function() {
+    game.load.image('endGame', 'assets/images/end.png')
+  },
 
   create: function() {
-    
+
+    game.sound.remove(winSound)
+
+    // Add Background
+    bg = makeSprite(0, 0, 'endGame')
     // Get the modal
     var modal = document.getElementById('myModal');
     modal.style.display = "block";
@@ -24,14 +31,14 @@ endGame.prototype = {
       }
       let finalScore = (score + timeBonus + livesBonus)
       let endGameText = 'Congratulations ' + `${playerName} ` + '\nYou have completed your quest!'
-      + '\nLife Bonus ' + `${livesBonus} ` + '\nTime Bonus ' + 
+      + '\nScore       ' + `${score}` + '\nLife Bonus   ' + `${livesBonus} ` + '\nTime Bonus  ' + 
       `${timeBonus} ` + '\nTotal Score ' + `${finalScore} `
       
-      egText = game.add.text(game.world.centerX, 400, endGameText, { fill: "#ffffff" });
+      egText = game.add.text(game.world.centerX, 200, endGameText, { fill: "#ffffff" });
       egText.fixedToCamera = true
       egText.font = 'Press Start 2P'
       egText.fontSize = 20
-      egText.anchor.set(0.5)
+      egText.anchor.set(0.5, 0.5)
         
       game.add.text(30, 20 )
 
