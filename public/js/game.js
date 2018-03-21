@@ -1,7 +1,7 @@
 let leaderboard = []
 
 let score = 0
-let ninjaLives = 3
+let ninjaLives = 5
 let totalTime = 0
 
 let Game = {
@@ -14,7 +14,8 @@ let Game = {
     game.load.image('treasure', 'assets/images/treasure.png')
     game.load.image('treasure2', 'assets/images/treasure2.png')
     game.load.image('shuriken', 'assets/images/shuriken.png')
-    game.load.image('autoEnemy', 'assets/images/head.png')
+    // game.load.image('autoEnemy', 'assets/images/head.png')
+    game.load.image('key', 'assets/images/key.png')
     game.load.image('boss', 'assets/images/head.png')
     game.load.spritesheet('hamster', 'assets/images/hamster-animation-sheet.png', 37, 45)
     game.load.image('weaponText', 'assets/images/weapon-text.png') 
@@ -61,6 +62,9 @@ let Game = {
     
     // Add Treasure Chest
     treasure = makeSprite(840, 670, 'treasure')
+
+    // Add Key
+    key = makeSprite(580, 110, 'key')
 
     // Add Sprites
     log = makeSprite(376, 297, 'log')
@@ -125,6 +129,7 @@ let Game = {
       log,
       logCheck,
       treasure,
+      key,
       levelUnlock], 
       Phaser.Physics.ARCADE)
 
@@ -148,6 +153,9 @@ let Game = {
 
     // Treasure Collision
     collideImmovable(treasure)
+
+    // Key Collision
+    collideImmovable(key)
 
     // Level 2 Unlock
     collideImmovable(levelUnlock)
@@ -189,6 +197,7 @@ let Game = {
     game.physics.arcade.collide(log, waterBoundary, this.testFunc, null, this)
     game.physics.arcade.collide(player, levelUnlock)
     game.physics.arcade.collide(player, treasure, this.spawnWeapon, null, this)
+    game.physics.arcade.overlap(player, key, this.ninjaKey, null, this)
     game.physics.arcade.collide(player, logCheck, this.checkPlatfrom, null, this)
 
     startingVelocity(player)
@@ -207,7 +216,7 @@ let Game = {
   
   resetScore: function() {
     score = 0
-    ninjaLives = 3
+    ninjaLives = 5
     totalTime = 0
     bossHealth = 100
   },
@@ -234,8 +243,8 @@ let Game = {
     ninjaLivesDisplay.text = ('Lives: ' + `${ninjaLives}`)
     
     if (ninjaLives == 0) {
-      ninjaLives = 3
-      score = 0
+      // ninjaLives = 5
+      // score = 0
       game.state.start('GameOver')
     }
 
@@ -291,23 +300,41 @@ let Game = {
     }
   },
 
+  ninjaKey: function(player, key) {
+    this.hasKey = true
+    key.kill()
+  },
+
   spawnWeapon: function(player, treasure) {
-    this.enableWeapon = true
+
+    if (this.hasKey){
+      this.enableWeapon = true
+      
+      treasure.kill()
+      this.fadeOutLog()
+      
+      levelUnlock.body.immovable = false
+      levelUnlock.body.collideWorldBounds = false
+      
+      game.add.sprite(840, 670, 'treasure2')
+      
+      let weaponText = game.add.sprite(740, 530, 'weaponText')
+      weaponText.alpha = 1
+      
+      game.add.tween(weaponText).to( { alpha: 0 }, 7000, Phaser.Easing.Linear.None, true)
     
-    treasure.kill()
-    this.fadeOutLog()
+      treasureSound.play()
+    }
+    else {
+      let lockedText = game.add.text(800, 620, 'Hmm....it\'s locked', { fill: "#000000" })
+      lockedText.fixedToCamera = false
+      lockedText.font = 'Press Start 2P'
+      lockedText.fontSize = 13
+      lockedText.anchor.set(0.5)
+      lockedText.alpha = 1
+      game.add.tween(lockedText).to( { alpha: 0 }, 7000, Phaser.Easing.Linear.None, true)
+    }
     
-    levelUnlock.body.immovable = false
-    levelUnlock.body.collideWorldBounds = false
-    
-    game.add.sprite(840, 670, 'treasure2')
-    
-    let weaponText = game.add.sprite(740, 530, 'weaponText')
-    weaponText.alpha = 1
-    
-    game.add.tween(weaponText).to( { alpha: 0 }, 7000, Phaser.Easing.Linear.None, true)
-  
-    treasureSound.play()
   },
 
   startLevelTwo: function(player, levelTwoExit) {

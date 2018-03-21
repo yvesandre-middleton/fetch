@@ -31,7 +31,7 @@ endGame.prototype = {
           + '\nLife Bonus ' + `${livesBonus} ` + '\nTime Bonus ' + 
           `${timeBonus} ` + '\nTotal Score ' + `${finalScore} `
         
-        egText = game.add.text(game.world.centerX, 400, endGameText, { fill: "#ffffff" });
+        egText = game.add.text(game.world.centerX, 400, endGameText, { fill: "#ffffff" })
         egText.fixedToCamera = true
         egText.font = 'Press Start 2P'
         egText.fontSize = 20
@@ -108,7 +108,6 @@ endGame.prototype = {
       }
 
 }
-
 
 
 
