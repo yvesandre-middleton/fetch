@@ -6,7 +6,7 @@ let update_interval = 4 * 60;
 let i = 0;
 
 let Menu = {
- preload: function() {
+  preload: function() {
     game.load.image('titleScreen', 'assets/images/titlescreen.png')
     
     game.load.spritesheet('snowflakes', 'assets/images/snowflakes.png', 17, 17);

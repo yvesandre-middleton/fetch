@@ -84,8 +84,8 @@ endGame.prototype = {
 
       function createScoreElement (score) {
         return `<article class="score"> 
-                   <p> Name: ${score.name} Score:${score.score} </p>   
-                  </article>`
+                  <p> Name: ${score.name} Score:${score.score} </p>   
+                </article>`
       }
       
       console.log("leaderboard", leaderboard)
