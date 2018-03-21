@@ -218,7 +218,6 @@ let Three = {
   killBoss: function(weapon, boss) {
     
     score += 200
-    console.log('score', score)
     scoreDisplay.text = ('Score: ' + `${score}`)
     
     bossHealth -= 40  
