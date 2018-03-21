@@ -1,5 +1,7 @@
 let endGame = function(game) {}
+
 endGame.prototype = {
+  
   preload: function() {
     game.load.image('endGame', 'assets/images/end.png')
   },
@@ -8,6 +10,7 @@ endGame.prototype = {
 
     // Add Background
     bg = makeSprite(0, 0, 'endGame')
+    
     // Get the modal
     var modal = document.getElementById('myModal');
     modal.style.display = "block";
@@ -16,10 +19,11 @@ endGame.prototype = {
     
     button.addEventListener("click", () => {
       let playerName = document.querySelector("input").value
-      console.log("input", playerName)
       modal.style.display = "none"
+      
       let timeBonus = 0
       let livesBonus = ninjaLives * 100
+      
       if (totalTime > 150) {
         timeBonus = 100
       } else if (totalTime > 90) {
@@ -27,6 +31,7 @@ endGame.prototype = {
       } else {
         timeBonus = 1000
       }
+
       let finalScore = (score + timeBonus + livesBonus)
       let endGameText = 'Congratulations ' + `${playerName} ` + '\nYou have completed your quest!'
       + '\nScore       ' + `${score}` + '\nLife Bonus   ' + `${livesBonus} ` + '\nTime Bonus  ' + 
@@ -48,7 +53,6 @@ endGame.prototype = {
 
       let playerScore = {name: `${playerName}`, score: `${finalScore}`};
       leaderboard.push(playerScore)
-      console.log("leaderboard", leaderboard)
 
       $.ajax({
         url: '/leaderboard',
@@ -56,16 +60,16 @@ endGame.prototype = {
         data: JSON.stringify(playerScore),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
+       
         success: function (data) {
-          console.log('Success: ', data)
           console.log(data)
           loadScores()
-          },
-          failure: function (data) {
-            console.log('Failure: ', data)
-            console.log(data)
-          }
-        })
+        },
+        
+        failure: function (data) {
+          console.log('Failure: ', data)
+        }
+      })
 
       const loadScores = () => {
         $.ajax({
@@ -74,23 +78,25 @@ endGame.prototype = {
           success: function (loadScores) {
             console.log('Success: ', loadScores)
             renderScores(loadScores)
-            // location.reload()
           }
         })
       }
+
       loadScores()
 
       function renderScores(data) {
         for (key of data) {
           var $score = createScoreElement(key)
-          $('.all-scores').prepend($score)
+          $('.all-scores').append($score)
         }
       }
 
       function createScoreElement (score) {
-        return `<article class="score"> 
-                  <p> ${score.name} | ${score.score} </p>   
-                </article>`
+        return `
+          <article class="score"> 
+             <p> ${score.name} | ${score.score} </p>   
+          </article>
+          `
       }
       
       console.log("leaderboard", leaderboard)
