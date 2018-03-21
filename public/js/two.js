@@ -1,5 +1,10 @@
 let Two = {
   preload: function() {
+    
+    // Music Sounds
+    game.load.audio('lvl2', 'assets/audio/music/lvl2.wav')
+    game.load.audio('lvl3', 'assets/audio/music/lvl3.wav')
+    
     game.load.image('bg', 'assets/images/lvl2bg-2750x1500.png')
 
     game.load.image('shuriken', 'assets/images/shuriken.png')
@@ -13,7 +18,7 @@ let Two = {
     game.load.image('wall5', 'assets/images/wall5-1517x0.png')
     game.load.image('wall6', 'assets/images/wall6-2243x-11.png')
     game.load.image('wall7', 'assets/images/wall7-2076x552.png')
-    game.load.image('wall8', 'assets/images/wall8-2345x0.png')
+    game.load.image('wall8', 'assets/images/wall8-2470x0.png')
     game.load.image('wall9', 'assets/images/wall9-1620x0.png')
     game.load.image('wall10', 'assets/images/wall10-1729x822.png')
     game.load.image('wall11', 'assets/images/wall11-2133x1042.png')
@@ -21,7 +26,9 @@ let Two = {
     game.load.image('wall13', 'assets/images/wall13-1729x876.png')
     game.load.image('wall14', 'assets/images/wall14-1729x1099.png')
     game.load.image('wall15', 'assets/images/wall15-1964x1245.png')
-
+    game.load.image('wall16', 'assets/images/wall16-2346x0.png')
+    game.load.image('wall17', 'assets/images/wall17-25970x0.png')
+    
     game.load.image('water1', 'assets/images/water1-656x489.png')
     game.load.image('water2', 'assets/images/water2-656x900.png')
     game.load.image('water3', 'assets/images/water3-1340x900.png')
@@ -39,6 +46,7 @@ let Two = {
     game.load.spritesheet('red-hamster-left', 'assets/images/hamster-left-red-animation-sheet.png', 37, 45) 
     game.load.spritesheet('red-hamster-front', 'assets/images/hamster-front-red-animation-sheet.png', 37, 45) 
     game.load.spritesheet('red-hamster-back', 'assets/images/hamster-back-red-animation-sheet.png', 37, 45) 
+    game.load.spritesheet('enemy-dead', 'assets/images/hamster-red-dead-animation-sheet.png', 37, 45) 
   
     // REFACTOR
     game.load.audio('enemy-death', 'assets/audio/SFX/enemy-dies-sfx.wav')
@@ -47,37 +55,34 @@ let Two = {
     game.load.audio('stairs', 'assets/audio/SFX/stairs-sfx.wav')
     game.load.audio('walking', 'assets/audio/SFX/walking-sfx-short.wav')    
     game.load.audio('death', 'assets/audio/SFX/player-dies-sfx.wav')
-    game.load.audio('lvl2', 'assets/audio/music/lvl2.wav')
-    game.load.audio('lvl3', 'assets/audio/music/lvl3.wav') // Add this later
     game.load.audio('shuriken', 'assets/audio/SFX/shuriken.mp3')
   },
   
   create: function() {
     
     // Sounds // REFACTOR
-    exitSound = game.add.audio('exit') // MAKE SURE TO ADD
+    exitSound = game.add.audio('exit')
     logSound = game.add.audio('push-log')
     deathSound = game.add.audio('death')
     enemyDeathSound = game.add.audio('enemy-death')
     lvl2Sound = game.add.audio('lvl2')
-    lvl3Sound = game.add.audio('lvl3') // MAKE SURE TO ADD
+    lvl3Sound = game.add.audio('lvl3') 
     shootingSound = game.add.audio('shuriken')
     walkingSound = game.add.audio('walking')
 
     lvl2Sound.loop = true
-    // lvl2Sound.play()
+    lvl2Sound.play()
     
     initWorldBounds(0, 0, 2750, 1500, 'bg')
     game.add.image(0, 0, 'bg')
 
-    player = makeSprite(220, 2000, 'hamster')
-    // player = makeSprite(2300, 2000, 'hamster')
+    player = makeSprite(2300, 1600, 'hamster')
     initPlayerAnimations(player)
      
     // Add a Timer
-     timer = game.time.create(false);
-     timer.loop(1250, this.updateCounter, this)
-     timer.start()
+    timer = game.time.create(false);
+    timer.loop(1250, this.updateCounter, this)
+    timer.start()
 
     // Add Enemies
     enemy = makeSprite(300, 0, 'red-hamster-front')
@@ -87,11 +92,11 @@ let Two = {
     enemy5 = makeSprite(2700, 870, 'red-hamster-front')
 
     // Enemy Animations
-    enemy.animations.add('down', [0, 1, 2, 3, 4], 10, true);
-    enemy2.animations.add('down', [0, 1, 2, 3, 4], 10, true);
-    enemy3.animations.add('down', [0, 1, 2, 3, 4], 10, true);
-    enemy4.animations.add('down', [0, 1, 2, 3, 4], 10, true);
-    enemy5.animations.add('down', [0, 1, 2, 3, 4], 10, true);
+    enemy.animations.add('down', [0, 1, 2, 3, 4], 10, true)
+    enemy2.animations.add('down', [0, 1, 2, 3, 4], 10, true)
+    enemy3.animations.add('down', [0, 1, 2, 3, 4], 10, true)
+    enemy4.animations.add('down', [0, 1, 2, 3, 4], 10, true)
+    enemy5.animations.add('down', [0, 1, 2, 3, 4], 10, true)
 
     // Add Enemy Weapon
     enemyWeapon = game.add.weapon(30, 'shuriken')
@@ -158,7 +163,6 @@ let Two = {
     boundaries.add(makeSprite(1517, 0, 'wall5'))
     boundaries.add(makeSprite(2243, 1, 'wall6'))
     boundaries.add(makeSprite(2076, 552, 'wall7'))
-    
     boundaries.add(makeSprite(1620, 0, 'wall9'))
     boundaries.add(makeSprite(1729, 822, 'wall10'))
     boundaries.add(makeSprite(2133, 1042, 'wall11'))
@@ -166,8 +170,10 @@ let Two = {
     boundaries.add(makeSprite(1729, 876, 'wall13'))
     boundaries.add(makeSprite(1729, 1070, 'wall14'))
     boundaries.add(makeSprite(1964, 1245, 'wall15'))
+    boundaries.add(makeSprite(2349, 0, 'wall16'))
+    boundaries.add(makeSprite(2597, 0, 'wall17'))
     
-    levelTwoExit = makeSprite(2345, 0, 'wall8')
+    levelTwoExit = makeSprite(2470, 0, 'wall8')
     alpha(levelTwoExit)
 
     bridgeTopBoundary = makeWorldSprite(330, 0, 130, 40, 'log2')
@@ -332,11 +338,11 @@ let Two = {
     game.physics.arcade.collide(weapon.bullets, enemy4, this.killEnemy4, null, this)
     game.physics.arcade.collide(weapon.bullets, enemy5, this.killEnemy5, null, this)
     
-    game.physics.arcade.collide(enemyWeapon.bullets, player, this.killPlayer, null, this)
-    game.physics.arcade.collide(enemyWeapon2.bullets, player, this.killPlayer, null, this)
-    game.physics.arcade.collide(enemyWeapon3.bullets, player, this.killPlayer, null, this)
-    game.physics.arcade.collide(enemyWeapon4.bullets, player, this.killPlayer, null, this)
-    game.physics.arcade.collide(enemyWeapon5.bullets, player, this.killPlayer, null, this)
+    // game.physics.arcade.collide(enemyWeapon.bullets, player, this.killPlayer, null, this)
+    // game.physics.arcade.collide(enemyWeapon2.bullets, player, this.killPlayer, null, this)
+    // game.physics.arcade.collide(enemyWeapon3.bullets, player, this.killPlayer, null, this)
+    // game.physics.arcade.collide(enemyWeapon4.bullets, player, this.killPlayer, null, this)
+    // game.physics.arcade.collide(enemyWeapon5.bullets, player, this.killPlayer, null, this)
     
     game.physics.arcade.collide(player, log, this.moveLog, null, this)
     game.physics.arcade.collide(player, log2, this.moveSecondLog, null, this)
@@ -360,8 +366,6 @@ let Two = {
     
     ninjaLives -= 1
     
-    console.log("ninja lives", ninjaLives)
-    
     ninjaLivesDisplay.text = ('Lives: ' + `${ninjaLives}`)
     
     if (ninjaLives == 0) {
@@ -378,8 +382,6 @@ let Two = {
     player.reset(player.body.velocity.x = 220, player.body.velocity.y = 1350)
         
     ninjaLives -= 1
-    
-    console.log("ninja lives", ninjaLives)
     
     ninjaLivesDisplay.text = ('Lives: ' + `${ninjaLives}`)
     
@@ -399,10 +401,17 @@ let Two = {
     
     score += 200
     scoreDisplay.setText('Score: ' + `${score}`)
-    
+
+    enemyDeath1 = makeSprite(enemy.body.x, enemy.body.y - 50, 'enemy-dead')
+    enemyDeath1.animations.add('kill', [0, 1, 2, 3, 4], 10, true)
+    enemyDeath1.animations.play('kill', 15, true)    
     enemy.kill()
     weapon.kill()
     fireOff(enemyWeapon)
+
+    game.time.events.add(1000, () => {
+      enemyDeath1.kill()
+    })
   },
 
   killEnemy2: function(weapon, enemy2) {
@@ -413,9 +422,16 @@ let Two = {
     score += 200
     scoreDisplay.setText('Score: ' + `${score}`)
     
+    enemyDeath2 = makeSprite(enemy2.body.x, enemy2.body.y, 'enemy-dead')
+    enemyDeath2.animations.add('kill', [0, 1, 2, 3, 4], 10, true)
+    enemyDeath2.animations.play('kill', 15, true)
     enemy2.kill()
     weapon.kill()
     fireOff(enemyWeapon2)
+
+    game.time.events.add(1000, () => {
+      enemyDeath2.kill()
+    })
   },
 
   killEnemy3: function(weapon, enemy3) {
@@ -426,9 +442,16 @@ let Two = {
     score += 200
     scoreDisplay.setText('Score: ' + `${score}`)
     
+    enemyDeath3 = makeSprite(enemy3.body.x, enemy3.body.y, 'enemy-dead')
+    enemyDeath3.animations.add('kill', [0, 1, 2, 3, 4], 10, true)
+    enemyDeath3.animations.play('kill', 15, true)
     enemy3.kill()
     weapon.kill()
     fireOff(enemyWeapon3)
+
+    game.time.events.add(1000, () => {
+      enemyDeath3.kill()
+    })
   },
 
   killEnemy4: function(weapon, enemy4) {
@@ -439,9 +462,16 @@ let Two = {
     score += 200
     scoreDisplay.setText('Score: ' + `${score}`)
     
+    enemyDeath4 = makeSprite(enemy4.body.x, enemy4.body.y, 'enemy-dead')
+    enemyDeath4.animations.add('kill', [0, 1, 2, 3, 4], 10, true)
+    enemyDeath4.animations.play('kill', 15, true)
     enemy4.kill()
     weapon.kill()
     fireOff(enemyWeapon4)
+
+    game.time.events.add(1000, () => {
+      enemyDeath4.kill()
+    })
   },
 
   killEnemy5: function(weapon, enemy5) {
@@ -452,9 +482,16 @@ let Two = {
     score += 200
     scoreDisplay.setText('Score: ' + `${score}`)
     
+    enemyDeath5 = makeSprite(enemy5.body.x, enemy5.body.y, 'enemy-dead')
+    enemyDeath5.animations.add('kill', [0, 1, 2, 3, 4], 10, true)
+    enemyDeath5.animations.play('kill', 15, true)
     enemy5.kill()
     weapon.kill()
     fireOff(enemyWeapon5)
+
+    game.time.events.add(1000, () => {
+      enemyDeath5.kill()
+    })
   },
 
   moveLog: function(player, log) {
@@ -465,7 +502,6 @@ let Two = {
     game.time.events.add(200, () => {
       this.logMoved = true
       log.reset(log.body.velocity.x = 891, log.body.velocity.y = 0), this
-      console.log(log.body.x)
       log.kill()
     })
 

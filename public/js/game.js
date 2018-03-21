@@ -1,11 +1,16 @@
 let leaderboard = []
 
 let score = 0
-let ninjaLives = 5
+let ninjaLives = 3
 let totalTime = 0
 
 let Game = {
   preload: function() {
+    
+    // Level Sounds
+    game.load.audio('lvl2', 'assets/audio/music/lvl2.wav')
+    game.load.audio('lvl1', 'assets/audio/music/lvl1.wav')
+    
     game.load.image('lvl1bg', 'assets/images/lvl1bg.png')
     game.load.image('bg', 'assets/images/bg.png')
     game.load.image('bg2', 'assets/images/bg2.png')
@@ -14,11 +19,11 @@ let Game = {
     game.load.image('treasure', 'assets/images/treasure.png')
     game.load.image('treasure2', 'assets/images/treasure2.png')
     game.load.image('shuriken', 'assets/images/shuriken.png')
-    // game.load.image('autoEnemy', 'assets/images/head.png')
     game.load.image('key', 'assets/images/key.png')
     game.load.image('boss', 'assets/images/head.png')
-    game.load.spritesheet('hamster', 'assets/images/hamster-animation-sheet.png', 37, 45)
     game.load.image('weaponText', 'assets/images/weapon-text.png') 
+    
+    game.load.spritesheet('hamster', 'assets/images/hamster-animation-sheet.png', 37, 45)
 
     // REFACTOR
     game.load.audio('treasure', 'assets/audio/SFX/chest-open-sfx.wav')
@@ -27,8 +32,6 @@ let Game = {
     game.load.audio('stairs', 'assets/audio/SFX/stairs-sfx.wav')
     game.load.audio('walking', 'assets/audio/SFX/walking-sfx.wav')
     game.load.audio('death', 'assets/audio/SFX/player-dies-sfx.wav')
-    game.load.audio('lvl2', 'assets/audio/music/lvl2.wav')
-    game.load.audio('lvl1', 'assets/audio/music/lvl1.wav')
     game.load.audio('shuriken', 'assets/audio/SFX/shuriken.mp3')    
   },
   
@@ -227,29 +230,21 @@ let Game = {
     enemy.kill()
     weapon.kill()
     enemyWeapon.autofire = false
-    console.log('killEnemy')
   },
     
   killPlayer: function(player, enemy) {
     deathSound.play()
-
-    console.log("ninja lives", ninjaLives)
     player.kill()
-    // game.state.start('EndGame')
     timeDelay(500, player, 240, 1304)
     ninjaLives -= 1
     
-    console.log("ninja lives", ninjaLives)
     ninjaLivesDisplay.text = ('Lives: ' + `${ninjaLives}`)
     
     if (ninjaLives == 0) {
-      // ninjaLives = 5
-      // score = 0
       game.state.start('GameOver')
     }
 
     player.reset(player.body.velocity.x = 240, player.body.velocity.y = 1304)
-    console.log('killplayer')
   },
 
   teleportPlayer: function(player, teleport) {
@@ -268,7 +263,6 @@ let Game = {
     game.time.events.add(1000, function() {
       game.add.tween(levelUnlock).to({alpha: 0}, 1500, Phaser.Easing.Linear.None, true)
     }, this)
-    console.log('test')
   },
 
   moveLog: function (player, logs) {
@@ -306,8 +300,7 @@ let Game = {
   },
 
   spawnWeapon: function(player, treasure) {
-
-    if (this.hasKey){
+    if (this.hasKey) {
       this.enableWeapon = true
       
       treasure.kill()
@@ -325,6 +318,7 @@ let Game = {
     
       treasureSound.play()
     }
+    
     else {
       let lockedText = game.add.text(800, 620, 'Hmm....it\'s locked', { fill: "#000000" })
       lockedText.fixedToCamera = false
@@ -334,7 +328,6 @@ let Game = {
       lockedText.alpha = 1
       game.add.tween(lockedText).to( { alpha: 0 }, 7000, Phaser.Easing.Linear.None, true)
     }
-    
   },
 
   startLevelTwo: function(player, levelTwoExit) {
