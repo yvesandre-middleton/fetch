@@ -12,7 +12,7 @@ module.exports = function makeDataHelpers(db) {
 
     // Get all tweets in `db`, sorted by newest first
     getScores: function(callback) {
-      db.collection('leaderboard').find().toArray(callback)
+      db.collection('leaderboard').find().sort({ score: -1 }).toArray(callback)
     }
   }
 }
