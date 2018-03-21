@@ -6,8 +6,6 @@ endGame.prototype = {
 
   create: function() {
 
-    game.sound.remove(winSound)
-
     // Add Background
     bg = makeSprite(0, 0, 'endGame')
     // Get the modal
@@ -101,6 +99,7 @@ endGame.prototype = {
   },
 
   restartGame: function() {
+    game.sound.remove(winSound)
     game.state.start('Menu')
   }
 }

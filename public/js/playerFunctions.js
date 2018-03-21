@@ -9,7 +9,7 @@ function initPlayerAnimations(player) {
 
 function initWeapon(weapon) {
   weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS
-  weapon.bulletSpeed = 200
+  weapon.bulletSpeed = 250
   weapon.fireRate = 1200
   weapon.trackSprite(player, 30, 30, false)
 }
