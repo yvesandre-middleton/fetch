@@ -1,25 +1,24 @@
-
 let max = 0
-  let front_emitter;
-  let mid_emitter;
-  let back_emitter;
-  let update_interval = 4 * 60;
-  let i = 0;
-
+let front_emitter;
+let mid_emitter;
+let back_emitter;
+let update_interval = 4 * 60;
+let i = 0;
 
 let Menu = {
- preload: function() {
+  preload: function() {
     game.load.image('titleScreen', 'assets/images/titlescreen.png')
+    
     game.load.spritesheet('snowflakes', 'assets/images/snowflakes.png', 17, 17);
     game.load.spritesheet('snowflakes_large', 'assets/images/snowflakes_large.png', 64, 64);
 
     game.load.audio('menuSound', 'assets/audio/music/sakura-sakura-title-screen.mp3')
+    game.load.audio('clickSound', 'assets/audio/SFX/start-click.wav')
   },
 
-
   create: function() {
-
     menuSound = game.add.audio('menuSound')
+    clickSound = game.add.audio('clickSound')
     
     menuSound.loop = true
     menuSound.play()
@@ -103,6 +102,7 @@ let Menu = {
   },
 
   restartGame: function() {
+    clickSound.play()
     game.sound.remove(menuSound)
     game.state.start('Game')
   }

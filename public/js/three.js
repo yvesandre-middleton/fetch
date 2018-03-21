@@ -216,6 +216,7 @@ let Three = {
   },
 
   killBoss: function(weapon, boss) {
+    
     score += 200
     scoreDisplay.text = ('Score: ' + `${score}`)
     
@@ -223,7 +224,7 @@ let Three = {
     boss.kill()
     this.bossHealthBar.setPercent(bossHealth)
     console.log('bossHealth', bossHealth)
-
+    
     if (bossHealth < 0) {
       console.log('bossHealth', bossHealth)
       boss.kill()
@@ -231,6 +232,9 @@ let Three = {
       
       score += 500
       bossHealth = 100
+      
+      game.sound.remove(lvl3Sound)
+      winSound.play()
       
       game.state.start('EndGame')
     }
