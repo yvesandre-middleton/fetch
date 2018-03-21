@@ -65,7 +65,7 @@ let Two = {
     walkingSound = game.add.audio('walking')
 
     lvl2Sound.loop = true
-    // lvl2Sound.play()
+    lvl2Sound.play()
     
     initWorldBounds(0, 0, 2750, 1500, 'bg')
     game.add.image(0, 0, 'bg')

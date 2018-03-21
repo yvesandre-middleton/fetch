@@ -232,14 +232,12 @@ let Game = {
     
   killPlayer: function(player, enemy) {
     deathSound.play()
-
+    ninjaLives -= 1
     console.log("ninja lives", ninjaLives)
     player.kill()
     // game.state.start('EndGame')
     timeDelay(500, player, 240, 1304)
-    ninjaLives -= 1
     
-    console.log("ninja lives", ninjaLives)
     ninjaLivesDisplay.text = ('Lives: ' + `${ninjaLives}`)
     
     if (ninjaLives == 0) {
@@ -294,6 +292,9 @@ let Game = {
     if (!this.logMoved) {
       deathSound.play()
       player.kill()
+      ninjaLives -= 1
+      ninjaLivesDisplay.text = ('Lives: ' + `${ninjaLives}`)
+
       timeDelay(500, player, 240, 1304)
     } else {
       logCheck.kill()
