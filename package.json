@@ -1,5 +1,5 @@
 {
-  "name": "Hamster-Ninja",
+  "name": "hamster",
   "version": "1.0.0",
   "description": "A dungeon crawl type game built with Node.js and Phaser.io",
   "main": "server/index.js",

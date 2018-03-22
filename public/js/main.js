@@ -7,4 +7,5 @@ game.state.add('Three', Three)
 game.state.add('EndGame', endGame)
 game.state.add('GameOver', gameOver)
 
-game.state.start('Two')
+// game.state.start('Two')
+game.state.start('Menu')

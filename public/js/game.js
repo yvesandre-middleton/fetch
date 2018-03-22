@@ -6,38 +6,38 @@ let totalTime = 0
 
 let Game = {
   preload: function() {
-    
+
     // Level Sounds
-    game.load.audio('lvl2', 'assets/audio/music/lvl2.wav')
-    game.load.audio('lvl1', 'assets/audio/music/lvl1.wav')
-    
+    // game.load.audio('lvl2', 'assets/audio/music/lvl2.wav')
+
+
     game.load.image('lvl1bg', 'assets/images/lvl1bg.png')
     game.load.image('bg', 'assets/images/bg.png')
-    game.load.image('bg2', 'assets/images/bg2.png')
+    // game.load.image('bg2', 'assets/images/bg2.png')
     game.load.image('log', 'assets/images/movable-log-lvl1-376x297.png')
     game.load.image('exit-log', 'assets/images/exit-barrier-log-lvl1.png')
     game.load.image('treasure', 'assets/images/treasure.png')
     game.load.image('treasure2', 'assets/images/treasure2.png')
     game.load.image('shuriken', 'assets/images/shuriken.png')
     game.load.image('key', 'assets/images/key.png')
-    game.load.image('boss', 'assets/images/head.png')
-    game.load.image('weaponText', 'assets/images/weapon-text.png') 
-    
+    // game.load.image('boss', 'assets/images/head.png')
+    game.load.image('weaponText', 'assets/images/weapon-text.png')
+
     game.load.spritesheet('hamster', 'assets/images/hamster-animation-sheet.png', 37, 45)
 
     // REFACTOR
-    game.load.audio('treasure', 'assets/audio/SFX/chest-open-sfx.wav')
-    game.load.audio('exit', 'assets/audio/SFX/exit-sfx.wav')
-    game.load.audio('push-log', 'assets/audio/SFX/push-sfx.wav')
-    game.load.audio('stairs', 'assets/audio/SFX/stairs-sfx.wav')
-    game.load.audio('walking', 'assets/audio/SFX/walking-sfx.wav')
-    game.load.audio('death', 'assets/audio/SFX/player-dies-sfx.wav')
-    game.load.audio('shuriken', 'assets/audio/SFX/shuriken.mp3')    
+    // game.load.audio('lvl1', 'assets/audio/music/lvl1.mp3')
+    game.load.audio('treasure', 'assets/audio/SFX/chest-open-sfx.mp3')
+    game.load.audio('exit', 'assets/audio/SFX/exit-sfx.mp3')
+    game.load.audio('push-log', 'assets/audio/SFX/push-sfx.mp3')
+    game.load.audio('stairs', 'assets/audio/SFX/stairs-sfx.mp3')
+    game.load.audio('death', 'assets/audio/SFX/player-dies-sfx.mp3')
+    game.load.audio('shuriken', 'assets/audio/SFX/shuriken.mp3')
   },
-  
+
   create: function() {
     this.resetScore()
-    
+
     // Sounds
     // REFACTOR
     stairSound = game.add.audio('stairs')
@@ -45,16 +45,16 @@ let Game = {
     exitSound = game.add.audio('exit')
     logSound = game.add.audio('push-log')
     deathSound = game.add.audio('death')
-    lvl2Sound = game.add.audio('lvl2')
-    lvl1Sound = game.add.audio('lvl1')
+    // lvl2Sound = game.add.audio('lvl2')
+    // lvl1Sound = game.add.audio('lvl1')
     shootingSound = game.add.audio('shuriken')
 
-    lvl1Sound.loop = true
-    lvl1Sound.play()
+    // lvl1Sound.loop = true
+    // lvl1Sound.play()
 
     // Set World Bounds
     initWorldBounds(0, 0, 996, 1304)
-     
+
     // Add Timer
     timer = game.time.create(false);
     timer.loop(1250, this.updateCounter, this)
@@ -62,7 +62,7 @@ let Game = {
 
     // Add Background
     bg = makeSprite(0, 0, 'lvl1bg')
-    
+
     // Add Treasure Chest
     treasure = makeSprite(840, 670, 'treasure')
 
@@ -72,8 +72,8 @@ let Game = {
     // Add Sprites
     log = makeSprite(376, 297, 'log')
     player = makeSprite(240, 1304, 'hamster')
-    
-    // Animations  
+
+    // Animations
     initPlayerAnimations(player)
 
     // PLAYER WEAPON //
@@ -81,9 +81,9 @@ let Game = {
     // Add Weapon
     weapon = makeWeapon(30, 'shuriken')
 
-    // Weapon Methods   
+    // Weapon Methods
     initWeapon(weapon)
-    
+
     boundaries = game.add.group()
     boundaries.add(makeWorldSprite(0, 335, 670, 90, 'bg'))
     boundaries.add(makeWorldSprite(0, 100, 75, 165, 'bg'))
@@ -104,7 +104,7 @@ let Game = {
     teleport2 = game.add.tileSprite(60, 270, 50, 60, 'bg')
     alpha(teleport)
     alpha(teleport2)
-    
+
     // Water Boundary
     waterBoundaries = game.add.group()
     waterBoundaries.add(makeWaterSprite(385, 600, 300, 750, 'bg'))
@@ -121,19 +121,19 @@ let Game = {
     // Level Unlock
     levelUnlock = makeSprite(690, 800, 'exit-log')
 
-    // Enable physics   
+    // Enable physics
     game.physics.enable([
-      player, 
+      player,
       weapon,
-      teleport, 
-      teleport2, 
-      boundaries, 
-      waterBoundaries, 
+      teleport,
+      teleport2,
+      boundaries,
+      waterBoundaries,
       log,
       logCheck,
       treasure,
       key,
-      levelUnlock], 
+      levelUnlock],
       Phaser.Physics.ARCADE)
 
     // Make sure player can't leave canvas view
@@ -141,13 +141,13 @@ let Game = {
 
     // Teleport Up
     collideImmovable(teleport)
-    
+
     // Teleport Down
     collideImmovable(teleport2)
 
     // Log Check
     immovable(logCheck)
-    
+
     // Water Death
     collisionGroup(waterBoundaries)
 
@@ -162,7 +162,7 @@ let Game = {
 
     // Level 2 Unlock
     collideImmovable(levelUnlock)
-    
+
     // Have Camera follow
     camera(player)
 
@@ -174,13 +174,13 @@ let Game = {
     scoreDisplay.fixedToCamera = true
     scoreDisplay.font = 'Press Start 2P'
     scoreDisplay.fontSize = 16
-    
+
     //Player lives
     ninjaLivesDisplay = game.add.text(scoreDisplay.x, scoreDisplay.y + 20, "Lives: " + `${ninjaLives} `, { fill: 'white'})
     ninjaLivesDisplay.fixedToCamera = true
     ninjaLivesDisplay.font = 'Press Start 2P'
     ninjaLivesDisplay.fontSize = scoreDisplay.fontSize
-    
+
     // Timer display
     time = game.add.text(scoreDisplay.x, scoreDisplay.y + 40)
     time.fixedToCamera = true
@@ -188,7 +188,7 @@ let Game = {
     time.fontSize = scoreDisplay.fontSize
     time.addColor('white', 0);
   },
-  
+
   update: function() {
     game.physics.arcade.collide(player, levelOneExit, this.startLevelTwo, null, this)
     game.physics.arcade.collide(player, log, this.moveLog, null, this)
@@ -205,7 +205,7 @@ let Game = {
 
     startingVelocity(player)
     playerMovement(player, weapon)
- 
+
     if (fireButton.isDown && this.enableWeapon) {
       weapon.fire()
       shootingSound.play()
@@ -216,7 +216,7 @@ let Game = {
     totalTime++
     time.setText('Time: ' + totalTime)
   },
-  
+
   resetScore: function() {
     score = 0
     ninjaLives = 5
@@ -231,16 +231,16 @@ let Game = {
     weapon.kill()
     enemyWeapon.autofire = false
   },
-    
+
   killPlayer: function(player, enemy) {
     deathSound.play()
     ninjaLives -= 1
     console.log("ninja lives", ninjaLives)
     player.kill()
     timeDelay(500, player, 240, 1304)
-    
+
     ninjaLivesDisplay.text = ('Lives: ' + `${ninjaLives}`)
-    
+
     if (ninjaLives == 0) {
       game.state.start('GameOver')
     }
@@ -255,7 +255,7 @@ let Game = {
   },
 
   teleportPlayer2: function(player, teleport) {
-    stairSound.play()    
+    stairSound.play()
     player.kill()
     timeDelay(1000, player, 140, 460)
   },
@@ -270,9 +270,9 @@ let Game = {
     logSound.play()
 
     game.world.bringToTop(player)
-    
+
     this.logMoved = true
-    
+
     if (this.logMoved) {
       game.time.events.add(500, () => {
         logs.reset(logs.body.x = 376, logs.body.y = 490)
@@ -306,23 +306,23 @@ let Game = {
   spawnWeapon: function(player, treasure) {
     if (this.hasKey) {
       this.enableWeapon = true
-      
+
       treasure.kill()
       this.fadeOutLog()
-      
+
       levelUnlock.body.immovable = false
       levelUnlock.body.collideWorldBounds = false
-      
+
       game.add.sprite(840, 670, 'treasure2')
-      
+
       let weaponText = game.add.sprite(740, 530, 'weaponText')
       weaponText.alpha = 1
-      
+
       game.add.tween(weaponText).to( { alpha: 0 }, 7000, Phaser.Easing.Linear.None, true)
-    
+
       treasureSound.play()
     }
-    
+
     else {
       let lockedText = game.add.text(800, 620, 'Hmm....it\'s locked', { fill: "#000000" })
       lockedText.fixedToCamera = false
@@ -335,9 +335,9 @@ let Game = {
   },
 
   startLevelTwo: function(player, levelTwoExit) {
-    game.sound.remove(lvl1Sound)
+    // game.sound.remove( lvl1Sound)
     exitSound.play()
-    
+
     this.state.start('Two')
   }
 }

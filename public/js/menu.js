@@ -9,21 +9,22 @@ let Menu = {
   preload: function() {
 
     // Menu Sound
-    game.load.audio('menuSound', 'assets/audio/music/sakura.wav')
-    
+
+
     game.load.image('titleScreen', 'assets/images/titlescreen.png')
-    
+
     game.load.spritesheet('snowflakes', 'assets/images/snowflakes.png', 17, 17)
     game.load.spritesheet('snowflakes_large', 'assets/images/snowflakes_large.png', 64, 64)
 
-    game.load.audio('clickSound', 'assets/audio/SFX/start-click.wav')
+    game.load.audio('menuSound', 'assets/audio/music/sakura-sakura-title-screen.mp3')
+    game.load.audio('clickSound', 'assets/audio/SFX/start-click.mp3')
   },
 
   create: function() {
     menuSound = game.add.audio('menuSound')
     clickSound = game.add.audio('clickSound')
-    
-    menuSound.loop = true
+
+    // menuSound.loop = true
     menuSound.play()
 
     game.add.image(0, 0, 'titleScreen')
@@ -72,7 +73,7 @@ let Menu = {
 
     if (i === update_interval) {
       this.changeWindDirection()
-      
+
       update_interval = Math.floor(Math.random() * 20) * 60 // 0 - 20sec @ 60fps
       i = 0
     }
@@ -100,7 +101,7 @@ let Menu = {
     particle.body.velocity.x = max - Math.floor(Math.random() * 30)
   },
 
-  restartGame: function() {
+restartGame: function() {
     clickSound.play()
     game.sound.remove(menuSound)
     game.state.start('Game')
