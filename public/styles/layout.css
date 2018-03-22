@@ -11,7 +11,7 @@ canvas {
 }
 
 .modal {
-    display: none;
+    /* display: none; */
     z-index: 1;
     position: absolute;
     left: 50%;
@@ -46,6 +46,7 @@ canvas {
     width: 200px;
     height: 30px;
     font-family: 'Press Start 2P', cursive;
+    padding: 8px;
 }
 
 .modal-content button {
